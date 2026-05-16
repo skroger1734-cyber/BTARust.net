@@ -1,7 +1,9 @@
-# BTARust.net GitHub Replacement Build
+# BTARust.net Fixed Canvas Exact Build
 
-Configured for https://btarust.net.
+This ZIP is rebuilt from the BTARust Kits Preview layout and includes the corrected styled Next.js app.
 
-Includes the updated Account Linking panel from the latest BTARust Kits Preview canvas plus Steam/Discord OAuth routes and unlink button routes.
-
-Upload the extracted contents to the root of your GitHub repository, replace existing files, then redeploy on Vercel with Build Cache OFF.
+Important:
+- Upload the contents of this ZIP to the root of the GitHub repository.
+- Replace the existing files.
+- Redeploy on Vercel with Build Cache OFF.
+- Use https://btarust.net as the only live OAuth domain.

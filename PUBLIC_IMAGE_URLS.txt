@@ -1,0 +1,38 @@
+BACKPACK IMAGE:
+https://www.btarust.net/backpack.png
+
+KIT PHOTO URLS:
+https://www.btarust.net/kits/Starter.jpg
+https://www.btarust.net/kits/Food.jpg
+https://www.btarust.net/kits/Discord.jpg
+https://www.btarust.net/kits/Discord%20Booster.jpg
+https://www.btarust.net/kits/VIP.jpg
+https://www.btarust.net/kits/VIP%20Lifetime.jpg
+https://www.btarust.net/kits/Recruit%20Tier.jpg
+https://www.btarust.net/kits/Enlistmnt%20Tier.jpg
+https://www.btarust.net/kits/Soldier%20Tier.jpg
+https://www.btarust.net/kits/Officer%20Tier.jpg
+https://www.btarust.net/kits/Officer%20Tier%20Lifetime.jpg
+https://www.btarust.net/kits/General%20Tier.jpg
+https://www.btarust.net/kits/General%20Tier%20Lifetime.jpg
+https://www.btarust.net/kits/Builder%20Kit.jpg
+https://www.btarust.net/kits/Electrical%20Kit.jpg
+https://www.btarust.net/kits/Farm%20Kit.jpg
+
+KIT ICON PHOTO URLS:
+https://www.btarust.net/kits/icons/Starter%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/Food%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/Discord%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/Discord%20Booster%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/VIP%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/VIP%20Kit%20Lifetime%20Icon.png
+https://www.btarust.net/kits/icons/Recuit%20Tier%20Icon.png
+https://www.btarust.net/kits/icons/Enlistment%20Tier%20Icon.png
+https://www.btarust.net/kits/icons/Soldier%20Tier%20Icon.png
+https://www.btarust.net/kits/icons/Officer%20Tier%20Icon.png
+https://www.btarust.net/kits/icons/Officer%20Tier%20Lifetime%20Icon.png
+https://www.btarust.net/kits/icons/General%20Tier%20Icon.png
+https://www.btarust.net/kits/icons/General%20Tier%20Lifetime%20Icon.png
+https://www.btarust.net/kits/icons/Builder%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/Electrical%20Kit%20Icon.png
+https://www.btarust.net/kits/icons/Farrm%20Kit%20Icon.png

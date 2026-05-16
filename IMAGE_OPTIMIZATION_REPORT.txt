@@ -1,0 +1,36 @@
+All original image files are included with the same filenames. Images were compressed/resized so GitHub web upload will work better. Nothing was intentionally deleted.
+
+public/BTARust.jpg: 149.1 KB -> 120.2 KB
+public/backpack.png: 2111.5 KB -> 47.0 KB
+public/kits/Builder Kit.jpg: 974.4 KB -> 105.7 KB
+public/kits/Discord Booster.jpg: 689.2 KB -> 90.9 KB
+public/kits/Discord.jpg: 1683.2 KB -> 85.8 KB
+public/kits/Electrical Kit.jpg: 2758.5 KB -> 115.5 KB
+public/kits/Enlistmnt Tier.jpg: 759.0 KB -> 101.8 KB
+public/kits/Farm Kit.jpg: 2650.5 KB -> 112.6 KB
+public/kits/Food.jpg: 1749.2 KB -> 81.2 KB
+public/kits/General Tier Lifetime.jpg: 2624.3 KB -> 118.1 KB
+public/kits/General Tier.jpg: 2484.6 KB -> 112.6 KB
+public/kits/Officer Tier Lifetime.jpg: 1980.3 KB -> 113.4 KB
+public/kits/Officer Tier.jpg: 895.2 KB -> 103.7 KB
+public/kits/Recruit Tier.jpg: 647.8 KB -> 92.5 KB
+public/kits/Soldier Tier.jpg: 2199.0 KB -> 113.3 KB
+public/kits/Starter.jpg: 1749.0 KB -> 108.5 KB
+public/kits/VIP Lifetime.jpg: 1902.3 KB -> 103.5 KB
+public/kits/VIP.jpg: 1567.3 KB -> 103.3 KB
+public/kits/icons/Builder Kit Icon.png: 861.3 KB -> 245.3 KB
+public/kits/icons/Discord Booster Kit Icon.png: 2289.3 KB -> 102.5 KB
+public/kits/icons/Discord Kit Icon.png: 37.2 KB -> 40.0 KB
+public/kits/icons/Electrical Kit Icon.png: 712.0 KB -> 214.9 KB
+public/kits/icons/Enlistment Tier Icon.png: 853.1 KB -> 272.4 KB
+public/kits/icons/Farrm Kit Icon.png: 744.6 KB -> 214.6 KB
+public/kits/icons/Food Kit Icon.png: 2016.8 KB -> 111.5 KB
+public/kits/icons/General Tier Icon.png: 956.8 KB -> 305.1 KB
+public/kits/icons/General Tier Lifetime Icon.png: 878.1 KB -> 290.2 KB
+public/kits/icons/Officer Tier Icon.png: 887.6 KB -> 282.7 KB
+public/kits/icons/Officer Tier Lifetime Icon.png: 990.5 KB -> 309.3 KB
+public/kits/icons/Recuit Tier Icon.png: 181.8 KB -> 182.2 KB
+public/kits/icons/Soldier Tier Icon.png: 831.8 KB -> 266.7 KB
+public/kits/icons/Starter Kit Icon.png: 1826.3 KB -> 128.9 KB
+public/kits/icons/VIP Kit Icon.png: 513.6 KB -> 382.3 KB
+public/kits/icons/VIP Kit Lifetime Icon.png: 1677.7 KB -> 361.2 KB

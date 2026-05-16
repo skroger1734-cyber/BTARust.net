@@ -13,6 +13,7 @@ function discordAvatarUrl(user) {
 async function saveDiscord(user) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
   if (!url || !key || !user?.id) {
     console.error("[discord] Missing Supabase env vars or Discord user");
     return;
@@ -37,6 +38,7 @@ async function assignVerifiedRole(discordId) {
   const token = process.env.DISCORD_BOT_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID;
   const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
+
   if (!token || !guildId || !roleId || !discordId) {
     console.error("[discord] Missing role assignment env vars");
     return;
@@ -48,20 +50,23 @@ async function assignVerifiedRole(discordId) {
   });
 
   if (!res.ok) {
-    const body = await res.text();
-    console.error("[discord] verified role failed", res.status, body);
+    console.error("[discord] verified role failed", res.status, await res.text());
   }
 }
 
 async function logToDiscord(user) {
   const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
-  if (!webhook) return;
 
-  await fetch(webhook, {
+  if (!webhook) {
+    console.error("[discord] DISCORD_MOD_LOG_WEBHOOK_URL missing");
+    return;
+  }
+
+  const res = await fetch(webhook, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      username: "BTARust.net Link Logs",
+      username: "BTARust Link Logs",
       embeds: [
         {
           title: "Discord Account Linked",
@@ -77,6 +82,10 @@ async function logToDiscord(user) {
       ]
     })
   });
+
+  if (!res.ok) {
+    console.error("[discord] webhook failed", res.status, await res.text());
+  }
 }
 
 export async function GET(request) {

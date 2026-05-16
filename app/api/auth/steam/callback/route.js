@@ -18,7 +18,6 @@ async function getSteamProfile(steamId) {
   );
 
   if (!res.ok) return null;
-
   const data = await res.json();
   return data?.response?.players?.[0] || null;
 }
@@ -26,6 +25,7 @@ async function getSteamProfile(steamId) {
 async function saveSteam(steamId, profile) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
   if (!url || !key || !steamId) {
     console.error("[steam] Missing Supabase env vars or Steam ID");
     return;
@@ -47,13 +47,16 @@ async function saveSteam(steamId, profile) {
 
 async function logToDiscord(steamId, profile) {
   const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
-  if (!webhook) return;
+  if (!webhook) {
+    console.error("[steam] DISCORD_MOD_LOG_WEBHOOK_URL missing");
+    return;
+  }
 
-  await fetch(webhook, {
+  const res = await fetch(webhook, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      username: "BTARust.net Link Logs",
+      username: "BTARust Link Logs",
       embeds: [
         {
           title: "Steam Account Linked",
@@ -68,6 +71,10 @@ async function logToDiscord(steamId, profile) {
       ]
     })
   });
+
+  if (!res.ok) {
+    console.error("[steam] webhook failed", res.status, await res.text());
+  }
 }
 
 export async function GET(request) {

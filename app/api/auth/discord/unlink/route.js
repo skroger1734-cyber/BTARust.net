@@ -2,13 +2,17 @@ import { NextResponse } from "next/server";
 
 async function logToDiscord() {
   const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
-  if (!webhook) return;
 
-  await fetch(webhook, {
+  if (!webhook) {
+    console.error("[discord] DISCORD_MOD_LOG_WEBHOOK_URL missing");
+    return;
+  }
+
+  const res = await fetch(webhook, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      username: "BTARust.net Link Logs",
+      username: "BTARust Link Logs",
       embeds: [
         {
           title: "Discord Account Unlinked",
@@ -19,6 +23,10 @@ async function logToDiscord() {
       ]
     })
   });
+
+  if (!res.ok) {
+    console.error("[discord] webhook failed", res.status, await res.text());
+  }
 }
 
 export async function POST() {
@@ -27,5 +35,6 @@ export async function POST() {
   } catch (err) {
     console.error("[discord] unlink log failed", err);
   }
+
   return NextResponse.json({ ok: true });
 }

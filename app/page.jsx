@@ -85,7 +85,8 @@ const servers = [
     rate: "Vanilla",
     wipe: "Monthly",
     desc: "Clean fair Rust with standard gather rates, long-term progression, and monthly reset schedule.",
-    bm: "https://www.battlemetrics.com/servers/rust/38992245"
+    bm: "https://www.battlemetrics.com/servers/rust/38992245",
+    connect: "steam://connect/btarust.net:28015"
   },
   { name: "BTARust.net 2x Monthly", status: "Coming Soon", rate: "2x Gather", wipe: "Monthly", desc: "Faster progression with less grind and more action." },
   { name: "BTARust.net 3x Monthly", status: "Coming Soon", rate: "3x Gather", wipe: "Monthly", desc: "Higher-paced monthly server for quicker bases, raids, and PvP." },
@@ -208,8 +209,8 @@ export default function Page() {
     });
 
     if (steamLinkedFromUrl || discordLinkedFromUrl || params.get("steam") === "failed" || params.get("discord") === "failed") {
-      const clean = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, clean);
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
     }
   }, []);
 
@@ -320,7 +321,14 @@ export default function Page() {
                   <Badge>{server.wipe}</Badge>
                 </div>
                 <p className="muted">{server.desc}</p>
-                {server.bm && <a href={server.bm}><Button>📊 BattleMetrics</Button></a>}
+                <div className="actions" style={{ marginTop: 14 }}>
+                  {server.connect && server.status === "Live Now" && (
+                    <a href={server.connect}>
+                      <Button>🎮 Connect to Server</Button>
+                    </a>
+                  )}
+                  {server.bm && <a href={server.bm}><Button outline>📊 BattleMetrics</Button></a>}
+                </div>
               </Card>
             ))}
           </div>

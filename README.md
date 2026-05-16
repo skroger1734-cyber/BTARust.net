@@ -1,21 +1,24 @@
-# BTARust.net Complete Updated Build
+# BTARust.net Working Replacement Build
 
-Included:
-- Latest BTARust Kits Preview UI
-- Active server-only "Connect to Server" button
-- Steam OAuth linking with Steam avatar/name return
-- Discord OAuth linking with Discord avatar/name return
-- Supabase linked_accounts upsert
-- Discord webhook logs for link/unlink events
-- Steam/Discord logo fallback until accounts are connected
-- Avatar resets back to logos after unlinking
+This build includes:
+- Current BTARust Kits Preview UI
+- Active server-only Connect to Server button
+- Active server-only View Map button
+- BattleMetrics button
+- Steam/Discord logo fallback until linked
+- Steam/Discord account avatar after linking
+- Supabase linked_accounts saving
+- Discord mod-log webhook embeds for link and unlink events
+- Debug endpoint for webhook testing
 
-Upload all ZIP contents to the root of your GitHub repo, replacing existing files.
+After upload:
+1. Replace all files in GitHub with this ZIP contents.
+2. Redeploy Vercel with Build Cache OFF.
+3. Confirm DISCORD_MOD_LOG_WEBHOOK_URL is in Production and Preview.
+4. Test webhook:
+   https://btarust.net/api/debug/webhook-test?key=YOUR_JWT_SECRET
+5. If the webhook test works, unlink all accounts and relink Steam/Discord.
 
-After uploading:
-1. In Vercel, confirm DISCORD_MOD_LOG_WEBHOOK_URL is set.
-2. Confirm SUPABASE_SERVICE_ROLE_KEY is set.
-3. Redeploy with Build Cache OFF.
-4. Click Unlink All Accounts once on the site.
-5. Re-link Steam and Discord.
-6. Check #mod-logs and Supabase.
+If no Discord log appears:
+- Open Vercel Function Logs for /api/auth/discord/callback or /api/debug/webhook-test.
+- Search for "[webhook] failed" or "DISCORD_MOD_LOG_WEBHOOK_URL missing".

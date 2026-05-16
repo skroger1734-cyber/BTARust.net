@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendDiscordLog } from "../../_utils/discordLog";
 
 const SITE_URL = "https://btarust.net";
 const DISCORD_CALLBACK_URL = "https://btarust.net/api/auth/discord/callback";
@@ -54,40 +55,6 @@ async function assignVerifiedRole(discordId) {
   }
 }
 
-async function logToDiscord(user) {
-  const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
-
-  if (!webhook) {
-    console.error("[discord] DISCORD_MOD_LOG_WEBHOOK_URL missing");
-    return;
-  }
-
-  const res = await fetch(webhook, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "BTARust Link Logs",
-      embeds: [
-        {
-          title: "Discord Account Linked",
-          color: 0x5865f2,
-          thumbnail: { url: discordAvatarUrl(user) },
-          fields: [
-            { name: "Discord Name", value: user.global_name || user.username || "Unknown", inline: true },
-            { name: "Discord Username", value: user.username || "Unknown", inline: true },
-            { name: "Discord ID", value: user.id || "Unknown", inline: false }
-          ],
-          timestamp: new Date().toISOString()
-        }
-      ]
-    })
-  });
-
-  if (!res.ok) {
-    console.error("[discord] webhook failed", res.status, await res.text());
-  }
-}
-
 export async function GET(request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -118,12 +85,24 @@ export async function GET(request) {
         user = await userRes.json();
         await saveDiscord(user);
         await assignVerifiedRole(user.id);
-        await logToDiscord(user);
+        await sendDiscordLog({
+          title: "Discord Account Linked",
+          color: 0x5865f2,
+          thumbnail: { url: discordAvatarUrl(user) },
+          fields: [
+            { name: "Discord Name", value: user.global_name || user.username || "Unknown", inline: true },
+            { name: "Discord Username", value: user.username || "Unknown", inline: true },
+            { name: "Discord ID", value: user.id || "Unknown", inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        });
         linked = Boolean(user.id);
         console.log("[discord] linked", { discordId: user.id, username: user.username });
       } else {
         console.error("[discord] token failed", token);
       }
+    } else {
+      console.error("[discord] missing code or client secret");
     }
   } catch (err) {
     console.error("[discord] link failed", err);

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendDiscordLog } from "../../_utils/discordLog";
 
 const SITE_URL = "https://btarust.net";
 
@@ -10,14 +11,21 @@ function getSteamId(claimedId) {
 
 async function getSteamProfile(steamId) {
   const key = process.env.STEAM_API_KEY;
-  if (!key || !steamId) return null;
+  if (!key || !steamId) {
+    console.error("[steam] STEAM_API_KEY missing or no Steam ID");
+    return null;
+  }
 
   const res = await fetch(
     `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${key}&steamids=${steamId}`,
     { cache: "no-store" }
   );
 
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.error("[steam] profile fetch failed", res.status, await res.text());
+    return null;
+  }
+
   const data = await res.json();
   return data?.response?.players?.[0] || null;
 }
@@ -45,38 +53,6 @@ async function saveSteam(steamId, profile) {
   if (error) throw error;
 }
 
-async function logToDiscord(steamId, profile) {
-  const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
-  if (!webhook) {
-    console.error("[steam] DISCORD_MOD_LOG_WEBHOOK_URL missing");
-    return;
-  }
-
-  const res = await fetch(webhook, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "BTARust Link Logs",
-      embeds: [
-        {
-          title: "Steam Account Linked",
-          color: 0x22c55e,
-          thumbnail: { url: profile?.avatarfull || profile?.avatarmedium || profile?.avatar || undefined },
-          fields: [
-            { name: "Steam Name", value: profile?.personaname || "Unknown", inline: true },
-            { name: "Steam ID", value: steamId || "Unknown", inline: true }
-          ],
-          timestamp: new Date().toISOString()
-        }
-      ]
-    })
-  });
-
-  if (!res.ok) {
-    console.error("[steam] webhook failed", res.status, await res.text());
-  }
-}
-
 export async function GET(request) {
   const url = new URL(request.url);
   const steamId = getSteamId(url.searchParams.get("openid.claimed_id"));
@@ -86,7 +62,16 @@ export async function GET(request) {
     if (steamId) {
       profile = await getSteamProfile(steamId);
       await saveSteam(steamId, profile);
-      await logToDiscord(steamId, profile);
+      await sendDiscordLog({
+        title: "Steam Account Linked",
+        color: 0x22c55e,
+        thumbnail: { url: profile?.avatarfull || profile?.avatarmedium || profile?.avatar || undefined },
+        fields: [
+          { name: "Steam Name", value: profile?.personaname || "Unknown", inline: true },
+          { name: "Steam ID", value: steamId || "Unknown", inline: true }
+        ],
+        timestamp: new Date().toISOString()
+      });
       console.log("[steam] linked", { steamId, persona: profile?.personaname || null });
     }
   } catch (err) {

@@ -86,6 +86,7 @@ const servers = [
     wipe: "Monthly",
     desc: "Clean fair Rust with standard gather rates, long-term progression, and monthly reset schedule.",
     bm: "https://www.battlemetrics.com/servers/rust/38992245",
+    map: "https://rustmaps.com/map/648252_3500",
     connect: "steam://connect/btarust.net:28015"
   },
   { name: "BTARust.net 2x Monthly", status: "Coming Soon", rate: "2x Gather", wipe: "Monthly", desc: "Faster progression with less grind and more action." },
@@ -327,7 +328,12 @@ export default function Page() {
                       <Button>🎮 Connect to Server</Button>
                     </a>
                   )}
-                  {server.bm && <a href={server.bm}><Button outline>📊 BattleMetrics</Button></a>}
+                  {server.map && server.status === "Live Now" && (
+                    <a href={server.map} target="_blank" rel="noreferrer">
+                      <Button outline>🗺️ View Map</Button>
+                    </a>
+                  )}
+                  {server.bm && <a href={server.bm} target="_blank" rel="noreferrer"><Button outline>📊 BattleMetrics</Button></a>}
                 </div>
               </Card>
             ))}

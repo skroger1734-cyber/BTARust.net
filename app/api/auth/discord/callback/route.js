@@ -4,6 +4,12 @@ import { createClient } from "@supabase/supabase-js";
 const SITE_URL = "https://btarust.net";
 const DISCORD_CALLBACK_URL = "https://btarust.net/api/auth/discord/callback";
 
+function discordAvatarUrl(user) {
+  if (!user?.id || !user?.avatar) return "https://cdn.discordapp.com/embed/avatars/0.png";
+  const ext = user.avatar.startsWith("a_") ? "gif" : "png";
+  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
+}
+
 async function saveDiscord(user) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -15,11 +21,12 @@ async function saveDiscord(user) {
       discord_id: user.id,
       discord_username: user.username,
       discord_global_name: user.global_name,
-      discord_avatar: user.avatar,
+      discord_avatar: discordAvatarUrl(user),
       updated_at: new Date().toISOString()
     },
     { onConflict: "discord_id" }
   );
+
   if (error) throw error;
 }
 
@@ -39,6 +46,7 @@ export async function GET(request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   let linked = false;
+  let user = null;
 
   try {
     if (code && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
@@ -61,7 +69,7 @@ export async function GET(request) {
           headers: { Authorization: `Bearer ${token.access_token}` }
         });
 
-        const user = await userRes.json();
+        user = await userRes.json();
         await saveDiscord(user);
         await assignVerifiedRole(user.id);
         linked = Boolean(user.id);
@@ -73,5 +81,11 @@ export async function GET(request) {
 
   const redirect = new URL("/", SITE_URL);
   redirect.searchParams.set("discord", linked ? "linked" : "failed");
+
+  if (linked && user) {
+    redirect.searchParams.set("discord_name", user.global_name || user.username || "Discord User");
+    redirect.searchParams.set("discord_avatar", discordAvatarUrl(user));
+  }
+
   return NextResponse.redirect(redirect);
 }

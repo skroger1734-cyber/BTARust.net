@@ -13,7 +13,10 @@ function discordAvatarUrl(user) {
 async function saveDiscord(user) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key || !user?.id) return;
+  if (!url || !key || !user?.id) {
+    console.error("[discord] Missing Supabase env vars or Discord user");
+    return;
+  }
 
   const supabase = createClient(url, key);
   const { error } = await supabase.from("linked_accounts").upsert(
@@ -34,11 +37,45 @@ async function assignVerifiedRole(discordId) {
   const token = process.env.DISCORD_BOT_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID;
   const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
-  if (!token || !guildId || !roleId || !discordId) return;
+  if (!token || !guildId || !roleId || !discordId) {
+    console.error("[discord] Missing role assignment env vars");
+    return;
+  }
 
-  await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`, {
+  const res = await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`, {
     method: "PUT",
     headers: { Authorization: `Bot ${token}` }
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("[discord] verified role failed", res.status, body);
+  }
+}
+
+async function logToDiscord(user) {
+  const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
+  if (!webhook) return;
+
+  await fetch(webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: "BTARust.net Link Logs",
+      embeds: [
+        {
+          title: "Discord Account Linked",
+          color: 0x5865f2,
+          thumbnail: { url: discordAvatarUrl(user) },
+          fields: [
+            { name: "Discord Name", value: user.global_name || user.username || "Unknown", inline: true },
+            { name: "Discord Username", value: user.username || "Unknown", inline: true },
+            { name: "Discord ID", value: user.id || "Unknown", inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]
+    })
   });
 }
 
@@ -72,11 +109,15 @@ export async function GET(request) {
         user = await userRes.json();
         await saveDiscord(user);
         await assignVerifiedRole(user.id);
+        await logToDiscord(user);
         linked = Boolean(user.id);
+        console.log("[discord] linked", { discordId: user.id, username: user.username });
+      } else {
+        console.error("[discord] token failed", token);
       }
     }
   } catch (err) {
-    console.error("[discord] save/link failed", err);
+    console.error("[discord] link failed", err);
   }
 
   const redirect = new URL("/", SITE_URL);

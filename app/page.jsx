@@ -169,35 +169,61 @@ export default function Page() {
   const [linked, setLinked] = useState({ steam: false, discord: false });
   const steamLogo = "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png";
   const discordLogo = "https://cdn.discordapp.com/embed/avatars/0.png";
+
   const [profile, setProfile] = useState({
     steamName: "Steam Player",
-    steamAvatar: "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png",
+    steamAvatar: steamLogo,
     discordName: "Discord User",
-    discordAvatar: "https://cdn.discordapp.com/embed/avatars/0.png"
+    discordAvatar: discordLogo
   });
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const steamLinked = params.get("steam") === "linked" || localStorage.getItem("btarust_steam_linked") === "true";
-    const discordLinked = params.get("discord") === "linked" || localStorage.getItem("btarust_discord_linked") === "true";
 
-    if (params.get("steam") === "linked") localStorage.setItem("btarust_steam_linked", "true");
-    if (params.get("discord") === "linked") localStorage.setItem("btarust_discord_linked", "true");
+    const steamLinkedFromUrl = params.get("steam") === "linked";
+    const discordLinkedFromUrl = params.get("discord") === "linked";
+
+    if (steamLinkedFromUrl) localStorage.setItem("btarust_steam_linked", "true");
+    if (discordLinkedFromUrl) localStorage.setItem("btarust_discord_linked", "true");
+
+    const steamNameFromUrl = params.get("steam_name");
+    const steamAvatarFromUrl = params.get("steam_avatar");
+    const discordNameFromUrl = params.get("discord_name");
+    const discordAvatarFromUrl = params.get("discord_avatar");
+
+    if (steamNameFromUrl) localStorage.setItem("btarust_steam_name", steamNameFromUrl);
+    if (steamAvatarFromUrl) localStorage.setItem("btarust_steam_avatar", steamAvatarFromUrl);
+    if (discordNameFromUrl) localStorage.setItem("btarust_discord_name", discordNameFromUrl);
+    if (discordAvatarFromUrl) localStorage.setItem("btarust_discord_avatar", discordAvatarFromUrl);
+
+    const steamLinked = localStorage.getItem("btarust_steam_linked") === "true";
+    const discordLinked = localStorage.getItem("btarust_discord_linked") === "true";
 
     setLinked({ steam: steamLinked, discord: discordLinked });
     setProfile({
-      steamName: localStorage.getItem("btarust_steam_name") || "Steam Player",
-      steamAvatar: localStorage.getItem("btarust_steam_avatar") || "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png",
-      discordName: localStorage.getItem("btarust_discord_name") || "Discord User",
-      discordAvatar: localStorage.getItem("btarust_discord_avatar") || "https://cdn.discordapp.com/embed/avatars/0.png"
+      steamName: steamLinked ? localStorage.getItem("btarust_steam_name") || "Steam Player" : "Steam Player",
+      steamAvatar: steamLinked ? localStorage.getItem("btarust_steam_avatar") || steamLogo : steamLogo,
+      discordName: discordLinked ? localStorage.getItem("btarust_discord_name") || "Discord User" : "Discord User",
+      discordAvatar: discordLinked ? localStorage.getItem("btarust_discord_avatar") || discordLogo : discordLogo
     });
+
+    if (steamLinkedFromUrl || discordLinkedFromUrl || params.get("steam") === "failed" || params.get("discord") === "failed") {
+      const clean = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, clean);
+    }
   }, []);
 
   const unlinkOnly = async (type) => {
     localStorage.removeItem(type === "steam" ? "btarust_steam_linked" : "btarust_discord_linked");
     localStorage.removeItem(type === "steam" ? "btarust_steam_name" : "btarust_discord_name");
     localStorage.removeItem(type === "steam" ? "btarust_steam_avatar" : "btarust_discord_avatar");
+
     setLinked((current) => ({ ...current, [type]: false }));
+    setProfile((current) => ({
+      ...current,
+      ...(type === "steam" ? { steamName: "Steam Player", steamAvatar: steamLogo } : {}),
+      ...(type === "discord" ? { discordName: "Discord User", discordAvatar: discordLogo } : {})
+    }));
 
     try {
       await fetch(`/api/auth/${type}/unlink`, { method: "POST" });

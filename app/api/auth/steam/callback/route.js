@@ -26,7 +26,10 @@ async function getSteamProfile(steamId) {
 async function saveSteam(steamId, profile) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key || !steamId) return;
+  if (!url || !key || !steamId) {
+    console.error("[steam] Missing Supabase env vars or Steam ID");
+    return;
+  }
 
   const supabase = createClient(url, key);
   const { error } = await supabase.from("linked_accounts").upsert(
@@ -42,6 +45,31 @@ async function saveSteam(steamId, profile) {
   if (error) throw error;
 }
 
+async function logToDiscord(steamId, profile) {
+  const webhook = process.env.DISCORD_MOD_LOG_WEBHOOK_URL;
+  if (!webhook) return;
+
+  await fetch(webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: "BTARust.net Link Logs",
+      embeds: [
+        {
+          title: "Steam Account Linked",
+          color: 0x22c55e,
+          thumbnail: { url: profile?.avatarfull || profile?.avatarmedium || profile?.avatar || undefined },
+          fields: [
+            { name: "Steam Name", value: profile?.personaname || "Unknown", inline: true },
+            { name: "Steam ID", value: steamId || "Unknown", inline: true }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]
+    })
+  });
+}
+
 export async function GET(request) {
   const url = new URL(request.url);
   const steamId = getSteamId(url.searchParams.get("openid.claimed_id"));
@@ -51,9 +79,11 @@ export async function GET(request) {
     if (steamId) {
       profile = await getSteamProfile(steamId);
       await saveSteam(steamId, profile);
+      await logToDiscord(steamId, profile);
+      console.log("[steam] linked", { steamId, persona: profile?.personaname || null });
     }
   } catch (err) {
-    console.error("[steam] Supabase/profile save skipped/failed", err);
+    console.error("[steam] link failed", err);
   }
 
   const redirect = new URL("/", SITE_URL);

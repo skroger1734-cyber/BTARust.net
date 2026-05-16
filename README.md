@@ -1,15 +1,7 @@
-# BTARust.net Real Domain Working Build
+# BTARust.net GitHub Replacement Build
 
-This build is configured for the real domain:
+Configured for https://btarust.net.
 
-https://btarust.net
+Includes the updated Account Linking panel from the latest BTARust Kits Preview canvas plus Steam/Discord OAuth routes and unlink button routes.
 
-Steam:
-- Domain: btarust.net
-- Realm: https://btarust.net
-- Return URL: https://btarust.net/api/auth/steam/callback
-
-Discord OAuth Redirect:
-https://btarust.net/api/auth/discord/callback
-
-Upload the extracted contents to the root of GitHub, replace existing files, then redeploy in Vercel with Build Cache OFF.
+Upload the extracted contents to the root of your GitHub repository, replace existing files, then redeploy on Vercel with Build Cache OFF.

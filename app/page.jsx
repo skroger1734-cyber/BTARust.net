@@ -101,7 +101,7 @@ const rules = [
   "No exploiting or bug abuse",
   "Respect admins and moderators",
   "No racism, hate speech, or harassment",
-  "Mini helis are available to everyone. Heli bombing into player bases increases mini heli cooldown from 5 minutes to 1 hour for 12 hours."
+  "Heli bombing into player bases with paid-for helis will result in your heli cooldown increasing from 5 minutes to 1 hour for a duration of 12 hours."
 ];
 
 const kitDetails = {

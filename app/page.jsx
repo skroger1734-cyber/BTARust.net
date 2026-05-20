@@ -347,7 +347,7 @@ export default function Page() {
       <div className="bg" />
       <header className="header container">
         <div className="brand">
-          <img src="/BTARust Favicon.png" alt="BTARust" />
+          <img src="/BTARust.jpg" alt="BTARust" />
           <div>
             <b>BTARust.net</b>
             <div className="eyebrow">Rust Servers</div>
@@ -372,7 +372,7 @@ export default function Page() {
       <main>
         <section className="hero container">
           <div>
-            <img className="logo" src="/image.png" alt="BTARust logo" />
+            <img className="logo" src="/BTARust.jpg" alt="BTARust logo" />
             
             <h1 className="h1">
               Survive, build, raid, and dominate on <span className="orange">BTARust.net</span>

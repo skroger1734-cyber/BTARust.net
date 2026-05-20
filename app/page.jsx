@@ -136,7 +136,7 @@ const kitDetails = {
   "Starter Kit": {
     image: "/kits/Starter.png",
     title: "Starter Kit",
-    desc: "Starter kit with 3 claims per wipe and a 5 minute cooldown.",
+    desc: "Starter kit with 3 claims per wipe and a 1 hour cooldown.",
     items: "Stone, metal fragments, wood, animal fat, pistol ammo, sheet metal doors, code locks, tool cupboard, building plan, hammer, revolver, spear, pumpkins, and medical supplies."
   },
   "Food Kit": {
@@ -232,7 +232,7 @@ const kitDetails = {
 };
 
 const freeKits = [
-  { icon: "🎒", title: "Starter Kit", badges: ["Steam Required", "3 Claims", "5 Min Cooldown"], desc: kitDetails["Starter Kit"].desc },
+  { icon: "🎒", title: "Starter Kit", badges: ["Steam Required", "3 Claims", "1 Hr Cooldown"], desc: kitDetails["Starter Kit"].desc },
   { icon: "🍖", title: "Food Kit", badges: ["Steam Required", "Unlimited", "30 Min Cooldown"], desc: kitDetails["Food Kit"].desc },
   { icon: "💬", title: "Discord Kit", badges: ["Discord Required", "3 Claims", "5 Min Cooldown"], desc: kitDetails["Discord Kit"].desc },
   { icon: "🚀", title: "Discord Booster Kit", badges: ["Booster Required", "5 Claims", "1 Hr Cooldown"], desc: kitDetails["Discord Booster Kit"].desc }

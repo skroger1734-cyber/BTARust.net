@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { Rcon } from "rcon-client";
 import { sendDiscordLog } from "../../_utils/discordLog";
+
+export const runtime = "nodejs";
 
 const SITE_URL = "https://btarust.net";
 const DISCORD_CALLBACK_URL = "https://btarust.net/api/auth/discord/callback";
 const LINK_COOKIE = "btarust_link_key";
 
-function getOrCreateLinkKey(request) {
+function getOrCreateLinkKey(request: Request & { cookies: any }) {
   return request.cookies.get(LINK_COOKIE)?.value || crypto.randomUUID();
 }
 
-function discordAvatarUrl(user) {
+function discordAvatarUrl(user: any) {
   if (!user?.id || !user?.avatar) return "https://cdn.discordapp.com/embed/avatars/0.png";
   const ext = user.avatar.startsWith("a_") ? "gif" : "png";
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
@@ -23,15 +26,12 @@ function getSupabase() {
   return createClient(url, key);
 }
 
-async function assignVerifiedRole(discordId) {
+async function assignVerifiedRole(discordId: string) {
   const token = process.env.DISCORD_BOT_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID;
   const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
 
-  if (!token || !guildId || !roleId || !discordId) {
-    console.error("[discord] Missing role assignment env vars");
-    return false;
-  }
+  if (!token || !guildId || !roleId || !discordId) return false;
 
   const res = await fetch(
     `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
@@ -46,11 +46,56 @@ async function assignVerifiedRole(discordId) {
     return false;
   }
 
-  console.log("[discord] verified role assigned", discordId);
   return true;
 }
 
-async function maybeAssignVerifiedRole(linkKey) {
+async function getDiscordMember(discordId: string) {
+  const token = process.env.DISCORD_BOT_TOKEN;
+  const guildId = process.env.DISCORD_GUILD_ID;
+
+  if (!token || !guildId || !discordId) return null;
+
+  const res = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}`,
+    {
+      headers: { Authorization: `Bot ${token}` }
+    }
+  );
+
+  if (!res.ok) {
+    console.error("[discord] member lookup failed", res.status, await res.text());
+    return null;
+  }
+
+  return await res.json();
+}
+
+async function sendRconCommand(command: string) {
+  const host = process.env.RUST_RCON_HOST;
+  const port = Number(process.env.RUST_RCON_PORT);
+  const password = process.env.RUST_RCON_PASSWORD;
+
+  if (!host || !port || !password) {
+    console.error("[rcon] Missing RCON env vars");
+    return false;
+  }
+
+  let rcon: Rcon | null = null;
+
+  try {
+    rcon = await Rcon.connect({ host, port, password });
+    const response = await rcon.send(command);
+    console.log("[rcon]", command, response);
+    return true;
+  } catch (err) {
+    console.error("[rcon] command failed", command, err);
+    return false;
+  } finally {
+    if (rcon) rcon.end();
+  }
+}
+
+async function syncRustGroups(linkKey: string) {
   const supabase = getSupabase();
 
   const { data, error } = await supabase
@@ -60,19 +105,33 @@ async function maybeAssignVerifiedRole(linkKey) {
     .maybeSingle();
 
   if (error) {
-    console.error("[verify] lookup failed", error);
+    console.error("[sync] lookup failed", error);
     return false;
   }
 
   if (!data?.discord_id || !data?.steam_id) {
-    console.log("[verify] not ready yet", data);
+    console.log("[sync] Steam and Discord are not both linked yet", data);
     return false;
   }
 
-  return await assignVerifiedRole(data.discord_id);
+  await assignVerifiedRole(data.discord_id);
+
+  const member = await getDiscordMember(data.discord_id);
+  const roles: string[] = member?.roles || [];
+
+  const boosterRoleId = process.env.DISCORD_BOOSTER_ROLE_ID;
+
+  const rustGroup =
+    boosterRoleId && roles.includes(boosterRoleId)
+      ? "discordbooster"
+      : "discord";
+
+  await sendRconCommand(`oxide.usergroup add ${data.steam_id} ${rustGroup}`);
+
+  return true;
 }
 
-async function saveDiscord(user, linkKey) {
+async function saveDiscord(user: any, linkKey: string) {
   if (!user?.id || !linkKey) throw new Error("Missing Discord user or link key");
 
   const supabase = getSupabase();
@@ -92,13 +151,13 @@ async function saveDiscord(user, linkKey) {
   if (error) throw error;
 }
 
-export async function GET(request) {
+export async function GET(request: any) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const linkKey = getOrCreateLinkKey(request);
 
   let linked = false;
-  let user = null;
+  let user: any = null;
 
   try {
     if (code && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
@@ -124,7 +183,7 @@ export async function GET(request) {
         user = await userRes.json();
 
         await saveDiscord(user, linkKey);
-        await maybeAssignVerifiedRole(linkKey);
+        await syncRustGroups(linkKey);
 
         await sendDiscordLog({
           title: "Discord Account Linked",

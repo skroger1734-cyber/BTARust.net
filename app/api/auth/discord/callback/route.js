@@ -71,7 +71,7 @@ async function getDiscordMember(discordId) {
 }
 
 async function sendRconCommand(command) {
-  const host = process.env.RUST_RCON_HOST;
+  const host = process.env.RUST_SERVER_IP;
   const port = Number(process.env.RUST_RCON_PORT);
   const password = process.env.RUST_RCON_PASSWORD;
 

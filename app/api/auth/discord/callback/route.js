@@ -9,11 +9,11 @@ const SITE_URL = "https://btarust.net";
 const DISCORD_CALLBACK_URL = "https://btarust.net/api/auth/discord/callback";
 const LINK_COOKIE = "btarust_link_key";
 
-function getOrCreateLinkKey(request: Request & { cookies: any }) {
+function getOrCreateLinkKey(request) {
   return request.cookies.get(LINK_COOKIE)?.value || crypto.randomUUID();
 }
 
-function discordAvatarUrl(user: any) {
+function discordAvatarUrl(user) {
   if (!user?.id || !user?.avatar) return "https://cdn.discordapp.com/embed/avatars/0.png";
   const ext = user.avatar.startsWith("a_") ? "gif" : "png";
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
@@ -26,7 +26,7 @@ function getSupabase() {
   return createClient(url, key);
 }
 
-async function assignVerifiedRole(discordId: string) {
+async function assignVerifiedRole(discordId) {
   const token = process.env.DISCORD_BOT_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID;
   const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
@@ -49,7 +49,7 @@ async function assignVerifiedRole(discordId: string) {
   return true;
 }
 
-async function getDiscordMember(discordId: string) {
+async function getDiscordMember(discordId) {
   const token = process.env.DISCORD_BOT_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID;
 
@@ -70,7 +70,7 @@ async function getDiscordMember(discordId: string) {
   return await res.json();
 }
 
-async function sendRconCommand(command: string) {
+async function sendRconCommand(command) {
   const host = process.env.RUST_RCON_HOST;
   const port = Number(process.env.RUST_RCON_PORT);
   const password = process.env.RUST_RCON_PASSWORD;
@@ -80,12 +80,12 @@ async function sendRconCommand(command: string) {
     return false;
   }
 
-  let rcon: Rcon | null = null;
+  let rcon = null;
 
   try {
     rcon = await Rcon.connect({ host, port, password });
-    const response = await rcon.send(command);
-    console.log("[rcon]", command, response);
+    const result = await rcon.send(command);
+    console.log("[rcon]", command, result);
     return true;
   } catch (err) {
     console.error("[rcon] command failed", command, err);
@@ -95,7 +95,27 @@ async function sendRconCommand(command: string) {
   }
 }
 
-async function syncRustGroups(linkKey: string) {
+async function saveDiscord(user, linkKey) {
+  if (!user?.id || !linkKey) throw new Error("Missing Discord user or link key");
+
+  const supabase = getSupabase();
+
+  const { error } = await supabase.from("linked_accounts").upsert(
+    {
+      link_key: linkKey,
+      discord_id: user.id,
+      discord_username: user.username,
+      discord_global_name: user.global_name,
+      discord_avatar: discordAvatarUrl(user),
+      updated_at: new Date().toISOString()
+    },
+    { onConflict: "link_key" }
+  );
+
+  if (error) throw error;
+}
+
+async function syncRustGroups(linkKey) {
   const supabase = getSupabase();
 
   const { data, error } = await supabase
@@ -117,8 +137,7 @@ async function syncRustGroups(linkKey: string) {
   await assignVerifiedRole(data.discord_id);
 
   const member = await getDiscordMember(data.discord_id);
-  const roles: string[] = member?.roles || [];
-
+  const roles = Array.isArray(member?.roles) ? member.roles : [];
   const boosterRoleId = process.env.DISCORD_BOOSTER_ROLE_ID;
 
   const rustGroup =
@@ -127,37 +146,18 @@ async function syncRustGroups(linkKey: string) {
       : "discord";
 
   await sendRconCommand(`oxide.usergroup add ${data.steam_id} ${rustGroup}`);
+  await sendRconCommand("server.writecfg");
 
   return true;
 }
 
-async function saveDiscord(user: any, linkKey: string) {
-  if (!user?.id || !linkKey) throw new Error("Missing Discord user or link key");
-
-  const supabase = getSupabase();
-
-  const { error } = await supabase.from("linked_accounts").upsert(
-    {
-      link_key: linkKey,
-      discord_id: user.id,
-      discord_username: user.username,
-      discord_global_name: user.global_name,
-      discord_avatar: discordAvatarUrl(user),
-      updated_at: new Date().toISOString()
-    },
-    { onConflict: "link_key" }
-  );
-
-  if (error) throw error;
-}
-
-export async function GET(request: any) {
+export async function GET(request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const linkKey = getOrCreateLinkKey(request);
 
   let linked = false;
-  let user: any = null;
+  let user = null;
 
   try {
     if (code && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
@@ -215,6 +215,7 @@ export async function GET(request: any) {
   }
 
   const response = NextResponse.redirect(redirect);
+
   response.cookies.set(LINK_COOKIE, linkKey, {
     httpOnly: true,
     secure: true,

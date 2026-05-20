@@ -4,6 +4,11 @@ import { sendDiscordLog } from "../../_utils/discordLog";
 
 const SITE_URL = "https://btarust.net";
 const DISCORD_CALLBACK_URL = "https://btarust.net/api/auth/discord/callback";
+const LINK_COOKIE = "btarust_link_key";
+
+function getOrCreateLinkKey(request) {
+  return request.cookies.get(LINK_COOKIE)?.value || crypto.randomUUID();
+}
 
 function discordAvatarUrl(user) {
   if (!user?.id || !user?.avatar) return "https://cdn.discordapp.com/embed/avatars/0.png";
@@ -11,28 +16,11 @@ function discordAvatarUrl(user) {
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
 }
 
-async function saveDiscord(user) {
+function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key || !user?.id) {
-    console.error("[discord] Missing Supabase env vars or Discord user");
-    return;
-  }
-
-  const supabase = createClient(url, key);
-  const { error } = await supabase.from("linked_accounts").upsert(
-    {
-      discord_id: user.id,
-      discord_username: user.username,
-      discord_global_name: user.global_name,
-      discord_avatar: discordAvatarUrl(user),
-      updated_at: new Date().toISOString()
-    },
-    { onConflict: "discord_id" }
-  );
-
-  if (error) throw error;
+  if (!url || !key) throw new Error("Missing Supabase env vars");
+  return createClient(url, key);
 }
 
 async function assignVerifiedRole(discordId) {
@@ -42,22 +30,73 @@ async function assignVerifiedRole(discordId) {
 
   if (!token || !guildId || !roleId || !discordId) {
     console.error("[discord] Missing role assignment env vars");
-    return;
+    return false;
   }
 
-  const res = await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`, {
-    method: "PUT",
-    headers: { Authorization: `Bot ${token}` }
-  });
+  const res = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bot ${token}` }
+    }
+  );
 
   if (!res.ok) {
     console.error("[discord] verified role failed", res.status, await res.text());
+    return false;
   }
+
+  console.log("[discord] verified role assigned", discordId);
+  return true;
+}
+
+async function maybeAssignVerifiedRole(linkKey) {
+  const supabase = getSupabase();
+
+  const { data, error } = await supabase
+    .from("linked_accounts")
+    .select("discord_id, steam_id")
+    .eq("link_key", linkKey)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[verify] lookup failed", error);
+    return false;
+  }
+
+  if (!data?.discord_id || !data?.steam_id) {
+    console.log("[verify] not ready yet", data);
+    return false;
+  }
+
+  return await assignVerifiedRole(data.discord_id);
+}
+
+async function saveDiscord(user, linkKey) {
+  if (!user?.id || !linkKey) throw new Error("Missing Discord user or link key");
+
+  const supabase = getSupabase();
+
+  const { error } = await supabase.from("linked_accounts").upsert(
+    {
+      link_key: linkKey,
+      discord_id: user.id,
+      discord_username: user.username,
+      discord_global_name: user.global_name,
+      discord_avatar: discordAvatarUrl(user),
+      updated_at: new Date().toISOString()
+    },
+    { onConflict: "link_key" }
+  );
+
+  if (error) throw error;
 }
 
 export async function GET(request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
+  const linkKey = getOrCreateLinkKey(request);
+
   let linked = false;
   let user = null;
 
@@ -83,8 +122,10 @@ export async function GET(request) {
         });
 
         user = await userRes.json();
-        await saveDiscord(user);
-        await assignVerifiedRole(user.id);
+
+        await saveDiscord(user, linkKey);
+        await maybeAssignVerifiedRole(linkKey);
+
         await sendDiscordLog({
           title: "Discord Account Linked",
           color: 0x5865f2,
@@ -96,13 +137,11 @@ export async function GET(request) {
           ],
           timestamp: new Date().toISOString()
         });
+
         linked = Boolean(user.id);
-        console.log("[discord] linked", { discordId: user.id, username: user.username });
       } else {
         console.error("[discord] token failed", token);
       }
-    } else {
-      console.error("[discord] missing code or client secret");
     }
   } catch (err) {
     console.error("[discord] link failed", err);
@@ -116,5 +155,14 @@ export async function GET(request) {
     redirect.searchParams.set("discord_avatar", discordAvatarUrl(user));
   }
 
-  return NextResponse.redirect(redirect);
+  const response = NextResponse.redirect(redirect);
+  response.cookies.set(LINK_COOKIE, linkKey, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30
+  });
+
+  return response;
 }

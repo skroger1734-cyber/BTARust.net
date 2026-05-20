@@ -220,7 +220,7 @@ const kitDetails = {
   "Electrical Kit": {
     image: "/kits/Electrical Kit.png",
     title: "Electrical Kit",
-    desc: "Advanced electrical and automation support kit for power generation, industrial components, turrets, furnaces, and utilities.",
+    desc: "Advanced electrical and automation support kit for power generation, industrial components, turrets, furnaces, and utilities with a 24 hour cooldown.",
     items: "Generator, batteries, windmills, solar panels, electrical branches, switches, splitters, electric furnaces, lights, fridge, industrial components, computer station, wire tool, piping tool, auto turrets, weapons, and ammo."
   },
   "Farm Kit": {
@@ -246,7 +246,7 @@ const premiumKits = [
   { icon: "🎯", title: "Officer Tier", price: "$80 / $160", cooldown: "12 Hr", lifetimeTitle: "Officer Tier Lifetime" },
   { icon: "👑", title: "General Tier", price: "$100 / $200", cooldown: "12 Hr", lifetimeTitle: "General Tier Lifetime" },
   { icon: "🏗️", title: "Builder Kit", price: "$15", cooldown: "12 Hr" },
-  { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "12 Hr" },
+  { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "24 Hr" },
   { icon: "🌾", title: "Farm Kit", price: "$10", cooldown: "12 Hr" }
 ];
 

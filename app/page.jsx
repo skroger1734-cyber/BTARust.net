@@ -191,25 +191,25 @@ const kitDetails = {
     image: "/kits/Officer Tier.png",
     title: "Officer Tier",
     desc: "Tier 3 workbench access with premium mid-late wipe support, unlimited claims per wipe, and a 12 hour cooldown.",
-    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, smoke grenades, and loot bag."
+    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag."
   },
   "Officer Tier Lifetime": {
     image: "/kits/Officer Tier Lifetime.png",
     title: "Officer Tier Lifetime",
-    desc: "Permanent Officer access with Tier 3 workbench support, premium mid-late wipe resources, unlimited claims per wipe, and a 12 hour cooldown.",
-    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, smoke grenades, and loot bag."
+    desc: "Permanent Officer access bundled with the Builder Kit. Includes Tier 3 workbench support, premium mid-late wipe resources, unlimited claims per wipe, and a 12 hour cooldown.",
+    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag."
   },
   "General Tier": {
     image: "/kits/General Tier.png",
     title: "General Tier",
     desc: "Top-tier monthly progression kit with massive resource support, premium gear and utility access, unlimited claims per wipe, and a 12 hour cooldown.",
-    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, smoke grenades, and pumpkins."
+    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, airdrops, and pumpkins."
   },
   "General Tier Lifetime": {
     image: "/kits/General Tier Lifetime.png",
     title: "General Tier Lifetime",
-    desc: "Permanent top-tier progression kit with massive resource support, premium gear and utility access, unlimited claims per wipe, and a 12 hour cooldown.",
-    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, smoke grenades, and pumpkins."
+    desc: "Permanent top-tier access bundled with Builder, Electrical, and Farm kits. Includes massive resource support, premium gear and utility access, unlimited claims per wipe, and a 12 hour cooldown.",
+    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, airdrops, and pumpkins."
   },
   "Builder Kit": {
     image: "/kits/Builder Kit.png",
@@ -239,15 +239,39 @@ const freeKits = [
 ];
 
 const premiumKits = [
-  { icon: "⭐", title: "VIP", price: "$5", cooldown: "12 Hr", lifetimeTitle: "VIP Lifetime" },
+  { icon: "⭐", title: "VIP", price: "$5", cooldown: "12 Hr" },
   { icon: "🎖️", title: "Recruit Tier", price: "$20", cooldown: "12 Hr" },
   { icon: "🪖", title: "Enlistment Tier", price: "$40", cooldown: "12 Hr" },
   { icon: "⚔️", title: "Soldier Tier", price: "$60", cooldown: "12 Hr" },
-  { icon: "🎯", title: "Officer Tier", price: "$80 / $160", cooldown: "12 Hr", lifetimeTitle: "Officer Tier Lifetime" },
-  { icon: "👑", title: "General Tier", price: "$100 / $200", cooldown: "12 Hr", lifetimeTitle: "General Tier Lifetime" },
+  { icon: "🎯", title: "Officer Tier", price: "$80", cooldown: "12 Hr" },
+  { icon: "👑", title: "General Tier", price: "$100", cooldown: "12 Hr" },
   { icon: "🏗️", title: "Builder Kit", price: "$15", cooldown: "12 Hr" },
   { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "24 Hr" },
   { icon: "🌾", title: "Farm Kit", price: "$10", cooldown: "12 Hr" }
+];
+
+const lifetimeKits = [
+  {
+    icon: "⭐",
+    title: "VIP Lifetime",
+    price: "Lifetime",
+    cooldown: "12 Hr",
+    bundle: "Permanent VIP access"
+  },
+  {
+    icon: "🎯",
+    title: "Officer Tier Lifetime",
+    price: "$160",
+    cooldown: "12 Hr",
+    bundle: "Bundled with Builder Kit"
+  },
+  {
+    icon: "👑",
+    title: "General Tier Lifetime",
+    price: "$200",
+    cooldown: "12 Hr",
+    bundle: "Bundled with Builder, Electrical & Farm Kits"
+  }
 ];
 
 function KitModal({ kit, onClose }) {
@@ -589,7 +613,32 @@ export default function Page() {
                 <div className="actions">
                   <a href={tebexStore}><Button>🛒 Buy on Tebex</Button></a>
                   <Button outline onClick={() => openKit(kit.title)}>👀 View Kit</Button>
-                  {kit.lifetimeTitle && <Button outline onClick={() => openKit(kit.lifetimeTitle)}>👑 View Lifetime</Button>}
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <p className="eyebrow" style={{ marginTop: 48 }}>Lifetime Kits</p>
+          <h2 className="h2">Permanent access and bundle perks</h2>
+          <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
+            Lifetime kits are usable across all BTARust.net servers and include the bundled perks shown below.
+          </p>
+          <div className="grid grid3" style={{ marginTop: 24 }}>
+            {lifetimeKits.map((kit) => (
+              <Card key={kit.title} extra="orangeBorder">
+                <div className="kitIcon">{kit.icon}</div>
+                <h3 className="kitTitle">{kit.title}</h3>
+                <div className="badges">
+                  <Badge tone="orange">{kit.price}</Badge>
+                  <Badge>{kit.cooldown} Cooldown</Badge>
+                  <Badge tone="green">{kit.bundle}</Badge>
+                  <Badge>Steam Linked</Badge>
+                  <Badge>Discord Linked</Badge>
+                </div>
+                <p className="muted">{kitDetails[kit.title]?.desc || "Lifetime rewards synced to your linked Rust account."}</p>
+                <div className="actions">
+                  <a href={tebexStore}><Button>🛒 Buy on Tebex</Button></a>
+                  <Button outline onClick={() => openKit(kit.title)}>👑 View Lifetime Kit</Button>
                 </div>
               </Card>
             ))}

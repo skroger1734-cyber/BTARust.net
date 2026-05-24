@@ -102,7 +102,7 @@ const servers = [
     rate: "QoL/Loot+ 3x",
     wipe: "Full Wipe",
     desc: "Fast-paced 3x monthly Rust server with boosted loot, QoL systems, no team limits, faster progression, PvP, raiding, and monthly wipes.",
-    bm: "https://www.battlemetrics.com/servers/rust?q=144.48.106.226%3A28015",
+    bm: "https://www.battlemetrics.com/servers/rust/39147285",
     connect: "steam://connect/144.48.106.226:28015",
     client: "144.48.106.226:28015"
   },

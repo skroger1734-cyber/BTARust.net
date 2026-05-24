@@ -80,38 +80,37 @@ function Countdown() {
 
 const servers = [
   {
-    name: "BTARust.net Vanilla Monthly",
+    name: "BTARust.net | US | Vanilla+ Monthly",
     status: "Live Now",
-    rate: "Vanilla",
-    wipe: "Monthly",
-    
-    desc: "Clean fair Rust with standard gather rates, long-term progression, and monthly reset schedule.",
+    rate: "QoL/Loot+",
+    wipe: "Full Wipe",
+    desc: "Vanilla+ monthly Rust experience with QoL improvements, boosted loot progression, no team limits, active moderation, and full monthly wipes.",
     bm: "https://www.battlemetrics.com/servers/rust/38992245",
-    map: "https://rustmaps.com/map/648252_3500",
-    connect: "steam://connect/btarust.net:28015"
+    connect: "steam://connect/216.245.177.18:28015",
+    client: "216.245.177.18:28015"
   },
   {
-    name: "BTARust.net 2x Monthly",
+    name: "BTARust.net | US | 2x Monthly",
     status: "Coming Soon",
-    rate: "2x Gather",
-    wipe: "Monthly",
-    
-    desc: "Faster progression with less grind and more action."
+    rate: "QoL/Loot+ 2x",
+    wipe: "Full Wipe",
+    desc: "Upcoming 2x monthly Rust server with faster progression, QoL improvements, Loot+, no team limits, active moderation, and full monthly wipes."
   },
   {
-    name: "BTARust.net 3x Monthly",
-    status: "Coming Soon",
-    rate: "3x Gather",
-    wipe: "Monthly",
-    
-    desc: "Higher-paced monthly server for quicker bases, raids, and PvP."
+    name: "BTARust.net | US | 3x Monthly",
+    status: "Live Now",
+    rate: "QoL/Loot+ 3x",
+    wipe: "Full Wipe",
+    desc: "Fast-paced 3x monthly Rust server with boosted loot, QoL systems, no team limits, faster progression, PvP, raiding, and monthly wipes.",
+    bm: "https://www.battlemetrics.com/servers/rust?q=144.48.106.226%3A28015",
+    connect: "steam://connect/144.48.106.226:28015",
+    client: "144.48.106.226:28015"
   },
   {
     name: "BTARust.net Million X",
     status: "Coming Soon",
     rate: "Million X",
     wipe: "TBD",
-    
     desc: "Focused PvP and raiding with extreme gather rates, fast progression, and high-action gameplay."
   },
   {
@@ -119,7 +118,6 @@ const servers = [
     status: "Coming Soon",
     rate: "Creative",
     wipe: "TBD",
-    
     desc: "Build-focused creative server for testing bases, practicing designs, experimenting with electrical setups, and planning raid bases."
   }
 ];
@@ -129,7 +127,9 @@ const rules = [
   "NO CHEATING",
   "Respect admins and moderators",
   "No racism, hate speech, or harassment",
-  "Heli Bombing with kit minis will increase your cooldown from 5min to 1hr, and it will last up to 12hrs."
+  "Heli Bombing with kit minis will increase your cooldown from 5min to 1hr, and it will last up to 12hrs.",
+  "Abuse of the 24hr wipe protection system may result in temporary bans.",
+  "If one member of a team/clan disables wipe protection early to participate in raiding, all active team/clan members must also have protection disabled."
 ];
 
 const kitDetails = {
@@ -387,10 +387,10 @@ export default function Page() {
           </div>
 
           <Card extra="orangeBorder">
-            <p className="eyebrow">Featured Server</p>
-            <h2 className="h2">Vanilla Monthly</h2>
+            <p className="eyebrow">Featured Servers</p>
+            <h2 className="h2">Vanilla+ & 3x Monthly</h2>
             <p className="muted">
-              BTARust.net main monthly wipe server with balanced progression, active moderation, and long-term support.
+              Two live BTARust.net servers featuring QoL improvements, Loot+, no team limits, active moderation, and full monthly wipes.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
@@ -408,7 +408,7 @@ export default function Page() {
               <p className="eyebrow">Server Lineup</p>
               <h2 className="h2">Choose your battlefield</h2>
             </div>
-            <p className="muted">Start on Vanilla Monthly while the BTARust network expands.</p>
+            <p className="muted">Both BTARust.net monthly servers are now live and accepting players.</p>
           </div>
 
           <div className="grid grid3">
@@ -427,10 +427,10 @@ export default function Page() {
                     <a href={server.connect}><Button>Connect to Server</Button></a>
                   )}
 
-                  {server.map && server.status === "Live Now" && (
-                    <a href={server.map} target="_blank" rel="noreferrer">
-                      <Button outline>View Map</Button>
-                    </a>
+                  {server.client && server.status === "Live Now" && (
+                    <div className="muted" style={{marginTop:12,fontWeight:700}}>
+                      Client Connect: {server.client}
+                    </div>
                   )}
 
                   {server.bm && (
@@ -554,6 +554,9 @@ export default function Page() {
         <section id="kits" className="container section">
           <p className="eyebrow">Free Starter Kits</p>
           <h2 className="h2">Claim free kits by linking accounts</h2>
+          <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
+            Kits are usable across all BTARust.net servers.
+          </p>
           <div className="grid grid4" style={{ marginTop: 24 }}>
             {freeKits.map((kit) => (
               <Card key={kit.title}>
@@ -568,6 +571,9 @@ export default function Page() {
 
           <p className="eyebrow" style={{ marginTop: 48 }}>Premium Kits</p>
           <h2 className="h2">Unlock advanced kits and perks</h2>
+          <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
+            Kits are usable across all BTARust.net servers.
+          </p>
           <div className="grid grid3" style={{ marginTop: 24 }}>
             {premiumKits.map((kit) => (
               <Card key={kit.title}>

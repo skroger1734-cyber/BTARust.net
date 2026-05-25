@@ -407,13 +407,13 @@ export default function Page() {
       `}</style>
       <div className="bg" />
       <header className="header container">
-        <div className="brand">
+        <a href="#top" className="brand">
           <img src="/BTARust.jpg" alt="BTARust" />
           <div>
             <b>BTARust.net</b>
             <div className="eyebrow">Rust Servers</div>
           </div>
-        </div>
+        </a>
         <nav className="nav">
           <a href="#servers">Servers</a>
           <a href="#linking">Account Linking</a>
@@ -430,7 +430,7 @@ export default function Page() {
         </div>
       </header>
 
-      <main>
+      <main id="top">
         <section className="hero container">
           <div>
             <img className="logo" src="/BTARust.jpg" alt="BTARust logo" />

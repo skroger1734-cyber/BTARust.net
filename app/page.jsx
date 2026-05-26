@@ -536,10 +536,11 @@ export default function Page() {
                 minHeight: 160
               }}>
                 <img
-                  src={profile.$1}
-                  alt="$2 profile avatar"
+                  src={profile.steamAvatar || steamLogo}
+                  alt="Steam profile avatar"
                   className="linkAvatar"
-                  style={{ width: 88, height: 88, borderRadius: 22, border: linked.$3 ? '2px solid rgba(34,197,94,.65)' : '2px solid rgba(249,115,22,.45)', objectFit: 'cover', background: '#18181b' }}
+                  onError={(event) => { event.currentTarget.src = steamLogo; }}
+                  style={{ width: 88, height: 88, borderRadius: 22, border: linked.steam ? '2px solid rgba(34,197,94,.65)' : '2px solid rgba(249,115,22,.45)', objectFit: 'cover', background: '#18181b' }}
                 />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -570,10 +571,11 @@ export default function Page() {
                 minHeight: 160
               }}>
                 <img
-                  src={profile.$1}
-                  alt="$2 profile avatar"
+                  src={profile.discordAvatar || discordLogo}
+                  alt="Discord profile avatar"
                   className="linkAvatar"
-                  style={{ width: 88, height: 88, borderRadius: 22, border: linked.$3 ? '2px solid rgba(34,197,94,.65)' : '2px solid rgba(249,115,22,.45)', objectFit: 'cover', background: '#18181b' }}
+                  onError={(event) => { event.currentTarget.src = discordLogo; }}
+                  style={{ width: 88, height: 88, borderRadius: 22, border: linked.discord ? '2px solid rgba(34,197,94,.65)' : '2px solid rgba(249,115,22,.45)', objectFit: 'cover', background: '#18181b' }}
                 />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>

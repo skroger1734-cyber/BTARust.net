@@ -291,38 +291,41 @@ const freeKits = [
 ];
 
 const premiumKits = [
-  { icon: "⭐", title: "VIP", price: "$5", cooldown: "12 Hr" },
-  { icon: "🎖️", title: "Recruit Tier", price: "$20", cooldown: "12 Hr" },
-  { icon: "🪖", title: "Enlistment Tier", price: "$40", cooldown: "12 Hr" },
-  { icon: "⚔️", title: "Soldier Tier", price: "$60", cooldown: "12 Hr" },
-  { icon: "🎯", title: "Officer Tier", price: "$80", cooldown: "12 Hr" },
-  { icon: "👑", title: "General Tier", price: "$100", cooldown: "12 Hr" },
-  { icon: "🏗️", title: "Builder Kit", price: "$15", cooldown: "12 Hr" },
-  { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "24 Hr" },
-  { icon: "🌾", title: "Farm Kit", price: "$10", cooldown: "12 Hr" }
+  { icon: "⭐", title: "VIP", price: "$5", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439458" },
+  { icon: "🎖️", title: "Recruit Tier", price: "$20", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439462" },
+  { icon: "🪖", title: "Enlistment Tier", price: "$40", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439464" },
+  { icon: "⚔️", title: "Soldier Tier", price: "$60", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439466" },
+  { icon: "🎯", title: "Officer Tier", price: "$80", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439468" },
+  { icon: "👑", title: "General Tier", price: "$100", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439470" },
+  { icon: "🏗️", title: "Builder Kit", price: "$15", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7470119" },
+  { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "24 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439479" },
+  { icon: "🌾", title: "Farm Kit", price: "$10", cooldown: "12 Hr", packageUrl: "https://btarustnet.tebex.io/package/7439480" }
 ];
 
 const lifetimeKits = [
   {
     icon: "⭐",
     title: "VIP Lifetime",
-    price: "Lifetime",
+    price: "$50",
     cooldown: "12 Hr",
-    bundle: "Permanent VIP access"
+    bundle: "Permanent VIP access",
+    packageUrl: "https://btarustnet.tebex.io/package/7439459"
   },
   {
     icon: "🎯",
     title: "Officer Tier Lifetime",
     price: "$160",
     cooldown: "12 Hr",
-    bundle: "Bundled with Builder Kit"
+    bundle: "Bundled with Builder Kit",
+    packageUrl: "https://btarustnet.tebex.io/package/7439469"
   },
   {
     icon: "👑",
     title: "General Tier Lifetime",
     price: "$200",
     cooldown: "12 Hr",
-    bundle: "Bundled with Builder, Electrical & Farm Kits"
+    bundle: "Bundled with Builder, Electrical & Farm Kits",
+    packageUrl: "https://btarustnet.tebex.io/package/7439471"
   }
 ];
 
@@ -665,7 +668,7 @@ export default function Page() {
                 </div>
                 <p className="muted">{kitDetails[kit.title]?.desc || "Premium server rewards synced to your linked Rust account."}</p>
                 <div className="actions">
-                  <a href={tebexStore}><Button>🛒 Buy on Tebex</Button></a>
+                  <a href={kit.packageUrl || tebexStore} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
                   <Button outline onClick={() => openKit(kit.title)}>👀 View Kit</Button>
                 </div>
               </Card>
@@ -691,7 +694,7 @@ export default function Page() {
                 </div>
                 <p className="muted">{kitDetails[kit.title]?.desc || "Lifetime rewards synced to your linked Rust account."}</p>
                 <div className="actions">
-                  <a href={tebexStore}><Button>🛒 Buy on Tebex</Button></a>
+                  <a href={kit.packageUrl || tebexStore} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
                   <Button outline onClick={() => openKit(kit.title)}>👑 View Lifetime Kit</Button>
                 </div>
               </Card>

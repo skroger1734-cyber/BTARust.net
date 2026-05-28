@@ -28,17 +28,34 @@ function Badge({ children, tone = "" }) {
 }
 
 function nextFacepunchWipe(now = new Date()) {
-  const firstThu = (y, m) => {
-    const d = new Date(Date.UTC(y, m, 1, 19, 0, 0));
-    d.setUTCDate(1 + ((4 - d.getUTCDay() + 7) % 7));
-    return d;
+  const getFirstThursdayAtEastern2PM = (year, month) => {
+    const firstDay = new Date(Date.UTC(year, month, 1, 12, 0, 0));
+    const firstThursdayDate = 1 + ((4 - firstDay.getUTCDay() + 7) % 7);
+
+    // Facepunch forced wipe is the first Thursday of each month at 2PM Eastern.
+    // During daylight saving months this is 18:00 UTC; during standard time this is 19:00 UTC.
+    const testNoonUtc = new Date(Date.UTC(year, month, firstThursdayDate, 12, 0, 0));
+    const easternParts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      timeZoneName: "short"
+    }).formatToParts(testNoonUtc);
+
+    const tzName = easternParts.find((part) => part.type === "timeZoneName")?.value || "EST";
+    const utcHour = tzName.includes("EDT") ? 18 : 19;
+
+    return new Date(Date.UTC(year, month, firstThursdayDate, utcHour, 0, 0));
   };
 
-  let wipe = firstThu(now.getUTCFullYear(), now.getUTCMonth());
+  let wipe = getFirstThursdayAtEastern2PM(now.getUTCFullYear(), now.getUTCMonth());
+
   if (now >= wipe) {
     const nextMonth = now.getUTCMonth() + 1;
-    wipe = firstThu(now.getUTCFullYear() + Math.floor(nextMonth / 12), nextMonth % 12);
+    wipe = getFirstThursdayAtEastern2PM(
+      now.getUTCFullYear() + Math.floor(nextMonth / 12),
+      nextMonth % 12
+    );
   }
+
   return wipe;
 }
 
@@ -52,15 +69,13 @@ function Countdown() {
 
   const wipe = useMemo(() => nextFacepunchWipe(now), [now]);
   const currentMonthStart = useMemo(() => {
-    const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 19, 0, 0));
-    start.setUTCDate(1 + ((4 - start.getUTCDay() + 7) % 7));
-    if (now < start) {
+    const current = nextFacepunchWipe(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0)));
+    if (now < current) {
       const prevMonth = now.getUTCMonth() - 1;
-      const prev = new Date(Date.UTC(now.getUTCFullYear() + Math.floor(prevMonth / 12), (prevMonth + 12) % 12, 1, 19, 0, 0));
-      prev.setUTCDate(1 + ((4 - prev.getUTCDay() + 7) % 7));
-      return prev;
+      const prevYear = now.getUTCFullYear() + Math.floor(prevMonth / 12);
+      return nextFacepunchWipe(new Date(Date.UTC(prevYear, (prevMonth + 12) % 12, 1, 0, 0, 0)));
     }
-    return start;
+    return current;
   }, [now]);
 
   const seconds = Math.max(0, Math.floor((wipe.getTime() - now.getTime()) / 1000));
@@ -83,7 +98,7 @@ function Countdown() {
         <div>
           <p className="eyebrow">Facepunch Wipe Calendar</p>
           <h2 className="h2">Next forced wipe countdown</h2>
-          <p className="muted">First Thursday of each month at 19:00 UTC.</p>
+          <p className="muted">First Thursday of each month at 2:00 PM Eastern.</p>
           <div className="count">
             {vals.map(([label, value]) => (
               <div key={label}>

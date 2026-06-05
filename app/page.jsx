@@ -242,8 +242,8 @@ const kitDetails = {
   "Officer Tier": {
     image: "/kits/Officer Tier.png",
     title: "Officer Tier",
-    desc: "Officer tier kit with 48 backpack slots, unlimited vehicle fuel, premium perks, unlimited claims, and a 12 hour cooldown.",
-    items: "Inventory: rifle ammo x300, wood x8k, stone x8k, animal fat x12k, HQM x300, gears x750, empty canteen x1, weapon component x1, metal blade x1, rifle magazine x1, coffins x3, low grade fuel x1k, tarp x1k, jackhammer x1, chainsaw x1, explosives/utility, laptops x10, cameras x10, stop signs x10, tech trash x10, rockets/explosives x10, medical supplies x10, rifle x1, scope x1. Wearables: metal/road sign armor set, tactical gloves, hoodie, pants, boots. Belt: assault rifle x1, medical syringes x12, bandages x12, pumpkins x20, supply signal x1, loot bag x1. Backpack: 48 slots."
+    desc: "Officer tier kit bundled with VIP Kit, Soldier Tier, Builder Kit, Electrical Kit, and Farm Kit. Includes 48 backpack slots, unlimited vehicle fuel, premium perks, unlimited claims, and a 12 hour cooldown.",
+    items: "Bundle includes VIP Kit, Soldier Tier, Builder Kit, Electrical Kit, and Farm Kit. Kit loadout: Inventory: rifle ammo x300, wood x8k, stone x8k, animal fat x12k, HQM x300, gears x750, empty canteen x1, weapon component x1, metal blade x1, rifle magazine x1, coffins x3, low grade fuel x1k, tarp x1k, jackhammer x1, chainsaw x1, explosives/utility, laptops x10, cameras x10, stop signs x10, tech trash x10, rockets/explosives x10, medical supplies x10, rifle x1, scope x1. Wearables: metal/road sign armor set, tactical gloves, hoodie, pants, boots. Belt: assault rifle x1, medical syringes x12, bandages x12, pumpkins x20, supply signal x1, loot bag x1. Backpack: 48 slots."
   },
   "Officer Tier Lifetime": {
     image: "/kits/Officer Tier Lifetime.png",
@@ -254,8 +254,8 @@ const kitDetails = {
   "General Tier": {
     image: "/kits/General Tier.png",
     title: "General Tier",
-    desc: "General tier kit with 48 backpack slots, unlimited vehicle fuel, top-tier premium perks, unlimited claims, and a 12 hour cooldown.",
-    items: "Inventory: rifle ammo x600, wood x16k, stone x16k, animal fat x24k, HQM x600, gears x1.5k, empty canteens x2, weapon components x2, metal blades x2, rifle magazines x2, coffins x3, low grade fuel x2k, tarp x2k, jackhammer x1, chainsaw x1, explosives/utility x40, laptops x20, cameras x20, stop signs x20, tech trash x20, rockets/explosives x20, medical supplies x20, rifles x2, scopes x2. Wearables: full armor set x2, tactical gloves x2, hoodie x2, pants x2, boots x2. Belt: assault rifles x2, medical syringes x12, bandages x12, pumpkins x20, supply signal x1, loot bag x1. Backpack: 48 slots."
+    desc: "General tier kit bundled with every BTARust.net kit except Discord Booster. Includes 48 backpack slots, unlimited vehicle fuel, top-tier premium perks, unlimited claims, and a 12 hour cooldown.",
+    items: "Bundle includes all kits except Discord Booster. Kit loadout: Inventory: rifle ammo x600, wood x16k, stone x16k, animal fat x24k, HQM x600, gears x1.5k, empty canteens x2, weapon components x2, metal blades x2, rifle magazines x2, coffins x3, low grade fuel x2k, tarp x2k, jackhammer x1, chainsaw x1, explosives/utility x40, laptops x20, cameras x20, stop signs x20, tech trash x20, rockets/explosives x20, medical supplies x20, rifles x2, scopes x2. Wearables: full armor set x2, tactical gloves x2, hoodie x2, pants x2, boots x2. Belt: assault rifles x2, medical syringes x12, bandages x12, pumpkins x20, supply signal x1, loot bag x1. Backpack: 48 slots."
   },
   "General Tier Lifetime": {
     image: "/kits/General Tier Lifetime.png",
@@ -295,8 +295,8 @@ const premiumKits = [
   { icon: "🎖️", title: "Recruit Tier", price: "$20", cooldown: "12 Hr", backpack: "24 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439462" },
   { icon: "🪖", title: "Enlistment Tier", price: "$40", cooldown: "12 Hr", backpack: "24 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439464" },
   { icon: "⚔️", title: "Soldier Tier", price: "$60", cooldown: "12 Hr", backpack: "48 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439466" },
-  { icon: "🎯", title: "Officer Tier", price: "$80", cooldown: "12 Hr", backpack: "48 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439468" },
-  { icon: "👑", title: "General Tier", price: "$100", cooldown: "12 Hr", backpack: "48 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439470" },
+  { icon: "🎯", title: "Officer Tier", price: "$80", cooldown: "12 Hr", backpack: "48 Slots", bundle: "Includes VIP, Soldier, Builder, Electrical & Farm", packageUrl: "https://btarustnet.tebex.io/package/7439468" },
+  { icon: "👑", title: "General Tier", price: "$100", cooldown: "12 Hr", backpack: "48 Slots", bundle: "Includes All Kits Except Discord Booster", packageUrl: "https://btarustnet.tebex.io/package/7439470" },
   { icon: "🏗️", title: "Builder Kit", price: "$15", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7470119" },
   { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7439479" },
   { icon: "🌾", title: "Farm Kit", price: "$10", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7439480" }
@@ -405,8 +405,8 @@ const perks = [
       "Auto Door Codes",
       "Inventory Sorting",
       "Instant Crafting",
-      "Officer Lifetime Bundle: VIP Kit, Soldier Tier, Builder Kit, Electrical Kit, and Farm Kit",
-      "General Lifetime Bundle: All kits except Discord Booster",
+      "Officer / Officer Lifetime Bundle: VIP Kit, Soldier Tier, Builder Kit, Electrical Kit, and Farm Kit",
+      "General / General Lifetime Bundle: All kits except Discord Booster",
       "Workbench requirements may still apply depending on tier"
     ]
   }
@@ -771,6 +771,7 @@ export default function Page() {
                   <Badge tone="orange">{kit.price}</Badge>
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   <Badge>{kit.backpack}</Badge>
+                  {kit.bundle && <Badge tone="green">{kit.bundle}</Badge>}
                   <Badge>Steam Linked</Badge>
                   <Badge>Discord Linked</Badge>
                 </div>

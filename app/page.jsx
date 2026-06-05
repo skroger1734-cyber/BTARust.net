@@ -291,15 +291,15 @@ const freeKits = [
 ];
 
 const premiumKits = [
-  { icon: "⭐", title: "VIP", price: "$5", cooldown: "12 Hr", backpack: "12 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439458" },
-  { icon: "🎖️", title: "Recruit Tier", price: "$20", cooldown: "12 Hr", backpack: "24 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439462" },
-  { icon: "🪖", title: "Enlistment Tier", price: "$40", cooldown: "12 Hr", backpack: "24 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439464" },
-  { icon: "⚔️", title: "Soldier Tier", price: "$60", cooldown: "12 Hr", backpack: "48 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439466" },
-  { icon: "🎯", title: "Officer Tier", price: "$80", cooldown: "12 Hr", backpack: "48 Slots", bundle: "Includes VIP, Soldier, Builder, Electrical & Farm", packageUrl: "https://btarustnet.tebex.io/package/7439468" },
-  { icon: "👑", title: "General Tier", price: "$100", cooldown: "12 Hr", backpack: "48 Slots", bundle: "Includes All Kits Except Discord Booster", packageUrl: "https://btarustnet.tebex.io/package/7439470" },
-  { icon: "🏗️", title: "Builder Kit", price: "$15", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7470119" },
-  { icon: "🔌", title: "Electrical Kit", price: "$15", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7439479" },
-  { icon: "🌾", title: "Farm Kit", price: "$10", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7439480" }
+  { icon: "⭐", title: "VIP", price: "$5", sale: "15% OFF SALE", cooldown: "12 Hr", backpack: "12 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439458" },
+  { icon: "🎖️", title: "Recruit Tier", price: "$20", sale: "15% OFF SALE", cooldown: "12 Hr", backpack: "24 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439462" },
+  { icon: "🪖", title: "Enlistment Tier", price: "$40", sale: "15% OFF SALE", cooldown: "12 Hr", backpack: "24 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439464" },
+  { icon: "⚔️", title: "Soldier Tier", price: "$60", sale: "15% OFF SALE", cooldown: "12 Hr", backpack: "48 Slots", packageUrl: "https://btarustnet.tebex.io/package/7439466" },
+  { icon: "🎯", title: "Officer Tier", price: "$80", sale: "15% OFF SALE", cooldown: "12 Hr", backpack: "48 Slots", bundle: "Includes VIP, Soldier, Builder, Electrical & Farm", packageUrl: "https://btarustnet.tebex.io/package/7439468" },
+  { icon: "👑", title: "General Tier", price: "$100", sale: "15% OFF SALE", cooldown: "12 Hr", backpack: "48 Slots", bundle: "Includes All Kits Except Discord Booster", packageUrl: "https://btarustnet.tebex.io/package/7439470" },
+  { icon: "🏗️", title: "Builder Kit", price: "$15", sale: "15% OFF SALE", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7470119" },
+  { icon: "🔌", title: "Electrical Kit", price: "$15", sale: "15% OFF SALE", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7439479" },
+  { icon: "🌾", title: "Farm Kit", price: "$10", sale: "15% OFF SALE", cooldown: "1 Day", backpack: "No Backpack", packageUrl: "https://btarustnet.tebex.io/package/7439480" }
 ];
 
 const lifetimeKits = [
@@ -307,6 +307,7 @@ const lifetimeKits = [
     icon: "⭐",
     title: "VIP Lifetime",
     price: "$50",
+    sale: "15% OFF SALE",
     cooldown: "12 Hr",
     backpack: "12 Slots",
     bundle: "Permanent VIP access",
@@ -316,6 +317,7 @@ const lifetimeKits = [
     icon: "🎯",
     title: "Officer Tier Lifetime",
     price: "$160",
+    sale: "15% OFF SALE",
     cooldown: "12 Hr",
     backpack: "48 Slots",
     bundle: "Includes VIP, Soldier, Builder, Electrical & Farm",
@@ -325,6 +327,7 @@ const lifetimeKits = [
     icon: "👑",
     title: "General Tier Lifetime",
     price: "$200",
+    sale: "15% OFF SALE",
     cooldown: "12 Hr",
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
@@ -760,7 +763,7 @@ export default function Page() {
           <p className="eyebrow" style={{ marginTop: 48 }}>Premium Kits</p>
           <h2 className="h2">Unlock advanced kits and perks</h2>
           <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
-            Kits are usable across all BTARust.net servers.
+            Kits are usable across all BTARust.net servers. All buyable kits are currently 15% off.
           </p>
           <div className="grid grid3" style={{ marginTop: 24 }}>
             {premiumKits.map((kit) => (
@@ -769,6 +772,7 @@ export default function Page() {
                 <h3 className="kitTitle">{kit.title}</h3>
                 <div className="badges">
                   <Badge tone="orange">{kit.price}</Badge>
+                  {kit.sale && <Badge tone="green">{kit.sale}</Badge>}
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   <Badge>{kit.backpack}</Badge>
                   {kit.bundle && <Badge tone="green">{kit.bundle}</Badge>}
@@ -787,7 +791,7 @@ export default function Page() {
           <p className="eyebrow" style={{ marginTop: 48 }}>Lifetime Kits</p>
           <h2 className="h2">Permanent access and bundle perks</h2>
           <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
-            Lifetime kits are usable across all BTARust.net servers and include the bundled perks shown below.
+            Lifetime kits are usable across all BTARust.net servers and include the bundled perks shown below. All lifetime kits are currently 15% off.
           </p>
           <div className="grid grid3" style={{ marginTop: 24 }}>
             {lifetimeKits.map((kit) => (
@@ -796,6 +800,7 @@ export default function Page() {
                 <h3 className="kitTitle">{kit.title}</h3>
                 <div className="badges">
                   <Badge tone="orange">{kit.price}</Badge>
+                  {kit.sale && <Badge tone="green">{kit.sale}</Badge>}
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   <Badge tone="green">{kit.bundle}</Badge>
                   <Badge>Steam Linked</Badge>

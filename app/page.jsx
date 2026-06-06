@@ -299,7 +299,7 @@ const lifetimeKits = [
     cooldown: "24 Hr",
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
-    packageUrl: "https://btarustnet.tebex.io/category/build-your-own-lifetime-bundle"
+    packageUrl: "https://btarustnet.tebex.io/package/7439471"
   },
   {
     icon: "💎",
@@ -308,7 +308,7 @@ const lifetimeKits = [
     cooldown: "24 Hr",
     backpack: "12 Slots",
     bundle: "Permanent VIP Kit & Permissions",
-    packageUrl: "https://btarustnet.tebex.io/category/build-your-own-lifetime-bundle"
+    packageUrl: "https://btarustnet.tebex.io/package/7439459"
   }
 ];
 
@@ -319,7 +319,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "General Tier Lifetime",
     cooldown: "24 Hr",
     backpack: "48 Slots",
-    packageUrl: tebexStore
+    packageUrl: "https://btarustnet.tebex.io/package/7439470"
   },
   {
     icon: "⭐",
@@ -327,7 +327,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Officer Tier Lifetime",
     cooldown: "24 Hr",
     backpack: "48 Slots",
-    packageUrl: tebexStore
+    packageUrl: "https://btarustnet.tebex.io/package/7486542"
   },
   {
     icon: "⚔️",
@@ -335,7 +335,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Soldier Tier",
     cooldown: "24 Hr",
     backpack: "48 Slots",
-    packageUrl: tebexStore
+    packageUrl: "https://btarustnet.tebex.io/package/7439466"
   },
   {
     icon: "🎖️",
@@ -343,7 +343,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Enlistment Tier",
     cooldown: "24 Hr",
     backpack: "24 Slots",
-    packageUrl: tebexStore
+    packageUrl: "https://btarustnet.tebex.io/package/7439464"
   },
   {
     icon: "🪖",
@@ -351,7 +351,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Recruit Tier",
     cooldown: "24 Hr",
     backpack: "24 Slots",
-    packageUrl: tebexStore
+    packageUrl: "https://btarustnet.tebex.io/package/7439462"
   },
   {
     icon: "💎",
@@ -359,34 +359,34 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "VIP Lifetime",
     cooldown: "24 Hr",
     backpack: "No Permission Bundle",
-    packageUrl: tebexStore
+    packageUrl: "https://btarustnet.tebex.io/package/7439458"
   },
   {
     icon: "🌱",
     title: "Farm Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/7439480"
+    packageUrl: "https://btarustnet.tebex.io/package/7486439"
   },
   {
     icon: "⚡",
     title: "Electrical Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/7439479"
+    packageUrl: "https://btarustnet.tebex.io/package/7486415"
   },
   {
     icon: "🏗️",
     title: "Builder Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/7470119"
+    packageUrl: "https://btarustnet.tebex.io/package/builder-lifetime"
   }
 ];
 
 function getPackageUrl(kit) {
   if (kit?.packageUrl && kit.packageUrl.trim() !== "") return kit.packageUrl;
-  return "https://btarustnet.tebex.io/category/build-your-own-lifetime-bundle";
+  return "https://btarustnet.tebex.io";
 }
 
 function getKitDetails(title) {

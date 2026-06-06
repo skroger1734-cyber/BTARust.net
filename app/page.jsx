@@ -290,75 +290,6 @@ const freeKits = [
   { icon: "🚀", title: "Discord Booster Kit", badges: ["Booster Required", "5 Claims", "1 Hr Cooldown"], desc: kitDetails["Discord Booster Kit"].desc }
 ];
 
-const premiumKits = [
-  {
-    icon: "💎",
-    title: "VIP Queue Skip",
-    detailsKey: "VIP",
-    cooldown: "24 Hr",
-    backpack: "12 Slots",
-    packageUrl: "https://btarustnet.tebex.io/package/7439458"
-  },
-  {
-    icon: "🪖",
-    title: "Recruit Tier",
-    cooldown: "24 Hr",
-    backpack: "24 Slots",
-    packageUrl: "https://btarustnet.tebex.io/package/7439462"
-  },
-  {
-    icon: "🎖️",
-    title: "Enlistment Tier",
-    cooldown: "24 Hr",
-    backpack: "24 Slots",
-    packageUrl: "https://btarustnet.tebex.io/package/7439464"
-  },
-  {
-    icon: "⚔️",
-    title: "Soldier Tier",
-    cooldown: "24 Hr",
-    backpack: "48 Slots",
-    packageUrl: "https://btarustnet.tebex.io/package/7439466"
-  },
-  {
-    icon: "🏅",
-    title: "Officer Tier",
-    cooldown: "24 Hr",
-    backpack: "48 Slots",
-    bundle: "Includes VIP, Soldier, Builder, Electrical & Farm",
-    packageUrl: "https://btarustnet.tebex.io/package/7439468"
-  },
-  {
-    icon: "👑",
-    title: "General Tier",
-    cooldown: "24 Hr",
-    backpack: "48 Slots",
-    bundle: "Includes All Kits Except Discord Booster",
-    packageUrl: "https://btarustnet.tebex.io/package/7439470"
-  },
-  {
-    icon: "🏗️",
-    title: "Builder Kit",
-    cooldown: "24 Hr",
-    backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/7470119"
-  },
-  {
-    icon: "⚡",
-    title: "Electrical Kit",
-    cooldown: "24 Hr",
-    backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/7439479"
-  },
-  {
-    icon: "🌱",
-    title: "Farm Kit",
-    cooldown: "24 Hr",
-    backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/7439480"
-  }
-];
-
 const lifetimeKits = [
   {
     icon: "👑",
@@ -558,7 +489,7 @@ export default function Page() {
         <nav className="nav">
           <a href="#servers">Servers</a>
           <a href="#linking">Account Linking</a>
-          <a href="#kits">Kits</a>
+          <a href="#kits">Lifetime Kits</a>
           <a href="#rules">Rules</a>
         </nav>
         <div className="actions">
@@ -779,7 +710,7 @@ export default function Page() {
             Kits are usable across all BTARust.net servers. Premium kit cooldowns are 24 hours.
           </p>
           <div className="grid grid3" style={{ marginTop: 24 }}>
-            {premiumKits.map((kit) => (
+            {removedPremiumKits_SHOULD_NOT_EXIST.map((kit) => (
               <Card key={kit.title}>
                 <div className="kitIcon">{kit.icon}</div>
                 <h3 className="kitTitle">{kit.title}</h3>

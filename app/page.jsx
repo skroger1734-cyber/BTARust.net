@@ -726,32 +726,6 @@ export default function Page() {
             ))}
           </div>
 
-          <p className="eyebrow" style={{ marginTop: 48 }}>Premium Kits</p>
-          <h2 className="h2">Unlock advanced kits and perks</h2>
-          <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
-            Kits are usable across all BTARust.net servers. Premium kit cooldowns are 24 hours.
-          </p>
-          <div className="grid grid3" style={{ marginTop: 24 }}>
-            {removedPremiumKits_SHOULD_NOT_EXIST.map((kit) => (
-              <Card key={kit.title}>
-                <div className="kitIcon">{kit.icon}</div>
-                <h3 className="kitTitle">{kit.title}</h3>
-                <div className="badges">
-                  <Badge>{kit.cooldown} Cooldown</Badge>
-                  {kit.backpack && <Badge>{kit.backpack}</Badge>}
-                  {kit.bundle && <Badge tone="green">{kit.bundle}</Badge>}
-                  <Badge>Steam Linked</Badge>
-                  <Badge>Discord Linked</Badge>
-                </div>
-                <p className="muted">{kitDetails[kit.detailsKey || kit.title]?.desc || "Premium server rewards synced to your linked Rust account."}</p>
-                <div className="actions">
-                  <a href={kit.packageUrl || tebexStore} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
-                  <Button outline onClick={() => openKit(kit.detailsKey || kit.title)}>👀 View Kit</Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-
           <p className="eyebrow" style={{ marginTop: 48 }}>Lifetime Packages</p>
           <h2 className="h2">Permanent access and lifetime bundles</h2>
           <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>

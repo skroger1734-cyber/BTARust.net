@@ -219,7 +219,8 @@ const kitDetails = {
     image: "/kits/viplifetime.png",
     title: "VIP Lifetime",
     desc: "Lifetime VIP kit access with VIP queue skip permissions, unlimited claims per wipe, and a 24 hour cooldown.",
-    items: "Pistol ammo, stone, metal fragments, wood, animal fat, gears, HQM, pumpkins, road sign armor, hoodie, pants, boots, tactical gloves, rifle, wooden barricades, medical syringes, bandages, and medkit."
+    items: "Pistol ammo, stone, metal fragments, wood, animal fat, gears, HQM, pumpkins, road sign armor, hoodie, pants, boots, tactical gloves, rifle, wooden barricades, medical syringes, bandages, and medkit.",
+    packageUrl: "https://btarustnet.tebex.io/package/7439480"
   },
   "Recruit Tier": {
     image: "/kits/recruit.png",
@@ -298,7 +299,7 @@ const lifetimeKits = [
     cooldown: "24 Hr",
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
-    packageUrl: "https://btarustnet.tebex.io/package/7439471"
+    packageUrl: "https://btarustnet.tebex.io/category/build-your-own-lifetime-bundle"
   },
   {
     icon: "💎",
@@ -307,7 +308,7 @@ const lifetimeKits = [
     cooldown: "24 Hr",
     backpack: "12 Slots",
     bundle: "Permanent VIP Kit & Permissions",
-    packageUrl: "https://btarustnet.tebex.io/package/7439459"
+    packageUrl: "https://btarustnet.tebex.io/category/build-your-own-lifetime-bundle"
   }
 ];
 
@@ -382,6 +383,11 @@ const buildYourOwnLifetimeKits = [
     packageUrl: "https://btarustnet.tebex.io/package/7470119"
   }
 ];
+
+function getPackageUrl(kit) {
+  if (kit?.packageUrl && kit.packageUrl.trim() !== "") return kit.packageUrl;
+  return "https://btarustnet.tebex.io/category/build-your-own-lifetime-bundle";
+}
 
 function getKitDetails(title) {
   const aliases = {
@@ -745,7 +751,7 @@ export default function Page() {
                 </div>
                 <p className="muted">{kitDetails[kit.detailsKey || kit.title]?.desc || "Lifetime rewards synced to your linked Rust account."}</p>
                 <div className="actions">
-                  <a href={kit.packageUrl || tebexStore} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
+                  <a href={getPackageUrl(kit)} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
                   <Button outline onClick={() => openKit(kit.detailsKey || kit.title)}>👑 View Lifetime Kit</Button>
                 </div>
               </Card>
@@ -770,7 +776,7 @@ export default function Page() {
                 </div>
                 <p className="muted">{kitDetails[kit.detailsKey || kit.title]?.desc || "Lifetime kit option synced to your linked Rust account."}</p>
                 <div className="actions">
-                  <a href={kit.packageUrl || tebexStore} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
+                  <a href={getPackageUrl(kit)} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
                   <Button outline onClick={() => openKit(kit.detailsKey || kit.title)}>👀 View Kit</Button>
                 </div>
               </Card>

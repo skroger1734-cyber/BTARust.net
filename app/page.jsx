@@ -266,19 +266,19 @@ const kitDetails = {
   },
   "Builder Kit": {
     image: "/kits/builder.png",
-    title: "Builder Kit",
+    title: "Builder Lifetime Kit",
     desc: "Advanced building and compound support kit with premium construction supplies, unlimited claims per wipe, and a 24 hour cooldown.",
     items: "Wood, stone, metal fragments, HQM, code locks, doors, gates, walls, barricades, garage doors, tool cupboards, coffins, workbenches, research table, repair bench, ladder, netting, window bars, armored doors, ladder hatches, building plan, and hammer."
   },
   "Electrical Kit": {
     image: "/kits/electrical.png",
-    title: "Electrical Kit",
+    title: "Electrical Lifetime Kit",
     desc: "Advanced electrical and automation support kit for power generation, industrial components, turrets, furnaces, and utilities with a 24 hour cooldown.",
     items: "Generator, batteries, windmills, solar panels, electrical branches, switches, splitters, electric furnaces, lights, fridge, industrial components, computer station, wire tool, piping tool, auto turrets, weapons, and ammo."
   },
   "Farm Kit": {
     image: "/kits/farm.png",
-    title: "Farm Kit",
+    title: "Farm Lifetime Kit",
     desc: "Advanced farming and water management kit with automated irrigation, plant growth systems, sprinklers, planters, and utilities.",
     items: "Water barrels, planters, water splitters, pumps, electrical components, batteries, lights, heaters, sprinklers, water storage, hose tools, farming deployables, clones, seeds, and food."
   }
@@ -363,21 +363,21 @@ const buildYourOwnLifetimeKits = [
   },
   {
     icon: "🌱",
-    title: "Farm Kit",
+    title: "Farm Lifetime Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
     packageUrl: "https://btarustnet.tebex.io/package/7486439"
   },
   {
     icon: "⚡",
-    title: "Electrical Kit",
+    title: "Electrical Lifetime Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
     packageUrl: "https://btarustnet.tebex.io/package/7486415"
   },
   {
     icon: "🏗️",
-    title: "Builder Kit",
+    title: "Builder Lifetime Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
     packageUrl: "https://btarustnet.tebex.io/package/builder-lifetime"
@@ -405,7 +405,10 @@ function getKitDetails(title) {
     "General Lifetime": "General Tier",
     "General Lifetime Kit": "General Tier",
     "ULTIMATE Lifetime Bundle": "General Tier",
-    "Build Your Own Lifetime Bundle": "General Tier"
+    "Build Your Own Lifetime Bundle": "General Tier",
+    "Farm Lifetime Kit": "Farm Kit",
+    "Electrical Lifetime Kit": "Electrical Kit",
+    "Builder Lifetime Kit": "Builder Kit"
   };
 
   return kitDetails[title] || kitDetails[aliases[title]] || null;

@@ -5,8 +5,8 @@ import { sendDiscordLog } from "../../_utils/discordLog";
 
 export const runtime = "nodejs";
 
-const SITE_URL = "https://btarust.net";
-const DISCORD_CALLBACK_URL = "https://btarust.net/api/auth/discord/callback";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.btarust.net";
+const DISCORD_CALLBACK_URL = `${SITE_URL}/api/auth/discord/callback`;
 const LINK_COOKIE = "btarust_link_key";
 
 function getOrCreateLinkKey(request) {
@@ -14,15 +14,49 @@ function getOrCreateLinkKey(request) {
 }
 
 function discordAvatarUrl(user) {
-  if (!user?.id || !user?.avatar) return "https://cdn.discordapp.com/embed/avatars/0.png";
+  if (!user?.id || !user?.avatar) {
+    return "https://cdn.discordapp.com/embed/avatars/0.png";
+  }
+
   const ext = user.avatar.startsWith("a_") ? "gif" : "png";
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
+}
+
+function redirectHome(status, user = null, linkKey = null) {
+  const redirect = new URL("/", SITE_URL);
+  redirect.searchParams.set("discord", status);
+
+  if (status === "linked" && user?.id) {
+    redirect.searchParams.set(
+      "discord_name",
+      user.global_name || user.username || "Discord User"
+    );
+    redirect.searchParams.set("discord_avatar", discordAvatarUrl(user));
+  }
+
+  const response = NextResponse.redirect(redirect);
+
+  if (linkKey) {
+    response.cookies.set(LINK_COOKIE, linkKey, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30
+    });
+  }
+
+  return response;
 }
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("Missing Supabase env vars");
+
+  if (!url || !key) {
+    throw new Error("Missing Supabase env vars");
+  }
+
   return createClient(url, key);
 }
 
@@ -31,13 +65,18 @@ async function assignVerifiedRole(discordId) {
   const guildId = process.env.DISCORD_GUILD_ID;
   const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
 
-  if (!token || !guildId || !roleId || !discordId) return false;
+  if (!token || !guildId || !roleId || !discordId) {
+    console.error("[discord] Missing role env vars");
+    return false;
+  }
 
   const res = await fetch(
     `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
     {
       method: "PUT",
-      headers: { Authorization: `Bot ${token}` }
+      headers: {
+        Authorization: `Bot ${token}`
+      }
     }
   );
 
@@ -53,12 +92,17 @@ async function getDiscordMember(discordId) {
   const token = process.env.DISCORD_BOT_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID;
 
-  if (!token || !guildId || !discordId) return null;
+  if (!token || !guildId || !discordId) {
+    console.error("[discord] Missing member lookup env vars");
+    return null;
+  }
 
   const res = await fetch(
     `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}`,
     {
-      headers: { Authorization: `Bot ${token}` }
+      headers: {
+        Authorization: `Bot ${token}`
+      }
     }
   );
 
@@ -96,7 +140,9 @@ async function sendRconCommand(command) {
 }
 
 async function saveDiscord(user, linkKey) {
-  if (!user?.id || !linkKey) throw new Error("Missing Discord user or link key");
+  if (!user?.id || !linkKey) {
+    throw new Error("Missing Discord user or link key");
+  }
 
   const supabase = getSupabase();
 
@@ -104,12 +150,14 @@ async function saveDiscord(user, linkKey) {
     {
       link_key: linkKey,
       discord_id: user.id,
-      discord_username: user.username,
-      discord_global_name: user.global_name,
+      discord_username: user.username || null,
+      discord_global_name: user.global_name || null,
       discord_avatar: discordAvatarUrl(user),
       updated_at: new Date().toISOString()
     },
-    { onConflict: "link_key" }
+    {
+      onConflict: "link_key"
+    }
   );
 
   if (error) throw error;
@@ -151,78 +199,114 @@ async function syncRustGroups(linkKey) {
   return true;
 }
 
+async function exchangeCodeForToken(code) {
+  const tokenRes = await fetch("https://discord.com/api/oauth2/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      client_id: process.env.DISCORD_CLIENT_ID,
+      client_secret: process.env.DISCORD_CLIENT_SECRET,
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: DISCORD_CALLBACK_URL
+    })
+  });
+
+  const token = await tokenRes.json();
+
+  if (!tokenRes.ok || !token.access_token) {
+    console.error("[discord] token failed", tokenRes.status, token);
+    return null;
+  }
+
+  return token;
+}
+
+async function getDiscordUser(accessToken) {
+  const userRes = await fetch("https://discord.com/api/users/@me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const user = await userRes.json();
+
+  if (!userRes.ok || !user?.id) {
+    console.error("[discord] user lookup failed", userRes.status, user);
+    return null;
+  }
+
+  return user;
+}
+
 export async function GET(request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
+  const error = url.searchParams.get("error");
   const linkKey = getOrCreateLinkKey(request);
 
-  let linked = false;
-  let user = null;
+  if (error) {
+    console.error("[discord] oauth returned error", error);
+    return redirectHome("failed", null, linkKey);
+  }
+
+  if (!code) {
+    console.error("[discord] missing code");
+    return redirectHome("failed", null, linkKey);
+  }
+
+  if (!process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_CLIENT_SECRET) {
+    console.error("[discord] missing Discord client env vars");
+    return redirectHome("failed", null, linkKey);
+  }
 
   try {
-    if (code && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
-      const tokenRes = await fetch("https://discord.com/api/oauth2/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          client_id: process.env.DISCORD_CLIENT_ID,
-          client_secret: process.env.DISCORD_CLIENT_SECRET,
-          grant_type: "authorization_code",
-          code,
-          redirect_uri: DISCORD_CALLBACK_URL
-        })
-      });
+    const token = await exchangeCodeForToken(code);
 
-      const token = await tokenRes.json();
-
-      if (token.access_token) {
-        const userRes = await fetch("https://discord.com/api/users/@me", {
-          headers: { Authorization: `Bearer ${token.access_token}` }
-        });
-
-        user = await userRes.json();
-
-        await saveDiscord(user, linkKey);
-        await syncRustGroups(linkKey);
-
-        await sendDiscordLog({
-          title: "Discord Account Linked",
-          color: 0x5865f2,
-          thumbnail: { url: discordAvatarUrl(user) },
-          fields: [
-            { name: "Discord Name", value: user.global_name || user.username || "Unknown", inline: true },
-            { name: "Discord Username", value: user.username || "Unknown", inline: true },
-            { name: "Discord ID", value: user.id || "Unknown", inline: false }
-          ],
-          timestamp: new Date().toISOString()
-        });
-
-        linked = Boolean(user.id);
-      } else {
-        console.error("[discord] token failed", token);
-      }
+    if (!token?.access_token) {
+      return redirectHome("failed", null, linkKey);
     }
+
+    const user = await getDiscordUser(token.access_token);
+
+    if (!user?.id) {
+      return redirectHome("failed", null, linkKey);
+    }
+
+    await saveDiscord(user, linkKey);
+    await syncRustGroups(linkKey);
+
+    await sendDiscordLog({
+      title: "Discord Account Linked",
+      color: 0x5865f2,
+      thumbnail: {
+        url: discordAvatarUrl(user)
+      },
+      fields: [
+        {
+          name: "Discord Name",
+          value: user.global_name || user.username || "Unknown",
+          inline: true
+        },
+        {
+          name: "Discord Username",
+          value: user.username || "Unknown",
+          inline: true
+        },
+        {
+          name: "Discord ID",
+          value: user.id || "Unknown",
+          inline: false
+        }
+      ],
+      timestamp: new Date().toISOString()
+    });
+
+    return redirectHome("linked", user, linkKey);
   } catch (err) {
     console.error("[discord] link failed", err);
+    return redirectHome("failed", null, linkKey);
   }
-
-  const redirect = new URL("/", SITE_URL);
-  redirect.searchParams.set("discord", linked ? "linked" : "failed");
-
-  if (linked && user) {
-    redirect.searchParams.set("discord_name", user.global_name || user.username || "Discord User");
-    redirect.searchParams.set("discord_avatar", discordAvatarUrl(user));
-  }
-
-  const response = NextResponse.redirect(redirect);
-
-  response.cookies.set(LINK_COOKIE, linkKey, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30
-  });
-
-  return response;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { servers } from "./data/servers";
 
 const siteUrl = "https://www.btarust.net";
 const tebexStore = "https://btarustnet.tebex.io";
@@ -129,50 +130,6 @@ function Countdown() {
     </Card>
   );
 }
-
-const servers = [
-  {
-    name: "BTARust.net | US | Vanilla+ Monthly",
-    status: "Live Now",
-    rate: "QoL/Loot+",
-    wipe: "Full Wipe",
-    desc: "Vanilla+ monthly Rust experience with QoL improvements, boosted loot progression, no team limits, active moderation, and full monthly wipes.",
-    bm: "https://www.battlemetrics.com/servers/rust/38992245",
-    connect: "steam://connect/216.245.177.18:28015",
-    client: "216.245.177.18:28015"
-  },
-  {
-    name: "BTARust.net | US | 2x Monthly",
-    status: "Coming Soon",
-    rate: "QoL/Loot+ 2x",
-    wipe: "Full Wipe",
-    desc: "Upcoming 2x monthly Rust server with faster progression, QoL improvements, Loot+, no team limits, active moderation, and full monthly wipes."
-  },
-  {
-    name: "BTARust.net | US | 3x Monthly",
-    status: "Live Now",
-    rate: "QoL/Loot+ 3x",
-    wipe: "Full Wipe",
-    desc: "Fast-paced 3x monthly Rust server with boosted loot, QoL systems, no team limits, faster progression, PvP, raiding, and monthly wipes.",
-    bm: "https://www.battlemetrics.com/servers/rust/39147285",
-    connect: "steam://connect/144.48.106.226:28015",
-    client: "144.48.106.226:28015"
-  },
-  {
-    name: "BTARust.net Million X",
-    status: "Coming Soon",
-    rate: "Million X",
-    wipe: "TBD",
-    desc: "Focused PvP and raiding with extreme gather rates, fast progression, and high-action gameplay."
-  },
-  {
-    name: "BTARust.net Creative",
-    status: "Coming Soon",
-    rate: "Creative",
-    wipe: "TBD",
-    desc: "Build-focused creative server for testing bases, practicing designs, experimenting with electrical setups, and planning raid bases."
-  }
-];
 
 const rules = [
   "Team Limit: No Limit",
@@ -441,6 +398,7 @@ function KitModal({ kit, onClose }) {
 export default function Page() {
   const [preview, setPreview] = useState(null);
   const [linked, setLinked] = useState({ steam: true, discord: true });
+  const [serverStatus, setServerStatus] = useState({});
   const steamLogo = "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png";
   const discordLogo = "https://cdn.discordapp.com/embed/avatars/0.png";
 
@@ -476,6 +434,34 @@ export default function Page() {
       discordName: localStorage.getItem("btarust_discord_name") || "Discord User",
       discordAvatar: discordLinked ? localStorage.getItem("btarust_discord_avatar") || discordLogo : discordLogo
     });
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    const refreshServerStatus = async () => {
+      try {
+        const response = await fetch("/api/status/battlemetrics", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Status API returned ${response.status}`);
+        const payload = await response.json();
+
+        if (active) {
+          setServerStatus(
+            Object.fromEntries((payload.servers || []).map((server) => [server.id, server]))
+          );
+        }
+      } catch (error) {
+        console.warn("Unable to refresh server status", error);
+      }
+    };
+
+    refreshServerStatus();
+    const timer = setInterval(refreshServerStatus, 60_000);
+
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
   }, []);
 
   const unlinkAccount = async (type) => {
@@ -550,14 +536,15 @@ export default function Page() {
 
           <Card extra="orangeBorder">
             <p className="eyebrow">Featured Servers</p>
-            <h2 className="h2">Vanilla+ & 3x Monthly</h2>
+            <h2 className="h2">US 3x, EU 3x & Creative</h2>
             <p className="muted">
-              Two live BTARust.net servers featuring QoL improvements, Loot+, no team limits, active moderation, and full monthly wipes.
+              Three live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, plus our official US Creative server.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
-              <Badge>Monthly</Badge>
               <Badge>US</Badge>
+              <Badge>EU</Badge>
+              <Badge>Creative</Badge>
             </div>
           </Card>
         </section>
@@ -570,39 +557,55 @@ export default function Page() {
               <p className="eyebrow">Server Lineup</p>
               <h2 className="h2">Choose your battlefield</h2>
             </div>
-            <p className="muted">Both BTARust.net monthly servers are now live and accepting players.</p>
+            <p className="muted">Choose US or EU 3x monthly gameplay, or build freely on the US Creative server.</p>
           </div>
 
           <div className="grid grid3">
-            {servers.map((server) => (
-              <Card key={server.name} extra="orangeBorder">
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <Badge tone={server.status === "Live Now" ? "green" : "orange"}>{server.status}</Badge>
-                  <Badge>{server.rate}</Badge>
-                </div>
+            {servers.map((server) => {
+              const live = serverStatus[server.id] || {};
+              const isOnline = live.status === "online";
+              const statusLabel = live.status
+                ? live.status.charAt(0).toUpperCase() + live.status.slice(1)
+                : "Checking...";
+              const mapUrl = live.mapUrl || server.mapUrl;
 
-                <h3 className="kitTitle">{server.name}</h3>
-                <p className="muted">{server.desc}</p>
+              return (
+                <Card key={server.id} extra="orangeBorder">
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+                    <Badge tone={isOnline ? "green" : "orange"}>{statusLabel}</Badge>
+                    <Badge>{server.region}</Badge>
+                  </div>
 
-                <div className="actions" style={{marginTop:18}}>
-                  {server.connect && server.status === "Live Now" && (
+                  <h3 className="kitTitle">{server.name}</h3>
+                  <div className="badges">
+                    <Badge>{server.rate}</Badge>
+                    <Badge>QoL/Loot+</Badge>
+                    <Badge>No Team Limit</Badge>
+                    <Badge>{server.wipe}</Badge>
+                  </div>
+                  <p className="muted">{server.description}</p>
+
+                  <div className="muted" style={{display:'grid',gap:6,marginTop:16,fontWeight:700}}>
+                    <span>Players: {live.players ?? "—"} / {live.maxPlayers ?? "—"}</span>
+                    <span>Game: {server.ip}:{server.port}</span>
+                    <span>Query: {server.ip}:{server.queryPort}</span>
+                    <span>Map: {live.map || server.map}</span>
+                  </div>
+
+                  <div className="actions" style={{marginTop:18}}>
                     <a href={server.connect}><Button>Connect to Server</Button></a>
-                  )}
-
-                  {server.client && server.status === "Live Now" && (
-                    <div className="muted" style={{marginTop:12,fontWeight:700}}>
-                      Client Connect: {server.client}
-                    </div>
-                  )}
-
-                  {server.bm && (
-                    <a href={server.bm} target="_blank" rel="noreferrer">
+                    <a href={mapUrl} target="_blank" rel="noreferrer"><Button outline>View Map</Button></a>
+                    <a href={server.battleMetricsUrl} target="_blank" rel="noreferrer">
                       <Button outline>BattleMetrics</Button>
                     </a>
-                  )}
-                </div>
-              </Card>
-            ))}
+                  </div>
+
+                  <div className="muted" style={{marginTop:14,fontWeight:700}}>
+                    Client Connect: {server.client}
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </section>
 

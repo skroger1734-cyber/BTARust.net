@@ -12,6 +12,6 @@
     "rcon-client": "^4.2.5"
   },
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   }
 }

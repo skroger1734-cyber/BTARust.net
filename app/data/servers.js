@@ -47,6 +47,6 @@ export const servers = [
 ].map((server) => ({
   ...server,
   client: `${server.ip}:${server.port}`,
-  connect: `steam://connect/${server.ip}:${server.port}`,
+  connect: `steam://run/252490//+connect%20${server.ip}%3A${server.port}/`,
   battleMetricsUrl: `https://www.battlemetrics.com/servers/rust/${server.battleMetricsId}`
 }));

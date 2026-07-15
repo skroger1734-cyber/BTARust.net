@@ -223,6 +223,16 @@ const rankReference = [
 
 const economySystems = ["Server Rewards / RP", "Economics", "Bank System", "Shop", "Daily Rewards", "BattlePass / Gamepass", "Playtime rewards every 30 minutes", "Faster RP progression for premium ranks"];
 
+const rankRewards = {
+  vip: "1,000 RP • 2,000 Keys • 500 XP",
+  recruit: "2,000 RP • 4,000 Keys • 500 XP",
+  enlistment: "4,000 RP • 8,000 Keys • 1,000 XP",
+  soldier: "6,000 RP • 10,000 Keys • 2,000 XP",
+  officer: "8,000 RP • 15,000 Keys • 3,000 XP",
+  general: "10,000 RP • 20,000 Keys • 4,000 XP",
+  ultimate: "30,000 RP • 40,000 Keys • 10,000 XP"
+};
+
 const kitDetails = {
   "Starter Kit": {
     image: "/kits/starter.png",
@@ -252,7 +262,8 @@ const kitDetails = {
     image: "/kits/viplifetime.png",
     title: "VIP",
     desc: "Monthly VIP kit access with VIP queue skip permissions, unlimited claims per wipe, and a 24 hour cooldown.",
-    items: "Pistol ammo, stone, metal fragments, wood, animal fat, gears, pumpkins, road sign armor, hoodie, pants, boots, tactical gloves, SMG, wooden barricades, medical syringes, bandages, and medkit."
+    items: "Pistol ammo, stone, metal fragments, wood, animal fat, gears, pumpkins, road sign armor, hoodie, pants, boots, tactical gloves, SMG, wooden barricades, medical syringes, bandages, and medkit.",
+    rewards: rankRewards.vip
   },
   "VIP Lifetime": {
     image: "/kits/viplifetime.png",
@@ -260,6 +271,7 @@ const kitDetails = {
     desc: "Lifetime VIP kit access with queue priority, Custom SkinBox, a 12-slot backpack, free-fuel mini access, and unlimited claims with a 24 hour kit cooldown.",
     perks: "Mini: no fuel, 5 minute spawn/fetch cooldown. Backpack: 12 slots. Default defense limits: 12 auto turrets, 12 flame turrets, 6 SAM sites, and 24 shotgun traps.",
     items: "Pistol ammo, stone, metal fragments, wood, animal fat, gears, HQM, pumpkins, road sign armor, hoodie, pants, boots, tactical gloves, rifle, wooden barricades, medical syringes, bandages, and medkit.",
+    rewards: rankRewards.vip,
     packageUrl: "https://btarustnet.tebex.io/package/7439480"
   },
   "Recruit Tier": {
@@ -267,47 +279,56 @@ const kitDetails = {
     title: "Recruit Tier",
     desc: "Recruit progression kit with a 24-slot backpack, free-fuel mini access, increased turret limits, unlimited claims, and a 24 hour kit cooldown.",
     perks: "Mini: no fuel, 5 minute spawn/fetch cooldown. Backpack: 24 slots. Defense limits: 24 auto turrets, 12 flame turrets, 6 SAM sites, and 24 shotgun traps.",
-    items: "Pistol ammo, wood, stone, metal fragments, animal fat, gears, basic tools, burlap/wood armor, P2 pistol, wooden barricades, medical syringes, bandages, and pumpkins."
+    items: "Pistol ammo, wood, stone, metal fragments, animal fat, gears, basic tools, burlap/wood armor, P2 pistol, wooden barricades, medical syringes, bandages, and pumpkins.",
+    rewards: rankRewards.recruit
   },
   "Enlistment Tier": {
     image: "/kits/enlisted.png",
     title: "Enlistment Tier",
     desc: "Enlistment progression kit with better gear, a 24-slot backpack, fast mini access, increased turret limits, unlimited claims, and a 24 hour kit cooldown.",
     perks: "Mini: 100 fuel, 5 minute spawn/fetch cooldown. Backpack: 24 slots. Defense limits: 24 auto turrets, 12 flame turrets, 6 SAM sites, and 24 shotgun traps.",
-    items: "Pistol ammo, wood, stone, metal fragments, animal fat, gears, salvage tools, road sign armor, hoodie, pants, boots, tactical gloves, SMG, barricades, medical syringes, bandages, and pumpkins."
+    items: "Pistol ammo, wood, stone, metal fragments, animal fat, gears, salvage tools, road sign armor, hoodie, pants, boots, tactical gloves, SMG, barricades, medical syringes, bandages, and pumpkins.",
+    rewards: rankRewards.enlistment
   },
   "Soldier Tier": {
     image: "/kits/soldier.png",
     title: "Soldier Tier",
     desc: "Soldier progression kit with mid-game combat support, a 48-slot backpack, unlimited-fuel mini access, expanded defenses, unlimited claims, and a 24 hour kit cooldown.",
     perks: "Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Backpack: 48 slots. Defense limits: 48 auto turrets, 24 flame turrets, 12 SAM sites, and 48 shotgun traps.",
-    items: "Wood, stone, metal fragments, animal fat, HQM, gears, salvage tools, pistol ammo, rifle ammo, road sign armor, hoodie, pants, boots, tactical gloves, rifle, barricades, medical syringes, medkits, bandages, and pumpkins."
+    items: "Wood, stone, metal fragments, animal fat, HQM, gears, salvage tools, pistol ammo, rifle ammo, road sign armor, hoodie, pants, boots, tactical gloves, rifle, barricades, medical syringes, medkits, bandages, and pumpkins.",
+    rewards: rankRewards.soldier
   },
   "Officer Tier": {
     image: "/kits/officer.png",
     title: "Officer Tier",
-    desc: "Tier 3 workbench access with premium mid-late wipe support, unlimited claims per wipe, and a 24 hour cooldown.",
-    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag."
+    desc: "Tier 3 workbench access with Instant Craft, the best RP and Skill progression, Elite Battle Pass, premium mid-late wipe support, unlimited claims per wipe, and a 24 hour cooldown.",
+    perks: "Instant Craft, best RP progression, best Skill progression, and Elite Battle Pass.",
+    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag.",
+    rewards: rankRewards.officer
   },
   "Officer Tier Lifetime": {
     image: "/kits/officer.png",
     title: "Officer Tier Lifetime",
-    desc: "Permanent Officer access with Tier 3 support, a 48-slot backpack, unlimited-fuel mini and Scrap Transport Helicopter access, unlimited defenses, unlimited claims, and a 24 hour kit cooldown.",
-    perks: "Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Scrap heli: unlimited fuel, 1 hour spawn/fetch cooldown. Backpack: 48 slots. Auto turrets, flame turrets, SAM sites, and shotgun traps: unlimited.",
-    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag."
+    desc: "Permanent Officer access with Instant Craft, the best RP and Skill progression, Elite Battle Pass, Tier 3 support, a 48-slot backpack, unlimited-fuel mini and Scrap Transport Helicopter access, unlimited defenses, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Instant Craft, best RP progression, best Skill progression, and Elite Battle Pass. Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Scrap heli: unlimited fuel, 1 hour spawn/fetch cooldown. Backpack: 48 slots. Auto turrets, flame turrets, SAM sites, and shotgun traps: unlimited.",
+    items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag.",
+    rewards: rankRewards.officer
   },
   "General Tier": {
     image: "/kits/general.png",
     title: "General Tier",
-    desc: "Top-tier monthly progression kit with massive resource support, premium gear and utility access, unlimited claims per wipe, and a 24 hour cooldown.",
-    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, airdrops, and pumpkins."
+    desc: "Top-tier monthly progression kit with Instant Craft, the best RP and Skill progression, Elite Battle Pass, massive resource support, premium gear and utility access, unlimited claims per wipe, and a 24 hour cooldown.",
+    perks: "Instant Craft, best RP progression, best Skill progression, and Elite Battle Pass.",
+    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, barricades, airdrops, and pumpkins.",
+    rewards: rankRewards.general
   },
   "General Tier Lifetime": {
     image: "/kits/general.png",
     title: "General Tier Lifetime",
-    desc: "Permanent top-tier access with a 48-slot backpack, unlimited-fuel mini, Scrap Transport and Attack Helicopter access, unlimited defenses, premium utility permissions, unlimited claims, and a 24 hour kit cooldown.",
-    perks: "Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Scrap and attack helis: unlimited fuel, 1 hour spawn/fetch cooldown. Backpack: 48 slots. Auto turrets, flame turrets, SAM sites, and shotgun traps: unlimited.",
-    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, airdrops, and pumpkins."
+    desc: "Permanent top-tier access with Instant Craft, the best RP and Skill progression, Elite Battle Pass, a 48-slot backpack, unlimited-fuel mini, Scrap Transport and Attack Helicopter access, unlimited defenses, premium utility permissions, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Instant Craft, best RP progression, best Skill progression, and Elite Battle Pass. Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Scrap and attack helis: unlimited fuel, 1 hour spawn/fetch cooldown. Backpack: 48 slots. Auto turrets, flame turrets, SAM sites, and shotgun traps: unlimited.",
+    items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, barricades, airdrops, and pumpkins.",
+    rewards: rankRewards.general
   },
   "Builder Kit": {
     image: "/kits/builder.png",
@@ -350,6 +371,7 @@ const lifetimeKits = [
     cooldown: "24 Hr",
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
+    rewards: rankRewards.ultimate,
     packageUrl: "https://btarustnet.tebex.io/package/7439471"
   },
   {
@@ -359,6 +381,7 @@ const lifetimeKits = [
     cooldown: "24 Hr",
     backpack: "12 Slots",
     bundle: "Permanent VIP Kit & Permissions",
+    rewards: rankRewards.vip,
     packageUrl: "https://btarustnet.tebex.io/package/7439459"
   }
 ];
@@ -370,6 +393,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "General Tier Lifetime",
     cooldown: "24 Hr",
     backpack: "48 Slots",
+    rewards: rankRewards.general,
     packageUrl: "https://btarustnet.tebex.io/package/7439470"
   },
   {
@@ -378,6 +402,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Officer Tier Lifetime",
     cooldown: "24 Hr",
     backpack: "48 Slots",
+    rewards: rankRewards.officer,
     packageUrl: "https://btarustnet.tebex.io/package/7486542"
   },
   {
@@ -386,6 +411,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Soldier Tier",
     cooldown: "24 Hr",
     backpack: "48 Slots",
+    rewards: rankRewards.soldier,
     packageUrl: "https://btarustnet.tebex.io/package/7439466"
   },
   {
@@ -394,6 +420,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Enlistment Tier",
     cooldown: "24 Hr",
     backpack: "24 Slots",
+    rewards: rankRewards.enlistment,
     packageUrl: "https://btarustnet.tebex.io/package/7439464"
   },
   {
@@ -402,6 +429,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "Recruit Tier",
     cooldown: "24 Hr",
     backpack: "24 Slots",
+    rewards: rankRewards.recruit,
     packageUrl: "https://btarustnet.tebex.io/package/7439462"
   },
   {
@@ -410,6 +438,7 @@ const buildYourOwnLifetimeKits = [
     detailsKey: "VIP Lifetime",
     cooldown: "24 Hr",
     backpack: "No Permission Bundle",
+    rewards: rankRewards.vip,
     packageUrl: "https://btarustnet.tebex.io/package/7439458"
   },
   {
@@ -462,6 +491,7 @@ function getKitDetails(title) {
       desc: "The complete BTARust.net lifetime collection: every kit shown below except the Discord Booster Kit, which remains exclusive to active Discord server boosters.",
       items: includedKeys.map((key) => kitDetails[key].title).join(", "),
       perks: "Includes the kit contents and applicable rank permissions shown for every included package. Discord Booster rewards are not included.",
+      rewards: rankRewards.ultimate,
       bundleKits: includedKeys.map((key) => kitDetails[key])
     };
   }
@@ -538,6 +568,12 @@ function KitModal({ kit, onClose }) {
               <div className="modalBox">
                 <h3>QoL & Permissions</h3>
                 <p>{kit.perks}</p>
+              </div>
+            )}
+            {kit.rewards && (
+              <div className="modalBox">
+                <h3>Package Extras</h3>
+                <p>{kit.rewards}</p>
               </div>
             )}
           </div>
@@ -816,7 +852,7 @@ export default function Page({ initialView = "home" }) {
                   </div>
 
                   <div className="muted" style={{marginTop:14,fontWeight:700}}>
-                    Client Connect: {server.client}
+                    F1 fallback: connect {server.client}
                   </div>
                 </Card>
               );
@@ -987,6 +1023,7 @@ export default function Page({ initialView = "home" }) {
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   {kit.backpack && <Badge>{kit.backpack}</Badge>}
                   <Badge tone="green">{kit.bundle}</Badge>
+                  {kit.rewards && <Badge tone="orange">{kit.rewards}</Badge>}
                   <Badge>Steam Linked</Badge>
                   <Badge>Discord Linked</Badge>
                 </div>
@@ -1012,6 +1049,7 @@ export default function Page({ initialView = "home" }) {
                 <div className="badges">
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   {kit.backpack && <Badge>{kit.backpack}</Badge>}
+                  {kit.rewards && <Badge tone="orange">{kit.rewards}</Badge>}
                   <Badge>Steam Linked</Badge>
                   <Badge>Discord Linked</Badge>
                 </div>

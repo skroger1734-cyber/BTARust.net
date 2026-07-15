@@ -5,7 +5,7 @@ import { servers } from "./data/servers";
 
 const siteUrl = "https://www.btarust.net";
 const tebexStore = "https://btarustnet.tebex.io";
-const discordInvite = "https://discord.gg/bXGd4SGEw2";
+const discordInvite = "https://discord.gg/HhrxErrDXg";
 
 function Button({ children, outline = false, onClick }) {
   return (
@@ -1160,7 +1160,7 @@ export default function Page({ initialView = "home" }) {
                   <div className="commandList">
                     <a className="commandLine" href="https://www.btarust.net/">Website — btarust.net</a>
                     <a className="commandLine" href={tebexStore} target="_blank" rel="noreferrer">Store — Tebex</a>
-                    <a className="commandLine" href="https://discord.gg/HhrxErrDXg" target="_blank" rel="noreferrer">Discord — Join the community</a>
+                    <a className="commandLine" href={discordInvite} target="_blank" rel="noreferrer">Discord — Join the community</a>
                     <a className="commandLine" href="https://x.com/BTARustOfficial" target="_blank" rel="noreferrer">X / Twitter — @BTARustOfficial</a>
                   </div>
                 </Card>

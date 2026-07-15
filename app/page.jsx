@@ -141,6 +141,77 @@ const rules = [
   "If one member of a team/clan disables wipe protection early to participate in raiding, all active team/clan members must also have protection disabled."
 ];
 
+const navigationPages = [
+  { key: "servers", href: "/servers", title: "Servers", icon: "🌎", desc: "Live status, player counts, maps, BattleMetrics, and direct connect links." },
+  { key: "account-linking", href: "/account-linking", title: "Account Linking", icon: "🔗", desc: "Connect Steam and Discord so purchases, kits, roles, and rewards sync correctly." },
+  { key: "lifetime-kits", href: "/lifetime-kits", title: "Lifetime Kits", icon: "👑", desc: "Compare package contents, rank permissions, cooldowns, backpacks, and lifetime bundles." },
+  { key: "rules", href: "/rules", title: "Rules", icon: "🛡️", desc: "Read the community, gameplay, wipe protection, and fair-play rules before joining." },
+  { key: "info", href: "/info", title: "QoL & Commands", icon: "⚡", desc: "Browse free QoL perks, events, premium perks, vehicles, limits, and in-game commands." }
+];
+
+const pageMeta = {
+  servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Creative server information from the network source of truth."],
+  "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
+  "lifetime-kits": ["Kits & Packages", "Know exactly what every package includes", "Compare free account-linked kits, the earned Discord Booster reward, individual lifetime kits, and the Ultimate bundle."],
+  rules: ["Server Rules", "Simple rules. Better wipes.", "These rules apply across the BTARust.net network unless a server-specific notice says otherwise."],
+  info: ["Player Guide", "QoL, perks, commands, and server info", "Everything players need after joining: protection, events, vehicles, ranks, limits, economy, and useful commands."]
+};
+
+const qolGroups = [
+  {
+    title: "Free Quality-of-Life Perks",
+    items: [
+      "First 24-hour wipe protection",
+      "Offline raid protection begins after the solo player—or the entire team/clan—has been offline for 30 minutes; active raid damage is reduced to 25%",
+      "Free 2-seat mini copter with no fuel, 1 hour spawn cooldown, and 1 hour fetch cooldown",
+      "Simple Symmetry building with planner UI, mirrored layouts, and normal material costs",
+      "Healthy/improved loot, custom events, Raidable Bases, Easy Sailing, and Vote Skip Night",
+      "60-minute days and 10-minute nights",
+      "TC-range workbenches, blueprint sharing, car radio, remove tool, box stacking, and object stacking",
+      "Clans, friends, stats, playtime tracking, and a server menu with Economy, RP, and Bank balances"
+    ]
+  },
+  {
+    title: "Events & PvE Content",
+    items: [
+      "Raidable Bases, Airfield Event, Armored Train, Cargo Plane Crash, Convoy, Harbor Event, and Launch Site Helipad Event",
+      "Shipwreck, NPC events, custom NPC presets, monument additions, and custom monument content",
+      "Raid markers, event notifications, cases, trader systems, skills, BattlePass, Daily Rewards, and playtime rewards",
+      "Ultimate Leaderboard, map voting, and wipe calendar"
+    ]
+  },
+  {
+    title: "Premium Perks",
+    items: [
+      "VIP queue priority, BTA Custom SkinBox, improved BattlePass/Daily Rewards, and faster RP progression",
+      "Furnace Splitter, backpack access, increased turret/defense limits, and vehicle spawning upgrades",
+      "Auto electrical branches, team/clan/friend authorization, auto door codes, and inventory sorting",
+      "Instant crafting for Officer and General, plus building grade tools",
+      "Premium kit groups: Builder, Electrical, Farm, Discord Booster, VIP, Recruit, Enlistment, Soldier, Officer, General, and Ultimate (all except Discord Booster)"
+    ]
+  }
+];
+
+const commandGroups = [
+  { title: "Start Here", commands: ["/info — server menu and quick help", "/help — basic help", "/kit — available kits", "/rules — server rules", "/store — store and perks", "/discord — Discord linking help", "/dc — generate a Discord linking code", "/wipe or /wipedata — wipe schedule", "/stats — player stats", "/playtime — view playtime", "/clan — clan system", "/remove — remove owned structures/entities", "/shop — shop, where available", "/vote — vote rewards", "/claim — claim vote rewards", "/rewardlist — vote reward list"] },
+  { title: "Wipe Protection", commands: ["/bta — wipe protection info", "/protection — protection status", "/protectionoff — disable protection early", "/wipeprotection or /wp — protection info/status"] },
+  { title: "Premium & QoL", commands: ["/skins, /skin, /skinbox — SkinBox", "/backpack or /bp — backpack", "/up and /upall — building upgrades", "/bgrade or /grade — building grade tool", "/code 1234 — auto-apply code locks", "/fs — Furnace Splitter", "/bs — Blueprint Share", "/btawb — TC workbench", "/togglecarradio — car radio", "/sym — Simple Symmetry"] },
+  { title: "Vehicles", commands: ["/mymini, /fmini, /nomini — Mini Copter", "/myheli, /fheli, /noheli — Scrap Transport Helicopter", "/myattack, /fattack, /noattack — Attack Helicopter"] }
+];
+
+const rankReference = [
+  "Default: mini has no fuel with 1 hour spawn/fetch cooldown; no backpack",
+  "VIP: mini has no fuel with 5 minute spawn/fetch cooldown; 12-slot backpack",
+  "Recruit: mini has no fuel with 5 minute spawn/fetch cooldown; 24-slot backpack",
+  "Enlistment: mini starts with 100 fuel and 5 minute spawn/fetch cooldown; 24-slot backpack",
+  "Soldier: unlimited-fuel mini with 5 minute spawn/fetch cooldown; 48-slot backpack",
+  "Officer: unlimited-fuel mini (5 minutes) and Scrap Heli (1 hour); 48-slot backpack; unlimited defenses",
+  "General: Officer vehicles plus unlimited-fuel Attack Heli (1 hour); 48-slot backpack; unlimited defenses",
+  "Backpack body bags despawn after 30 minutes"
+];
+
+const economySystems = ["Server Rewards / RP", "Economics", "Bank System", "Shop", "Daily Rewards", "BattlePass / Gamepass", "Playtime rewards every 30 minutes", "Faster RP progression for premium ranks"];
+
 const kitDetails = {
   "Starter Kit": {
     image: "/kits/starter.png",
@@ -163,7 +234,7 @@ const kitDetails = {
   "Discord Booster Kit": {
     image: "/kits/discord-booster.png",
     title: "Discord Booster Kit",
-    desc: "Reward kit for players who boost the BTARust.net Discord server. Includes 5 claims and a 1 hour cooldown.",
+    desc: "Earned reward for players with an active boost on the BTARust.net Discord server. This is not a free kit. Includes 5 claims and a 1 hour cooldown.",
     items: "MP5, pistol ammo, jackhammer, chainsaw, low grade fuel, supply signal, road sign armor set, hoodie, pants, boots, tactical gloves, backpack, medical syringes, bandages, medkit, and wooden barricade cover."
   },
   "VIP": {
@@ -175,26 +246,30 @@ const kitDetails = {
   "VIP Lifetime": {
     image: "/kits/viplifetime.png",
     title: "VIP Lifetime",
-    desc: "Lifetime VIP kit access with VIP queue skip permissions, unlimited claims per wipe, and a 24 hour cooldown.",
+    desc: "Lifetime VIP kit access with queue priority, Custom SkinBox, a 12-slot backpack, free-fuel mini access, and unlimited claims with a 24 hour kit cooldown.",
+    perks: "Mini: no fuel, 5 minute spawn/fetch cooldown. Backpack: 12 slots. Default defense limits: 12 auto turrets, 12 flame turrets, 6 SAM sites, and 24 shotgun traps.",
     items: "Pistol ammo, stone, metal fragments, wood, animal fat, gears, HQM, pumpkins, road sign armor, hoodie, pants, boots, tactical gloves, rifle, wooden barricades, medical syringes, bandages, and medkit.",
     packageUrl: "https://btarustnet.tebex.io/package/7439480"
   },
   "Recruit Tier": {
     image: "/kits/recruit.png",
     title: "Recruit Tier",
-    desc: "Basic recruit loadout for early wipe progression with unlimited claims per wipe and a 24 hour cooldown.",
+    desc: "Recruit progression kit with a 24-slot backpack, free-fuel mini access, increased turret limits, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Mini: no fuel, 5 minute spawn/fetch cooldown. Backpack: 24 slots. Defense limits: 24 auto turrets, 12 flame turrets, 6 SAM sites, and 24 shotgun traps.",
     items: "Pistol ammo, wood, stone, metal fragments, animal fat, gears, basic tools, burlap/wood armor, P2 pistol, wooden barricades, medical syringes, bandages, and pumpkins."
   },
   "Enlistment Tier": {
     image: "/kits/enlisted.png",
     title: "Enlistment Tier",
-    desc: "Improved mid-early wipe progression kit with better gear, basic and advanced fragments, unlimited claims per wipe, and a 24 hour cooldown.",
+    desc: "Enlistment progression kit with better gear, a 24-slot backpack, fast mini access, increased turret limits, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Mini: 100 fuel, 5 minute spawn/fetch cooldown. Backpack: 24 slots. Defense limits: 24 auto turrets, 12 flame turrets, 6 SAM sites, and 24 shotgun traps.",
     items: "Pistol ammo, wood, stone, metal fragments, animal fat, gears, salvage tools, road sign armor, hoodie, pants, boots, tactical gloves, SMG, barricades, medical syringes, bandages, and pumpkins."
   },
   "Soldier Tier": {
     image: "/kits/soldier.png",
     title: "Soldier Tier",
-    desc: "Tier 2 progression access with mid-game combat support, advanced fragments, unlimited claims per wipe, and a 24 hour cooldown.",
+    desc: "Soldier progression kit with mid-game combat support, a 48-slot backpack, unlimited-fuel mini access, expanded defenses, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Backpack: 48 slots. Defense limits: 48 auto turrets, 24 flame turrets, 12 SAM sites, and 48 shotgun traps.",
     items: "Wood, stone, metal fragments, animal fat, HQM, gears, salvage tools, pistol ammo, rifle ammo, road sign armor, hoodie, pants, boots, tactical gloves, rifle, barricades, medical syringes, medkits, bandages, and pumpkins."
   },
   "Officer Tier": {
@@ -206,7 +281,8 @@ const kitDetails = {
   "Officer Tier Lifetime": {
     image: "/kits/officer.png",
     title: "Officer Tier Lifetime",
-    desc: "Permanent Officer access bundled with the Builder Kit. Includes Tier 3 workbench support, premium mid-late wipe resources, unlimited claims per wipe, and a 24 hour cooldown.",
+    desc: "Permanent Officer access with Tier 3 support, a 48-slot backpack, unlimited-fuel mini and Scrap Transport Helicopter access, unlimited defenses, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Scrap heli: unlimited fuel, 1 hour spawn/fetch cooldown. Backpack: 48 slots. Auto turrets, flame turrets, SAM sites, and shotgun traps: unlimited.",
     items: "Rifle ammo, wood, stone, metal fragments, animal fat, gears, HQM, weapon components, chainsaw, jackhammer, low grade fuel, cloth, coffins, armor, assault rifle, medical syringes, pumpkins, airdrops, and loot bag."
   },
   "General Tier": {
@@ -218,7 +294,8 @@ const kitDetails = {
   "General Tier Lifetime": {
     image: "/kits/general.png",
     title: "General Tier Lifetime",
-    desc: "Permanent top-tier access bundled with Builder, Electrical, and Farm kits. Includes massive resource support, premium gear and utility access, unlimited claims per wipe, and a 24 hour cooldown.",
+    desc: "Permanent top-tier access with a 48-slot backpack, unlimited-fuel mini, Scrap Transport and Attack Helicopter access, unlimited defenses, premium utility permissions, unlimited claims, and a 24 hour kit cooldown.",
+    perks: "Mini: unlimited fuel, 5 minute spawn/fetch cooldown. Scrap and attack helis: unlimited fuel, 1 hour spawn/fetch cooldown. Backpack: 48 slots. Auto turrets, flame turrets, SAM sites, and shotgun traps: unlimited.",
     items: "Rifle ammo, full metal gear, hoodie, pants, boots, tactical gloves, wood, stone, metal fragments, animal fat, gears, HQM, coffins, cloth, chainsaws, jackhammers, low grade fuel, weapon components, assault rifles, medical syringes, medkits, supply crates, barricades, airdrops, and pumpkins."
   },
   "Builder Kit": {
@@ -244,15 +321,21 @@ const kitDetails = {
 const freeKits = [
   { icon: "🎒", title: "Starter Kit", badges: ["Steam Required", "3 Claims", "1 Hr Cooldown"], desc: kitDetails["Starter Kit"].desc },
   { icon: "🍖", title: "Food Kit", badges: ["Steam Required", "Unlimited", "30 Min Cooldown"], desc: kitDetails["Food Kit"].desc },
-  { icon: "💬", title: "Discord Kit", badges: ["Discord Required", "3 Claims", "5 Min Cooldown"], desc: kitDetails["Discord Kit"].desc },
-  { icon: "🚀", title: "Discord Booster Kit", badges: ["Booster Required", "5 Claims", "1 Hr Cooldown"], desc: kitDetails["Discord Booster Kit"].desc }
+  { icon: "💬", title: "Discord Kit", badges: ["Discord Required", "3 Claims", "5 Min Cooldown"], desc: kitDetails["Discord Kit"].desc }
 ];
+
+const discordBoosterKit = {
+  icon: "🚀",
+  title: "Discord Booster Kit",
+  badges: ["Active Server Boost Required", "5 Claims", "1 Hr Cooldown"],
+  desc: kitDetails["Discord Booster Kit"].desc
+};
 
 const lifetimeKits = [
   {
     icon: "👑",
     title: "ULTIMATE Lifetime Bundle",
-    detailsKey: "General Tier Lifetime",
+    detailsKey: "ULTIMATE Lifetime Bundle",
     cooldown: "24 Hr",
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
@@ -347,6 +430,31 @@ function getPackageUrl(kit) {
 }
 
 function getKitDetails(title) {
+  if (title === "ULTIMATE Lifetime Bundle") {
+    const includedKeys = [
+      "Starter Kit",
+      "Food Kit",
+      "Discord Kit",
+      "VIP Lifetime",
+      "Recruit Tier",
+      "Enlistment Tier",
+      "Soldier Tier",
+      "Officer Tier Lifetime",
+      "General Tier Lifetime",
+      "Builder Kit",
+      "Electrical Kit",
+      "Farm Kit"
+    ];
+
+    return {
+      title: "ULTIMATE Lifetime Bundle",
+      desc: "The complete BTARust.net lifetime collection: every kit shown below except the Discord Booster Kit, which remains exclusive to active Discord server boosters.",
+      items: includedKeys.map((key) => kitDetails[key].title).join(", "),
+      perks: "Includes the kit contents and applicable rank permissions shown for every included package. Discord Booster rewards are not included.",
+      bundleKits: includedKeys.map((key) => kitDetails[key])
+    };
+  }
+
   const aliases = {
     "VIP Queue Skip": "VIP",
     "VIP Queue Skip Lifetime": "VIP Lifetime",
@@ -361,7 +469,6 @@ function getKitDetails(title) {
     "Officer Lifetime Kit": "Officer Tier",
     "General Lifetime": "General Tier",
     "General Lifetime Kit": "General Tier",
-    "ULTIMATE Lifetime Bundle": "General Tier",
     "Build Your Own Lifetime Bundle": "General Tier",
     "Farm Lifetime Kit": "Farm Kit",
     "Electrical Lifetime Kit": "Electrical Kit",
@@ -372,22 +479,56 @@ function getKitDetails(title) {
 }
 
 function KitModal({ kit, onClose }) {
+  useEffect(() => {
+    if (!kit) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [kit, onClose]);
+
   if (!kit) return null;
 
   return (
-    <div className="modal">
-      <div className="modalInner kitModalInner">
-        <button className="close" onClick={onClose}>✕ Close</button>
-        <div className="modalGrid">
-          <img src={kit.image} alt={`${kit.title} preview`} className="kitImg" />
+    <div className="modal" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div className="modalInner kitModalInner" role="dialog" aria-modal="true" aria-labelledby="kit-modal-title">
+        <button className="close" onClick={onClose} autoFocus>✕ Close</button>
+        <div className={`modalGrid ${kit.bundleKits ? "bundleModalGrid" : ""}`}>
+          {kit.bundleKits ? (
+            <div className="bundleGallery">
+              {kit.bundleKits.map((includedKit) => (
+                <figure className="bundleKit" key={includedKit.title}>
+                  <img src={includedKit.image} alt={`${includedKit.title} preview`} />
+                  <figcaption>{includedKit.title}</figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : (
+            <img src={kit.image} alt={`${kit.title} preview`} className="kitImg" />
+          )}
           <div className="modalCopy">
             <p className="eyebrow">Kit Preview</p>
-            <h2 className="h2">{kit.title}</h2>
+            <h2 className="h2" id="kit-modal-title">{kit.title}</h2>
             <p className="muted">{kit.desc}</p>
             <div className="modalBox">
-              <h3>Items Provided</h3>
+              <h3>{kit.bundleKits ? "Included Kits" : "Items Provided"}</h3>
               <p>{kit.items}</p>
             </div>
+            {kit.perks && (
+              <div className="modalBox">
+                <h3>QoL & Permissions</h3>
+                <p>{kit.perks}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -395,10 +536,11 @@ function KitModal({ kit, onClose }) {
   );
 }
 
-export default function Page() {
+export default function Page({ initialView = "home" }) {
   const [preview, setPreview] = useState(null);
   const [linked, setLinked] = useState({ steam: true, discord: true });
   const [serverStatus, setServerStatus] = useState({});
+  const activeMeta = pageMeta[initialView];
   const steamLogo = "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png";
   const discordLogo = "https://cdn.discordapp.com/embed/avatars/0.png";
 
@@ -492,11 +634,11 @@ export default function Page() {
   return (
     <>
       <style>{`
-        *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#09090b;color:#f4f4f5;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background-image:linear-gradient(180deg,rgba(0,0,0,.72),rgba(9,9,11,.96) 55%,#09090b 100%),url('/BTARust_HeroImage_Optimized.jpg');background-size:cover;background-position:top center;background-attachment:fixed;background-repeat:no-repeat}a{color:inherit;text-decoration:none}.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at top left,rgba(249,115,22,.22),transparent 34%),radial-gradient(circle at top right,rgba(185,28,28,.18),transparent 30%),linear-gradient(180deg,rgba(0,0,0,.18),#09090b 82%);pointer-events:none}.container{max-width:1280px;margin:0 auto;padding:0 24px}.header{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;gap:20px;position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(9,9,11,.92),rgba(9,9,11,.62));backdrop-filter:blur(14px);border-bottom:1px solid rgba(249,115,22,.12)}.brand{display:flex;align-items:center;gap:14px}.brand img{width:52px;height:52px;border-radius:16px;border:1px solid rgba(249,115,22,.35);transition:.25s ease}.brand:hover img{transform:rotate(-2deg) scale(1.06);box-shadow:0 0 26px rgba(249,115,22,.35)}.nav{display:flex;gap:22px;color:#d4d4d8;font-size:14px}.nav a{position:relative;transition:.25s ease}.nav a:hover{color:#fb923c}.nav a:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:#fb923c;transform:scaleX(0);transform-origin:left;transition:.25s ease}.nav a:hover:after{transform:scaleX(1)}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;border-radius:18px;padding:12px 18px;font-weight:900;border:0;cursor:pointer;background:linear-gradient(135deg,#f97316,#ea580c 55%,#c2410c);color:white;box-shadow:0 12px 28px rgba(124,45,18,.35),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 42px rgba(249,115,22,.35),0 0 22px rgba(249,115,22,.25);filter:saturate(1.15)}.btn:active{transform:translateY(0) scale(.98)}.btn.outline{background:rgba(9,9,11,.68);border:1px solid rgba(255,255,255,.18);color:#fafafa;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.btn.outline:hover{border-color:rgba(249,115,22,.7);box-shadow:0 0 30px rgba(249,115,22,.18),inset 0 1px 0 rgba(255,255,255,.08)}.btnShine{position:absolute;inset:-40% auto -40% -70%;width:60%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .55s ease}.btn:hover .btnShine{left:125%}.btnText{position:relative;z-index:1}.hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding-top:70px;padding-bottom:70px;animation:fadeUp .7s ease both}.logo{width:210px;height:210px;border-radius:28px;border:1px solid rgba(249,115,22,.35);object-fit:cover;box-shadow:0 25px 80px rgba(0,0,0,.45);animation:floatLogo 4.5s ease-in-out infinite}.pill{display:inline-flex;padding:8px 14px;border:1px solid rgba(249,115,22,.35);border-radius:999px;background:rgba(124,45,18,.25);color:#fed7aa;font-size:14px;margin:20px 0}.h1{font-size:64px;line-height:1;letter-spacing:-.04em;margin:0;font-weight:1000;text-shadow:0 8px 34px rgba(0,0,0,.55)}.orange{color:#fb923c;text-shadow:0 0 22px rgba(249,115,22,.22)}.card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,rgba(15,15,18,.86),rgba(8,8,10,.74));border-radius:28px;box-shadow:0 25px 70px rgba(0,0,0,.35);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(249,115,22,.08),transparent);opacity:0;transition:.25s ease;pointer-events:none}.card:hover{transform:translateY(-6px);border-color:rgba(249,115,22,.45);box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 30px rgba(249,115,22,.12)}.card:hover:before{opacity:1}.card.orangeBorder{border-color:rgba(249,115,22,.45)}.pad{padding:26px;position:relative;z-index:1}.section{padding:56px 0;animation:fadeUp .7s ease both}.sectionHead{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:#fdba74;font-weight:900}.h2{font-size:40px;line-height:1.05;margin:10px 0 0;font-weight:1000;letter-spacing:-.03em}.muted{color:#a1a1aa;line-height:1.65}.grid{display:grid;gap:20px}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.badge{display:inline-flex;border-radius:999px;background:rgba(24,24,27,.88);padding:6px 10px;font-size:12px;font-weight:900;color:#d4d4d8;border:1px solid rgba(255,255,255,.06);transition:.22s ease}.badge:hover{transform:translateY(-1px);border-color:rgba(249,115,22,.35)}.badge.green{background:rgba(16,185,129,.16);color:#86efac;border-color:rgba(16,185,129,.22)}.badge.orange{background:rgba(249,115,22,.16);color:#fdba74;border:1px solid rgba(249,115,22,.25)}.kitIcon{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(249,115,22,.28),rgba(124,45,18,.22));display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:.25s ease}.card:hover .kitIcon{transform:scale(1.08) rotate(-3deg);box-shadow:0 0 28px rgba(249,115,22,.18)}.kitTitle{font-size:26px;margin:20px 0 8px;font-weight:1000}.badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.kitImg{width:100%;max-width:100%;border-radius:20px;border:1px solid #3f3f46;background:#09090b;object-fit:contain}.countdownLayout{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;align-items:center}.countdownCard .pad{padding:30px}.count{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}.count div{background:rgba(24,24,27,.78);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:18px;text-align:center;transition:.25s ease}.count div:hover{transform:translateY(-4px);border-color:rgba(249,115,22,.45)}.count strong{display:block;color:#fdba74;font-size:38px;text-shadow:0 0 18px rgba(249,115,22,.28)}.hourglassPanel{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;border:1px solid rgba(249,115,22,.22);border-radius:24px;background:radial-gradient(circle at top,rgba(249,115,22,.16),rgba(9,9,11,.55));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.hourglassTitle{font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#fdba74;font-size:12px;margin-bottom:12px}.hourglass{position:relative;width:96px;height:158px;filter:drop-shadow(0 0 18px rgba(249,115,22,.22))}.hgCap{position:absolute;left:7px;width:82px;height:12px;border-radius:999px;background:linear-gradient(90deg,#78350f,#fdba74,#78350f);box-shadow:0 0 12px rgba(249,115,22,.25)}.hgCap.top{top:0}.hgCap.bottom{bottom:0}.hgGlass{position:absolute;top:14px;bottom:14px;left:17px;right:17px;border:3px solid rgba(253,186,116,.78);border-radius:18px;overflow:hidden;clip-path:polygon(0 0,100% 0,58% 50%,100% 100%,0 100%,42% 50%);background:rgba(255,255,255,.04)}.hgTopSand{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,#fde68a,#f97316);transition:height .9s linear;opacity:.9}.hgBottomSand{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,#fde68a,#f97316);transition:height .9s linear;opacity:.95}.hgStream{position:absolute;left:50%;top:44%;width:4px;height:28px;border-radius:999px;background:#fde68a;transform:translateX(-50%);animation:sandStream 1s linear infinite;box-shadow:0 0 10px rgba(253,230,138,.8)}.hourglassPercent{margin-top:12px;color:#a1a1aa;font-weight:800;font-size:12px;text-align:center}.card:hover .hourglass{animation:hourglassTilt 1.8s ease-in-out infinite}@keyframes sandStream{0%{opacity:.25;transform:translateX(-50%) translateY(-4px)}50%{opacity:1}100%{opacity:.25;transform:translateX(-50%) translateY(8px)}}@keyframes hourglassTilt{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}.modalInner{position:relative;max-width:1100px;max-height:92vh;overflow:auto;background:#09090b;border:1px solid rgba(249,115,22,.35);border-radius:24px;padding:18px}.kitModalInner{max-width:1200px}.close{position:absolute;right:16px;top:16px;background:#ef4444;color:white;border:0;border-radius:12px;padding:10px 14px;font-weight:900;z-index:5;cursor:pointer;transition:.22s ease}.close:hover{transform:translateY(-2px);box-shadow:0 0 22px rgba(239,68,68,.35)}.modalGrid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:start;padding-top:48px}.modalCopy{padding:8px 6px}.modalBox{margin-top:20px;border:1px solid #27272a;background:rgba(24,24,27,.75);border-radius:20px;padding:18px}.modalBox h3{margin:0 0 10px;color:#fdba74}.modalBox p{margin:0;color:#d4d4d8;line-height:1.65}.footer{text-align:center;color:#a1a1aa;padding:50px 0;border-top:1px solid #27272a}.rules{grid-template-columns:repeat(2,1fr)}.rule{background:rgba(24,24,27,.72);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;transition:.22s ease}.rule:hover{transform:translateX(4px);border-color:rgba(249,115,22,.35);background:rgba(24,24,27,.88)}@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes floatLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@media(max-width:900px){.countdownLayout{grid-template-columns:1fr}.hourglassPanel{min-height:220px}body{background-attachment:scroll;overflow-x:hidden}.container{width:100%;max-width:100%;padding:0 16px}.hero,.grid3,.grid4,.rules,.modalGrid,.linkGrid{grid-template-columns:1fr!important}.nav{display:none}.h1{font-size:40px;line-height:1.05;letter-spacing:-.035em}.h2{font-size:30px;line-height:1.1}.sectionHead{display:block}.header{align-items:flex-start;flex-direction:column;padding:18px 16px}.header.container{padding-left:16px;padding-right:16px}.brand{width:100%;align-items:center}.brand img{width:62px;height:62px}.actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions a,.actions button,.btn{width:100%;min-width:0}.badges{max-width:100%}.header>.actions>.badges{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:10px}.header>.actions{grid-template-columns:1fr 1fr}.hero{gap:28px;padding-top:34px;padding-bottom:42px}.logo{width:150px;height:150px}.card{overflow:hidden;border-radius:22px}.pad{padding:18px}.section{padding:36px 0}.count{grid-template-columns:repeat(2,1fr);gap:10px}.count div{padding:14px}.count strong{font-size:30px}.linkGrid{display:grid!important;grid-template-columns:1fr!important;gap:16px!important}.linkCard{display:flex!important;flex-direction:column!important;text-align:center!important;align-items:center!important;width:100%!important;min-width:0!important;padding:18px!important}.linkCard>div{width:100%!important;min-width:0!important}.linkCard h3{font-size:28px!important;line-height:1.05!important;word-break:normal!important}.linkAvatar{width:96px!important;height:96px!important;flex:0 0 auto!important}.modal{padding:12px}.modalInner{width:100%;max-height:88vh}.modalGrid{gap:18px}.kitTitle{font-size:22px}.rule{font-size:15px}.muted{font-size:15px;line-height:1.55}img{max-width:100%;height:auto}}@media(max-width:520px){.header>.actions{grid-template-columns:1fr}.header>.actions>.badges{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.h1{font-size:36px}.h2{font-size:28px}.hero{text-align:left}.count{grid-template-columns:1fr 1fr}.btn{padding:13px 14px;border-radius:16px}.linkCard h3{font-size:26px!important}.linkCard .badges{justify-content:center}.grid{gap:16px}}
+        *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#09090b;color:#f4f4f5;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background-image:linear-gradient(180deg,rgba(0,0,0,.72),rgba(9,9,11,.96) 55%,#09090b 100%),url('/BTARust_HeroImage_Optimized.jpg');background-size:cover;background-position:top center;background-attachment:fixed;background-repeat:no-repeat}a{color:inherit;text-decoration:none}.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at top left,rgba(249,115,22,.22),transparent 34%),radial-gradient(circle at top right,rgba(185,28,28,.18),transparent 30%),linear-gradient(180deg,rgba(0,0,0,.18),#09090b 82%);pointer-events:none}.container{max-width:1280px;margin:0 auto;padding:0 24px}.header{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;gap:20px;position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(9,9,11,.92),rgba(9,9,11,.62));backdrop-filter:blur(14px);border-bottom:1px solid rgba(249,115,22,.12)}.brand{display:flex;align-items:center;gap:14px}.brand img{width:52px;height:52px;border-radius:16px;border:1px solid rgba(249,115,22,.35);transition:.25s ease}.brand:hover img{transform:rotate(-2deg) scale(1.06);box-shadow:0 0 26px rgba(249,115,22,.35)}.nav{display:flex;gap:22px;color:#d4d4d8;font-size:14px}.nav a{position:relative;transition:.25s ease;white-space:nowrap}.nav a:hover,.nav a.active{color:#fb923c}.nav a:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:#fb923c;transform:scaleX(0);transform-origin:left;transition:.25s ease}.nav a:hover:after,.nav a.active:after{transform:scaleX(1)}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;border-radius:18px;padding:12px 18px;font-weight:900;border:0;cursor:pointer;background:linear-gradient(135deg,#f97316,#ea580c 55%,#c2410c);color:white;box-shadow:0 12px 28px rgba(124,45,18,.35),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 42px rgba(249,115,22,.35),0 0 22px rgba(249,115,22,.25);filter:saturate(1.15)}.btn:active{transform:translateY(0) scale(.98)}.btn.outline{background:rgba(9,9,11,.68);border:1px solid rgba(255,255,255,.18);color:#fafafa;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.btn.outline:hover{border-color:rgba(249,115,22,.7);box-shadow:0 0 30px rgba(249,115,22,.18),inset 0 1px 0 rgba(255,255,255,.08)}.btnShine{position:absolute;inset:-40% auto -40% -70%;width:60%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .55s ease}.btn:hover .btnShine{left:125%}.btnText{position:relative;z-index:1}.hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding-top:70px;padding-bottom:70px;animation:fadeUp .7s ease both}.logo{width:210px;height:210px;border-radius:28px;border:1px solid rgba(249,115,22,.35);object-fit:cover;box-shadow:0 25px 80px rgba(0,0,0,.45);animation:floatLogo 4.5s ease-in-out infinite}.pill{display:inline-flex;padding:8px 14px;border:1px solid rgba(249,115,22,.35);border-radius:999px;background:rgba(124,45,18,.25);color:#fed7aa;font-size:14px;margin:20px 0}.h1{font-size:64px;line-height:1;letter-spacing:-.04em;margin:0;font-weight:1000;text-shadow:0 8px 34px rgba(0,0,0,.55)}.orange{color:#fb923c;text-shadow:0 0 22px rgba(249,115,22,.22)}.card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,rgba(15,15,18,.86),rgba(8,8,10,.74));border-radius:28px;box-shadow:0 25px 70px rgba(0,0,0,.35);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(249,115,22,.08),transparent);opacity:0;transition:.25s ease;pointer-events:none}.card:hover{transform:translateY(-6px);border-color:rgba(249,115,22,.45);box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 30px rgba(249,115,22,.12)}.card:hover:before{opacity:1}.card.orangeBorder{border-color:rgba(249,115,22,.45)}.pad{padding:26px;position:relative;z-index:1}.section{padding:56px 0;animation:fadeUp .7s ease both}.sectionHead{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:#fdba74;font-weight:900}.h2{font-size:40px;line-height:1.05;margin:10px 0 0;font-weight:1000;letter-spacing:-.03em}.muted{color:#a1a1aa;line-height:1.65}.grid{display:grid;gap:20px}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.badge{display:inline-flex;border-radius:999px;background:rgba(24,24,27,.88);padding:6px 10px;font-size:12px;font-weight:900;color:#d4d4d8;border:1px solid rgba(255,255,255,.06);transition:.22s ease}.badge:hover{transform:translateY(-1px);border-color:rgba(249,115,22,.35)}.badge.green{background:rgba(16,185,129,.16);color:#86efac;border-color:rgba(16,185,129,.22)}.badge.orange{background:rgba(249,115,22,.16);color:#fdba74;border:1px solid rgba(249,115,22,.25)}.kitIcon{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(249,115,22,.28),rgba(124,45,18,.22));display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:.25s ease}.card:hover .kitIcon{transform:scale(1.08) rotate(-3deg);box-shadow:0 0 28px rgba(249,115,22,.18)}.kitTitle{font-size:26px;margin:20px 0 8px;font-weight:1000}.badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.kitImg{width:100%;max-width:100%;border-radius:20px;border:1px solid #3f3f46;background:#09090b;object-fit:contain}.countdownLayout{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;align-items:center}.countdownCard .pad{padding:30px}.count{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}.count div{background:rgba(24,24,27,.78);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:18px;text-align:center;transition:.25s ease}.count div:hover{transform:translateY(-4px);border-color:rgba(249,115,22,.45)}.count strong{display:block;color:#fdba74;font-size:38px;text-shadow:0 0 18px rgba(249,115,22,.28)}.hourglassPanel{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;border:1px solid rgba(249,115,22,.22);border-radius:24px;background:radial-gradient(circle at top,rgba(249,115,22,.16),rgba(9,9,11,.55));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.hourglassTitle{font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#fdba74;font-size:12px;margin-bottom:12px}.hourglass{position:relative;width:96px;height:158px;filter:drop-shadow(0 0 18px rgba(249,115,22,.22))}.hgCap{position:absolute;left:7px;width:82px;height:12px;border-radius:999px;background:linear-gradient(90deg,#78350f,#fdba74,#78350f);box-shadow:0 0 12px rgba(249,115,22,.25)}.hgCap.top{top:0}.hgCap.bottom{bottom:0}.hgGlass{position:absolute;top:14px;bottom:14px;left:17px;right:17px;border:3px solid rgba(253,186,116,.78);border-radius:18px;overflow:hidden;clip-path:polygon(0 0,100% 0,58% 50%,100% 100%,0 100%,42% 50%);background:rgba(255,255,255,.04)}.hgTopSand{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,#fde68a,#f97316);transition:height .9s linear;opacity:.9}.hgBottomSand{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,#fde68a,#f97316);transition:height .9s linear;opacity:.95}.hgStream{position:absolute;left:50%;top:44%;width:4px;height:28px;border-radius:999px;background:#fde68a;transform:translateX(-50%);animation:sandStream 1s linear infinite;box-shadow:0 0 10px rgba(253,230,138,.8)}.hourglassPercent{margin-top:12px;color:#a1a1aa;font-weight:800;font-size:12px;text-align:center}.card:hover .hourglass{animation:hourglassTilt 1.8s ease-in-out infinite}@keyframes sandStream{0%{opacity:.25;transform:translateX(-50%) translateY(-4px)}50%{opacity:1}100%{opacity:.25;transform:translateX(-50%) translateY(8px)}}@keyframes hourglassTilt{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}.modalInner{position:relative;max-width:1100px;max-height:92vh;overflow:auto;background:#09090b;border:1px solid rgba(249,115,22,.35);border-radius:24px;padding:18px}.kitModalInner{max-width:1200px}.close{position:absolute;right:16px;top:16px;background:#ef4444;color:white;border:0;border-radius:12px;padding:10px 14px;font-weight:900;z-index:5;cursor:pointer;transition:.22s ease}.close:hover{transform:translateY(-2px);box-shadow:0 0 22px rgba(239,68,68,.35)}.modalGrid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:start;padding-top:48px}.bundleModalGrid{grid-template-columns:minmax(0,1.65fr) minmax(280px,.75fr)}.bundleGallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.bundleKit{margin:0;border:1px solid rgba(249,115,22,.24);border-radius:16px;background:#111114;overflow:hidden}.bundleKit img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain;background:#09090b}.bundleKit figcaption{padding:10px;font-size:12px;font-weight:900;color:#fed7aa;text-align:center}.modalCopy{padding:8px 6px}.modalBox{margin-top:20px;border:1px solid #27272a;background:rgba(24,24,27,.75);border-radius:20px;padding:18px}.modalBox h3{margin:0 0 10px;color:#fdba74}.modalBox p{margin:0;color:#d4d4d8;line-height:1.65}.footer{text-align:center;color:#a1a1aa;padding:50px 0;border-top:1px solid #27272a}.rules{grid-template-columns:repeat(2,1fr)}.rule{background:rgba(24,24,27,.72);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;transition:.22s ease}.rule:hover{transform:translateX(4px);border-color:rgba(249,115,22,.35);background:rgba(24,24,27,.88)}.pageIntro{padding-top:58px;padding-bottom:8px}.pageIntro .h1{font-size:52px}.routeGrid{grid-template-columns:repeat(5,minmax(0,1fr))}.routeCard{display:block;height:100%}.routeCard .card{height:100%}.infoList{margin:18px 0 0;padding-left:20px;color:#d4d4d8;line-height:1.65}.infoList li+li{margin-top:9px}.commandList{display:grid;gap:9px;margin-top:18px}.commandLine{padding:11px 13px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(24,24,27,.66);color:#d4d4d8;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px}.boosterCallout{margin-top:28px}.boosterCallout .card{border-color:rgba(88,101,242,.55);background:linear-gradient(145deg,rgba(54,57,99,.42),rgba(9,9,11,.8))}@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes floatLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@media(max-width:1100px){.routeGrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:900px){.countdownLayout{grid-template-columns:1fr}.hourglassPanel{min-height:220px}body{background-attachment:scroll;overflow-x:hidden}.container{width:100%;max-width:100%;padding:0 16px}.hero,.grid3,.grid4,.rules,.modalGrid,.linkGrid,.routeGrid{grid-template-columns:1fr!important}.nav{display:flex;width:100%;overflow-x:auto;gap:18px;padding:8px 0 10px}.h1{font-size:40px;line-height:1.05;letter-spacing:-.035em}.h2{font-size:30px;line-height:1.1}.sectionHead{display:block}.header{align-items:flex-start;flex-direction:column;padding:18px 16px}.header.container{padding-left:16px;padding-right:16px}.brand{width:100%;align-items:center}.brand img{width:62px;height:62px}.actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions a,.actions button,.btn{width:100%;min-width:0}.badges{max-width:100%}.header>.actions>.badges{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:10px}.header>.actions{grid-template-columns:1fr 1fr}.hero{gap:28px;padding-top:34px;padding-bottom:42px}.logo{width:150px;height:150px}.card{overflow:hidden;border-radius:22px}.pad{padding:18px}.section{padding:36px 0}.pageIntro{padding-top:36px}.pageIntro .h1{font-size:40px}.count{grid-template-columns:repeat(2,1fr);gap:10px}.count div{padding:14px}.count strong{font-size:30px}.linkGrid{display:grid!important;grid-template-columns:1fr!important;gap:16px!important}.linkCard{display:flex!important;flex-direction:column!important;text-align:center!important;align-items:center!important;width:100%!important;min-width:0!important;padding:18px!important}.linkCard>div{width:100%!important;min-width:0!important}.linkCard h3{font-size:28px!important;line-height:1.05!important;word-break:normal!important}.linkAvatar{width:96px!important;height:96px!important;flex:0 0 auto!important}.modal{padding:12px}.modalInner{width:100%;max-height:88vh}.modalGrid{gap:18px}.bundleGallery{grid-template-columns:repeat(2,minmax(0,1fr))}.kitTitle{font-size:22px}.rule{font-size:15px}.muted{font-size:15px;line-height:1.55}img{max-width:100%;height:auto}}@media(max-width:520px){.header>.actions{grid-template-columns:1fr}.header>.actions>.badges{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.h1{font-size:36px}.h2{font-size:28px}.hero{text-align:left}.count{grid-template-columns:1fr 1fr}.btn{padding:13px 14px;border-radius:16px}.linkCard h3{font-size:26px!important}.linkCard .badges{justify-content:center}.grid{gap:16px}.bundleGallery{grid-template-columns:1fr 1fr}}
       `}</style>
       <div className="bg" />
       <header className="header container">
-        <a href="#top" className="brand">
+        <a href="/" className="brand">
           <img src="/BTARust.jpg" alt="BTARust" />
           <div>
             <b>BTARust.net</b>
@@ -504,10 +646,11 @@ export default function Page() {
           </div>
         </a>
         <nav className="nav">
-          <a href="#servers">Servers</a>
-          <a href="#linking">Account Linking</a>
-          <a href="#kits">Lifetime Kits</a>
-          <a href="#rules">Rules</a>
+          {navigationPages.map((page) => (
+            <a className={initialView === page.key ? "active" : ""} href={page.href} key={page.key}>
+              {page.title}
+            </a>
+          ))}
         </nav>
         <div className="actions">
           <div className="badges" style={{ margin: 0, alignItems: 'center' }}>
@@ -520,6 +663,16 @@ export default function Page() {
       </header>
 
       <main id="top">
+        {activeMeta && (
+          <section className="container pageIntro">
+            <p className="eyebrow">{activeMeta[0]}</p>
+            <h1 className="h1">{activeMeta[1]}</h1>
+            <p className="muted" style={{ maxWidth: 820, marginTop: 18 }}>{activeMeta[2]}</p>
+          </section>
+        )}
+
+        {initialView === "home" && (
+          <>
         <section className="hero container">
           <div>
             <img className="logo" src="/BTARust.jpg" alt="BTARust logo" />
@@ -529,8 +682,8 @@ export default function Page() {
             </h1>
             
             <div className="actions" style={{ marginTop: 30 }}>
-              <a href="#servers"><Button>View Servers</Button></a>
-              <a href="#linking"><Button outline>Link Accounts</Button></a>
+              <a href="/servers"><Button>View Servers</Button></a>
+              <a href="/account-linking"><Button outline>Link Accounts</Button></a>
             </div>
           </div>
 
@@ -551,6 +704,30 @@ export default function Page() {
 
         <section className="container section"><Countdown /></section>
 
+        <section className="container section">
+          <div className="sectionHead">
+            <div>
+              <p className="eyebrow">Explore BTARust.net</p>
+              <h2 className="h2">Five focused player guides</h2>
+            </div>
+            <p className="muted">Open a dedicated page for the information you need.</p>
+          </div>
+          <div className="grid routeGrid">
+            {navigationPages.map((page) => (
+              <a className="routeCard" href={page.href} key={page.key}>
+                <Card extra="orangeBorder">
+                  <div className="kitIcon">{page.icon}</div>
+                  <h3 className="kitTitle">{page.title}</h3>
+                  <p className="muted">{page.desc}</p>
+                </Card>
+              </a>
+            ))}
+          </div>
+        </section>
+          </>
+        )}
+
+        {initialView === "servers" && (
         <section id="servers" className="container section">
           <div className="sectionHead">
             <div>
@@ -608,7 +785,9 @@ export default function Page() {
             })}
           </div>
         </section>
+        )}
 
+        {initialView === "rules" && (
         <section id="rules" className="container section">
           <Card>
             <p className="eyebrow">Server Rules</p>
@@ -618,7 +797,9 @@ export default function Page() {
             </div>
           </Card>
         </section>
+        )}
 
+        {initialView === "account-linking" && (
         <section id="linking" className="container section">
           <Card extra="orangeBorder">
             <p className="eyebrow">Account Linking</p>
@@ -719,7 +900,9 @@ export default function Page() {
             </div>
           </Card>
         </section>
+        )}
 
+        {initialView === "lifetime-kits" && (
         <section id="kits" className="container section">
           <p className="eyebrow">Free Starter Kits</p>
           <h2 className="h2">Claim free kits by linking accounts</h2>
@@ -736,6 +919,20 @@ export default function Page() {
                 <Button outline onClick={() => openKit(kit.detailsKey || kit.title)}>👀 View Kit</Button>
               </Card>
             ))}
+          </div>
+
+          <div className="boosterCallout">
+            <Card>
+              <div className="kitIcon">{discordBoosterKit.icon}</div>
+              <p className="eyebrow" style={{ marginTop: 18 }}>Earned Discord Perk — Not a Free Kit</p>
+              <h3 className="kitTitle">{discordBoosterKit.title}</h3>
+              <div className="badges">{discordBoosterKit.badges.map((badge) => <Badge key={badge}>{badge}</Badge>)}</div>
+              <p className="muted">{discordBoosterKit.desc}</p>
+              <div className="actions">
+                <a href={discordInvite} target="_blank" rel="noreferrer"><Button>Boost BTARust.net Discord</Button></a>
+                <Button outline onClick={() => openKit(discordBoosterKit.title)}>View Booster Kit</Button>
+              </div>
+            </Card>
           </div>
 
           <p className="eyebrow" style={{ marginTop: 48 }}>Lifetime Packages</p>
@@ -755,7 +952,7 @@ export default function Page() {
                   <Badge>Steam Linked</Badge>
                   <Badge>Discord Linked</Badge>
                 </div>
-                <p className="muted">{kitDetails[kit.detailsKey || kit.title]?.desc || "Lifetime rewards synced to your linked Rust account."}</p>
+                <p className="muted">{getKitDetails(kit.detailsKey || kit.title)?.desc || "Lifetime rewards synced to your linked Rust account."}</p>
                 <div className="actions">
                   <a href={getPackageUrl(kit)} target="_blank" rel="noreferrer"><Button>🛒 Buy on Tebex</Button></a>
                   <Button outline onClick={() => openKit(kit.detailsKey || kit.title)}>👑 View Lifetime Kit</Button>
@@ -789,7 +986,75 @@ export default function Page() {
             ))}
           </div>
         </section>
+        )}
 
+        {initialView === "info" && (
+          <>
+            <section className="container section">
+              <div className="grid grid3">
+                {qolGroups.map((group) => (
+                  <Card key={group.title} extra="orangeBorder">
+                    <h2 className="kitTitle" style={{ marginTop: 0 }}>{group.title}</h2>
+                    <ul className="infoList">
+                      {group.items.map((item) => <li key={item}>{item}</li>)}
+                    </ul>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="sectionHead">
+                <div>
+                  <p className="eyebrow">In-Game Commands</p>
+                  <h2 className="h2">Quick command reference</h2>
+                </div>
+                <p className="muted">Commands and availability may vary by server type and active permissions.</p>
+              </div>
+              <div className="grid grid4">
+                {commandGroups.map((group) => (
+                  <Card key={group.title}>
+                    <h3 className="kitTitle" style={{ marginTop: 0 }}>{group.title}</h3>
+                    <div className="commandList">
+                      {group.commands.map((command) => <div className="commandLine" key={command}>{command}</div>)}
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="grid grid3">
+                <Card extra="orangeBorder">
+                  <p className="eyebrow">Vehicles, Backpacks & Limits</p>
+                  <h2 className="kitTitle">Rank reference</h2>
+                  <ul className="infoList">
+                    {rankReference.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </Card>
+                <Card>
+                  <p className="eyebrow">Economy & Rewards</p>
+                  <h2 className="kitTitle">Progression systems</h2>
+                  <ul className="infoList">
+                    {economySystems.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </Card>
+                <Card>
+                  <p className="eyebrow">Official Links</p>
+                  <h2 className="kitTitle">Stay connected</h2>
+                  <div className="commandList">
+                    <a className="commandLine" href="https://www.btarust.net/">Website — btarust.net</a>
+                    <a className="commandLine" href={tebexStore} target="_blank" rel="noreferrer">Store — Tebex</a>
+                    <a className="commandLine" href="https://discord.gg/HhrxErrDXg" target="_blank" rel="noreferrer">Discord — Join the community</a>
+                    <a className="commandLine" href="https://x.com/BTARustOfficial" target="_blank" rel="noreferrer">X / Twitter — @BTARustOfficial</a>
+                  </div>
+                </Card>
+              </div>
+            </section>
+          </>
+        )}
+
+        {initialView === "lifetime-kits" && (
         <section className="container section">
           <Card>
             <p className="eyebrow">Store Disclaimer</p>
@@ -797,6 +1062,7 @@ export default function Page() {
             <div className="muted" style={{display:'grid',gap:'14px'}}><p>All purchases made through the BTARust.net Tebex store are considered voluntary donations supporting server development, hosting, maintenance, custom plugins, moderation, and community operations. By completing a purchase, you acknowledge that you are receiving digital virtual goods, perks, ranks, or access tied exclusively to BTARust.net servers and services.</p><p>Due to the digital nature of in-game items, ranks, permissions, and server-related benefits, all purchases are final and non-refundable unless required by applicable law or approved directly by BTARust.net administration. Chargebacks, fraudulent disputes, payment reversals, or unauthorized transaction claims may result in permanent suspension from all BTARust.net services, including game servers, Discord services, and associated platforms.</p><p>BTARust.net reserves the right to modify, rebalance, remove, wipe, replace, suspend, or discontinue any server feature, kit, rank, item, permission, cooldown, server, or perk at any time without prior notice in order to maintain gameplay balance, server health, security, stability, or community fairness.</p><p>BTARust.net staff members, moderators, developers, owners, affiliates, and partners are not liable for data loss, item loss, server downtime, wipes, plugin failures, exploits, account compromises, gameplay interruptions, third-party outages, or any damages arising from use of BTARust.net services. All services are provided on an “as-is” and “as-available” basis without warranties or guarantees of uninterrupted availability.</p><p>By using BTARust.net services, purchasing store items, or accessing community platforms, you agree to follow all server rules, community guidelines, Facepunch Studios terms of service, Steam terms of service, Discord terms of service, and Tebex policies. Violations may result in suspension or termination of access without refund eligibility.</p><p>BTARust.net may offer a conditional Ban Appeal Reinstatement option for eligible community bans issued exclusively on BTARust.net servers. In order to qualify, the banned player must first submit a formal support ticket and complete a manual ban appeal review through the official BTARust.net Discord server. Appeals are reviewed solely by authorized BTARust.net staff members.</p><p>If a player’s appeal is approved by BTARust.net staff, a private “Unban Me” purchase option may then become available to the approved player through Tebex. The purchase option is only accessible after staff approval and does not bypass the required review process. Purchasing the approved reinstatement option will restore access only to BTARust.net community servers and services approved by staff.</p><p>Cheating bans, EAC bans, Facepunch bans, fraudulent activity, severe harassment, exploit abuse, ban evasion, or repeat offenses may automatically disqualify a player from eligibility. BTARust.net staff reserve full discretion to approve, deny, revoke, or permanently refuse any appeal request for reasons related to community safety, fairness, server integrity, or platform compliance. Any payments associated with approved reinstatement reviews are considered administrative processing fees and are non-refundable once review processing or reinstatement actions begin.</p><p>If you experience payment issues or require assistance, please contact BTARust.net staff through the official Discord server before opening disputes or chargebacks.</p></div>
           </Card>
         </section>
+        )}
       </main>
 
       <footer className="footer">© BTARust.net • Built for Rust players • {siteUrl}</footer>

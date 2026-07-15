@@ -145,6 +145,7 @@ const navigationPages = [
   { key: "servers", href: "/servers", title: "Servers", icon: "🌎", desc: "Live status, player counts, maps, BattleMetrics, and direct connect links." },
   { key: "account-linking", href: "/account-linking", title: "Account Linking", icon: "🔗", desc: "Connect Steam and Discord so purchases, kits, roles, and rewards sync correctly." },
   { key: "lifetime-kits", href: "/lifetime-kits", title: "BTA Kits", icon: "👑", desc: "Explore free kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and bundles." },
+  { key: "events", href: "/events", title: "Events", icon: "💥", desc: "Preview BTA custom events, Raidable Bases, Cargo Plane Crash, and the open-PvP action waiting across the map." },
   { key: "rules", href: "/rules", title: "Rules", icon: "🛡️", desc: "Read the community, gameplay, wipe protection, and fair-play rules before joining." },
   { key: "info", href: "/info", title: "QoL & Commands", icon: "⚡", desc: "Browse free QoL perks, events, premium perks, vehicles, limits, and in-game commands." }
 ];
@@ -153,9 +154,19 @@ const pageMeta = {
   servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Creative server information from the network source of truth."],
   "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
   "lifetime-kits": ["BTA Kits & Packages", "Know exactly what every kit includes", "Browse free starter kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and the Ultimate bundle."],
+  events: ["BTA Events", "The map never stays quiet", "Explore BTARust.net custom and native events. Every event is open PvP, so counter-players can arrive at any moment."],
   rules: ["Server Rules", "Simple rules. Better wipes.", "These rules apply across the BTARust.net network unless a server-specific notice says otherwise."],
   info: ["Player Guide", "QoL, perks, commands, and server info", "Everything players need after joining: protection, events, vehicles, ranks, limits, economy, and useful commands."]
 };
+
+const eventVideos = [
+  { id: "oTlj8xio2rc", title: "Shipwreck", desc: "Race to a dangerous wreck site, fight for control, and secure the event loot before another group does." },
+  { id: "k1auI9HlG20", title: "Convoy Reforged", desc: "Track and engage a heavily defended roaming convoy while watching every approach for counters." },
+  { id: "MftnKINexAY", title: "Armored Train", desc: "Take on an armed train encounter that turns the rail network into a moving PvP objective." },
+  { id: "izkoOym_YrA", title: "Harbor Event", desc: "Battle through a custom harbor encounter where the monument can become a high-stakes PvP hotspot." },
+  { id: "sqfrLuLWQhY", title: "Airfield Event", desc: "Contest a custom Airfield encounter with hostile opposition, valuable rewards, and exposed sightlines." },
+  { id: "4TrU0gYpXMg", title: "Launch Site Helipad Event", desc: "Push the Launch Site helipad objective and hold the area while rivals close in from across the monument." }
+];
 
 const qolGroups = [
   {
@@ -636,6 +647,30 @@ export default function Page({ initialView = "home" }) {
       <style>{`
         *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#09090b;color:#f4f4f5;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background-image:linear-gradient(180deg,rgba(0,0,0,.72),rgba(9,9,11,.96) 55%,#09090b 100%),url('/BTARust_HeroImage_Optimized.jpg');background-size:cover;background-position:top center;background-attachment:fixed;background-repeat:no-repeat}a{color:inherit;text-decoration:none}.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at top left,rgba(249,115,22,.22),transparent 34%),radial-gradient(circle at top right,rgba(185,28,28,.18),transparent 30%),linear-gradient(180deg,rgba(0,0,0,.18),#09090b 82%);pointer-events:none}.container{max-width:1280px;margin:0 auto;padding:0 24px}.header{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;gap:20px;position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(9,9,11,.92),rgba(9,9,11,.62));backdrop-filter:blur(14px);border-bottom:1px solid rgba(249,115,22,.12)}.brand{display:flex;align-items:center;gap:14px}.brand img{width:52px;height:52px;border-radius:16px;border:1px solid rgba(249,115,22,.35);transition:.25s ease}.brand:hover img{transform:rotate(-2deg) scale(1.06);box-shadow:0 0 26px rgba(249,115,22,.35)}.nav{display:flex;gap:22px;color:#d4d4d8;font-size:14px}.nav a{position:relative;transition:.25s ease;white-space:nowrap}.nav a:hover,.nav a.active{color:#fb923c}.nav a:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:#fb923c;transform:scaleX(0);transform-origin:left;transition:.25s ease}.nav a:hover:after,.nav a.active:after{transform:scaleX(1)}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;border-radius:18px;padding:12px 18px;font-weight:900;border:0;cursor:pointer;background:linear-gradient(135deg,#f97316,#ea580c 55%,#c2410c);color:white;box-shadow:0 12px 28px rgba(124,45,18,.35),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 42px rgba(249,115,22,.35),0 0 22px rgba(249,115,22,.25);filter:saturate(1.15)}.btn:active{transform:translateY(0) scale(.98)}.btn.outline{background:rgba(9,9,11,.68);border:1px solid rgba(255,255,255,.18);color:#fafafa;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.btn.outline:hover{border-color:rgba(249,115,22,.7);box-shadow:0 0 30px rgba(249,115,22,.18),inset 0 1px 0 rgba(255,255,255,.08)}.btnShine{position:absolute;inset:-40% auto -40% -70%;width:60%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .55s ease}.btn:hover .btnShine{left:125%}.btnText{position:relative;z-index:1}.hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding-top:70px;padding-bottom:70px;animation:fadeUp .7s ease both}.logo{width:210px;height:210px;border-radius:28px;border:1px solid rgba(249,115,22,.35);object-fit:cover;box-shadow:0 25px 80px rgba(0,0,0,.45);animation:floatLogo 4.5s ease-in-out infinite}.pill{display:inline-flex;padding:8px 14px;border:1px solid rgba(249,115,22,.35);border-radius:999px;background:rgba(124,45,18,.25);color:#fed7aa;font-size:14px;margin:20px 0}.h1{font-size:64px;line-height:1;letter-spacing:-.04em;margin:0;font-weight:1000;text-shadow:0 8px 34px rgba(0,0,0,.55)}.orange{color:#fb923c;text-shadow:0 0 22px rgba(249,115,22,.22)}.card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,rgba(15,15,18,.86),rgba(8,8,10,.74));border-radius:28px;box-shadow:0 25px 70px rgba(0,0,0,.35);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(249,115,22,.08),transparent);opacity:0;transition:.25s ease;pointer-events:none}.card:hover{transform:translateY(-6px);border-color:rgba(249,115,22,.45);box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 30px rgba(249,115,22,.12)}.card:hover:before{opacity:1}.card.orangeBorder{border-color:rgba(249,115,22,.45)}.pad{padding:26px;position:relative;z-index:1}.section{padding:56px 0;animation:fadeUp .7s ease both}.sectionHead{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:#fdba74;font-weight:900}.h2{font-size:40px;line-height:1.05;margin:10px 0 0;font-weight:1000;letter-spacing:-.03em}.muted{color:#a1a1aa;line-height:1.65}.grid{display:grid;gap:20px}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.badge{display:inline-flex;border-radius:999px;background:rgba(24,24,27,.88);padding:6px 10px;font-size:12px;font-weight:900;color:#d4d4d8;border:1px solid rgba(255,255,255,.06);transition:.22s ease}.badge:hover{transform:translateY(-1px);border-color:rgba(249,115,22,.35)}.badge.green{background:rgba(16,185,129,.16);color:#86efac;border-color:rgba(16,185,129,.22)}.badge.orange{background:rgba(249,115,22,.16);color:#fdba74;border:1px solid rgba(249,115,22,.25)}.kitIcon{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(249,115,22,.28),rgba(124,45,18,.22));display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:.25s ease}.card:hover .kitIcon{transform:scale(1.08) rotate(-3deg);box-shadow:0 0 28px rgba(249,115,22,.18)}.kitTitle{font-size:26px;margin:20px 0 8px;font-weight:1000}.badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.kitImg{width:100%;max-width:100%;border-radius:20px;border:1px solid #3f3f46;background:#09090b;object-fit:contain}.countdownLayout{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;align-items:center}.countdownCard .pad{padding:30px}.count{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}.count div{background:rgba(24,24,27,.78);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:18px;text-align:center;transition:.25s ease}.count div:hover{transform:translateY(-4px);border-color:rgba(249,115,22,.45)}.count strong{display:block;color:#fdba74;font-size:38px;text-shadow:0 0 18px rgba(249,115,22,.28)}.hourglassPanel{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;border:1px solid rgba(249,115,22,.22);border-radius:24px;background:radial-gradient(circle at top,rgba(249,115,22,.16),rgba(9,9,11,.55));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.hourglassTitle{font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#fdba74;font-size:12px;margin-bottom:12px}.hourglass{position:relative;width:96px;height:158px;filter:drop-shadow(0 0 18px rgba(249,115,22,.22))}.hgCap{position:absolute;left:7px;width:82px;height:12px;border-radius:999px;background:linear-gradient(90deg,#78350f,#fdba74,#78350f);box-shadow:0 0 12px rgba(249,115,22,.25)}.hgCap.top{top:0}.hgCap.bottom{bottom:0}.hgGlass{position:absolute;top:14px;bottom:14px;left:17px;right:17px;border:3px solid rgba(253,186,116,.78);border-radius:18px;overflow:hidden;clip-path:polygon(0 0,100% 0,58% 50%,100% 100%,0 100%,42% 50%);background:rgba(255,255,255,.04)}.hgTopSand{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,#fde68a,#f97316);transition:height .9s linear;opacity:.9}.hgBottomSand{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,#fde68a,#f97316);transition:height .9s linear;opacity:.95}.hgStream{position:absolute;left:50%;top:44%;width:4px;height:28px;border-radius:999px;background:#fde68a;transform:translateX(-50%);animation:sandStream 1s linear infinite;box-shadow:0 0 10px rgba(253,230,138,.8)}.hourglassPercent{margin-top:12px;color:#a1a1aa;font-weight:800;font-size:12px;text-align:center}.card:hover .hourglass{animation:hourglassTilt 1.8s ease-in-out infinite}@keyframes sandStream{0%{opacity:.25;transform:translateX(-50%) translateY(-4px)}50%{opacity:1}100%{opacity:.25;transform:translateX(-50%) translateY(8px)}}@keyframes hourglassTilt{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}.modalInner{position:relative;max-width:1100px;max-height:92vh;overflow:auto;background:#09090b;border:1px solid rgba(249,115,22,.35);border-radius:24px;padding:18px}.kitModalInner{max-width:1200px}.close{position:absolute;right:16px;top:16px;background:#ef4444;color:white;border:0;border-radius:12px;padding:10px 14px;font-weight:900;z-index:5;cursor:pointer;transition:.22s ease}.close:hover{transform:translateY(-2px);box-shadow:0 0 22px rgba(239,68,68,.35)}.modalGrid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:start;padding-top:48px}.bundleModalGrid{grid-template-columns:minmax(0,1.65fr) minmax(280px,.75fr)}.bundleGallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.bundleKit{margin:0;border:1px solid rgba(249,115,22,.24);border-radius:16px;background:#111114;overflow:hidden}.bundleKit img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain;background:#09090b}.bundleKit figcaption{padding:10px;font-size:12px;font-weight:900;color:#fed7aa;text-align:center}.modalCopy{padding:8px 6px}.modalBox{margin-top:20px;border:1px solid #27272a;background:rgba(24,24,27,.75);border-radius:20px;padding:18px}.modalBox h3{margin:0 0 10px;color:#fdba74}.modalBox p{margin:0;color:#d4d4d8;line-height:1.65}.footer{text-align:center;color:#a1a1aa;padding:50px 0;border-top:1px solid #27272a}.rules{grid-template-columns:repeat(2,1fr)}.rule{background:rgba(24,24,27,.72);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;transition:.22s ease}.rule:hover{transform:translateX(4px);border-color:rgba(249,115,22,.35);background:rgba(24,24,27,.88)}.pageIntro{padding-top:58px;padding-bottom:8px}.pageIntro .h1{font-size:52px}.routeGrid{grid-template-columns:repeat(5,minmax(0,1fr))}.routeCard{display:block;height:100%}.routeCard .card{height:100%}.infoList{margin:18px 0 0;padding-left:20px;color:#d4d4d8;line-height:1.65}.infoList li+li{margin-top:9px}.commandList{display:grid;gap:9px;margin-top:18px}.commandLine{padding:11px 13px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(24,24,27,.66);color:#d4d4d8;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px}.boosterCallout{margin-top:28px}.boosterCallout .card{border-color:rgba(88,101,242,.55);background:linear-gradient(145deg,rgba(54,57,99,.42),rgba(9,9,11,.8))}@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes floatLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@media(max-width:1100px){.routeGrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:900px){.countdownLayout{grid-template-columns:1fr}.hourglassPanel{min-height:220px}body{background-attachment:scroll;overflow-x:hidden}.container{width:100%;max-width:100%;padding:0 16px}.hero,.grid3,.grid4,.rules,.modalGrid,.linkGrid,.routeGrid{grid-template-columns:1fr!important}.nav{display:flex;width:100%;overflow-x:auto;gap:18px;padding:8px 0 10px}.h1{font-size:40px;line-height:1.05;letter-spacing:-.035em}.h2{font-size:30px;line-height:1.1}.sectionHead{display:block}.header{align-items:flex-start;flex-direction:column;padding:18px 16px}.header.container{padding-left:16px;padding-right:16px}.brand{width:100%;align-items:center}.brand img{width:62px;height:62px}.actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions a,.actions button,.btn{width:100%;min-width:0}.badges{max-width:100%}.header>.actions>.badges{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:10px}.header>.actions{grid-template-columns:1fr 1fr}.hero{gap:28px;padding-top:34px;padding-bottom:42px}.logo{width:150px;height:150px}.card{overflow:hidden;border-radius:22px}.pad{padding:18px}.section{padding:36px 0}.pageIntro{padding-top:36px}.pageIntro .h1{font-size:40px}.count{grid-template-columns:repeat(2,1fr);gap:10px}.count div{padding:14px}.count strong{font-size:30px}.linkGrid{display:grid!important;grid-template-columns:1fr!important;gap:16px!important}.linkCard{display:flex!important;flex-direction:column!important;text-align:center!important;align-items:center!important;width:100%!important;min-width:0!important;padding:18px!important}.linkCard>div{width:100%!important;min-width:0!important}.linkCard h3{font-size:28px!important;line-height:1.05!important;word-break:normal!important}.linkAvatar{width:96px!important;height:96px!important;flex:0 0 auto!important}.modal{padding:12px}.modalInner{width:100%;max-height:88vh}.modalGrid{gap:18px}.bundleGallery{grid-template-columns:repeat(2,minmax(0,1fr))}.kitTitle{font-size:22px}.rule{font-size:15px}.muted{font-size:15px;line-height:1.55}img{max-width:100%;height:auto}}@media(max-width:520px){.header>.actions{grid-template-columns:1fr}.header>.actions>.badges{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.h1{font-size:36px}.h2{font-size:28px}.hero{text-align:left}.count{grid-template-columns:1fr 1fr}.btn{padding:13px 14px;border-radius:16px}.linkCard h3{font-size:26px!important}.linkCard .badges{justify-content:center}.grid{gap:16px}.bundleGallery{grid-template-columns:1fr 1fr}}
       `}</style>
+      <style>{`
+        .header.container{max-width:1600px}
+        .nav{gap:14px;font-size:13px}
+        .header .actions{gap:8px}
+        .header .btn{padding:12px 15px}
+        .routeGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+        .eventWarning{border:1px solid rgba(239,68,68,.6);background:linear-gradient(135deg,rgba(127,29,29,.5),rgba(9,9,11,.88));border-radius:24px;padding:24px;box-shadow:0 0 36px rgba(239,68,68,.12)}
+        .eventWarning h2{margin:8px 0 10px}
+        .videoGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+        .videoCard{overflow:hidden;border:1px solid rgba(249,115,22,.35);border-radius:24px;background:rgba(9,9,11,.9)}
+        .videoFrame{position:relative;aspect-ratio:16/9;background:#000}
+        .videoFrame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+        .videoCopy{padding:20px}
+        .videoCopy h3{margin:0 0 8px;font-size:24px}
+        .eventFeatureGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+        .eventFeature{overflow:hidden;border:1px solid rgba(249,115,22,.35);border-radius:24px;background:rgba(9,9,11,.88)}
+        .eventFeature img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#050505}
+        .eventFeatureCopy{padding:24px}
+        .eventPhotoPair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:10px}
+        .eventPhotoPair img{border-radius:14px;aspect-ratio:16/9}
+        @media(max-width:1100px){.routeGrid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:900px){.videoGrid,.eventFeatureGrid{grid-template-columns:1fr}}
+        @media(max-width:520px){.eventPhotoPair{grid-template-columns:1fr}}
+      `}</style>
       <div className="bg" />
       <header className="header container">
         <a href="/" className="brand">
@@ -711,7 +746,7 @@ export default function Page({ initialView = "home" }) {
           <div className="sectionHead">
             <div>
               <p className="eyebrow">Explore BTARust.net</p>
-              <h2 className="h2">Five focused player guides</h2>
+              <h2 className="h2">Six focused player guides</h2>
             </div>
             <p className="muted">Open a dedicated page for the information you need.</p>
           </div>
@@ -989,6 +1024,83 @@ export default function Page({ initialView = "home" }) {
             ))}
           </div>
         </section>
+        )}
+
+        {initialView === "events" && (
+          <>
+            <section className="container section" style={{ paddingTop: 28 }}>
+              <div className="eventWarning">
+                <p className="eyebrow">Open PvP Everywhere</p>
+                <h2 className="h2">Every custom and native event is contested</h2>
+                <p className="muted" style={{ marginBottom: 0 }}>
+                  Counter-players can, could, and will show up at any moment. This applies to every BTA custom event, every native Rust event, Cargo Plane Crash, and every Raidable Base. Come prepared to fight for the objective and your way home.
+                </p>
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="sectionHead">
+                <div>
+                  <p className="eyebrow">Watch on BTARust.net</p>
+                  <h2 className="h2">Custom event previews</h2>
+                </div>
+                <p className="muted">Play every video directly here without leaving the website.</p>
+              </div>
+              <div className="videoGrid">
+                {eventVideos.map((event) => (
+                  <article className="videoCard" key={event.id}>
+                    <div className="videoFrame">
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${event.id}?rel=0`}
+                        title={`${event.title} event video`}
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      />
+                    </div>
+                    <div className="videoCopy">
+                      <p className="eyebrow">BTA Event</p>
+                      <h3>{event.title}</h3>
+                      <p className="muted" style={{ marginBottom: 0 }}>{event.desc}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="sectionHead">
+                <div>
+                  <p className="eyebrow">More BTA Encounters</p>
+                  <h2 className="h2">Cargo Plane Crash & Raidable Bases</h2>
+                </div>
+                <p className="muted">High-value objectives designed to pull players together—and into conflict.</p>
+              </div>
+              <div className="eventFeatureGrid">
+                <article className="eventFeature">
+                  <div className="eventPhotoPair">
+                    <img src="/events/cargo-plane-crash.png" alt="Burning Cargo Plane Crash event aircraft" loading="lazy" decoding="async" />
+                    <img src="/events/cargo-plane-explosion.png" alt="Cargo Plane Crash event explosion with airborne loot" loading="lazy" decoding="async" />
+                  </div>
+                  <div className="eventFeatureCopy">
+                    <p className="eyebrow">Custom World Event</p>
+                    <h2 className="kitTitle" style={{ marginTop: 8 }}>Cargo Plane Crash</h2>
+                    <p className="muted">A cargo aircraft goes down in a violent crash, scattering a dangerous objective and valuable loot into an open-PvP fight.</p>
+                  </div>
+                </article>
+
+                <article className="eventFeature">
+                  <img src="/events/raidable-bases.png" alt="Raidable Bases open PvP combat illustration" loading="lazy" decoding="async" />
+                  <div className="eventFeatureCopy">
+                    <p className="eyebrow">200+ Randomized Bases</p>
+                    <h2 className="kitTitle" style={{ marginTop: 8 }}>Raidable Bases</h2>
+                    <p className="muted">BTARust.net features more than 200 randomized Raidable Bases. Layouts, defenses, and encounters vary, but the PvP risk never does—counters may arrive at any time.</p>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </>
         )}
 
         {initialView === "info" && (

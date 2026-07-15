@@ -144,7 +144,7 @@ const rules = [
 const navigationPages = [
   { key: "servers", href: "/servers", title: "Servers", icon: "🌎", desc: "Live status, player counts, maps, BattleMetrics, and direct connect links." },
   { key: "account-linking", href: "/account-linking", title: "Account Linking", icon: "🔗", desc: "Connect Steam and Discord so purchases, kits, roles, and rewards sync correctly." },
-  { key: "lifetime-kits", href: "/lifetime-kits", title: "Lifetime Kits", icon: "👑", desc: "Compare package contents, rank permissions, cooldowns, backpacks, and lifetime bundles." },
+  { key: "lifetime-kits", href: "/lifetime-kits", title: "BTA Kits", icon: "👑", desc: "Explore free kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and bundles." },
   { key: "rules", href: "/rules", title: "Rules", icon: "🛡️", desc: "Read the community, gameplay, wipe protection, and fair-play rules before joining." },
   { key: "info", href: "/info", title: "QoL & Commands", icon: "⚡", desc: "Browse free QoL perks, events, premium perks, vehicles, limits, and in-game commands." }
 ];
@@ -152,7 +152,7 @@ const navigationPages = [
 const pageMeta = {
   servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Creative server information from the network source of truth."],
   "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
-  "lifetime-kits": ["Kits & Packages", "Know exactly what every package includes", "Compare free account-linked kits, the earned Discord Booster reward, individual lifetime kits, and the Ultimate bundle."],
+  "lifetime-kits": ["BTA Kits & Packages", "Know exactly what every kit includes", "Browse free starter kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and the Ultimate bundle."],
   rules: ["Server Rules", "Simple rules. Better wipes.", "These rules apply across the BTARust.net network unless a server-specific notice says otherwise."],
   info: ["Player Guide", "QoL, perks, commands, and server info", "Everything players need after joining: protection, events, vehicles, ranks, limits, economy, and useful commands."]
 };
@@ -646,6 +646,9 @@ export default function Page({ initialView = "home" }) {
           </div>
         </a>
         <nav className="nav">
+          <a className={initialView === "home" ? "active" : ""} href="/">
+            Home
+          </a>
           {navigationPages.map((page) => (
             <a className={initialView === page.key ? "active" : ""} href={page.href} key={page.key}>
               {page.title}

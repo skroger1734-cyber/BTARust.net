@@ -61,12 +61,32 @@ function nextFacepunchWipe(now = new Date()) {
 }
 
 function Countdown() {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(null);
 
   useEffect(() => {
+    setNow(new Date());
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  if (!now) {
+    return (
+      <Card extra="orangeBorder countdownCard">
+        <div className="countdownLayout">
+          <div>
+            <p className="eyebrow">Facepunch Wipe Calendar</p>
+            <h2 className="h2">Next forced wipe countdown</h2>
+            <p className="muted">First Thursday of each month at 2:00 PM Eastern.</p>
+            <div className="count">
+              {["Days", "Hours", "Minutes", "Seconds"].map((label) => (
+                <div key={label}><strong>--</strong><span>{label}</span></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   const wipe = useMemo(() => nextFacepunchWipe(now), [now]);
   const currentMonthStart = useMemo(() => {
@@ -585,7 +605,9 @@ function KitModal({ kit, onClose }) {
 
 export default function Page({ initialView = "home" }) {
   const [preview, setPreview] = useState(null);
-  const [linked, setLinked] = useState({ steam: true, discord: true });
+  const [linked, setLinked] = useState({ steam: false, discord: false });
+  const [linkStatusLoading, setLinkStatusLoading] = useState(true);
+  const [linkMessage, setLinkMessage] = useState("");
   const [serverStatus, setServerStatus] = useState({});
   const activeMeta = pageMeta[initialView];
   const steamLogo = "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png";
@@ -600,32 +622,40 @@ export default function Page({ initialView = "home" }) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const steamLinked = params.get("steam") === "linked" || localStorage.getItem("btarust_steam_linked") === "true";
-    const discordLinked = params.get("discord") === "linked" || localStorage.getItem("btarust_discord_linked") === "true";
+    const result = params.get("discord") || params.get("steam");
+    if (result === "linked") setLinkMessage("Account linked successfully.");
+    if (result === "failed") setLinkMessage("Account linking failed. Please try again or open a support ticket.");
 
-    if (params.get("steam") === "linked") localStorage.setItem("btarust_steam_linked", "true");
-    if (params.get("discord") === "linked") localStorage.setItem("btarust_discord_linked", "true");
+    const loadLinkStatus = async () => {
+      try {
+        const response = await fetch("/api/auth/status", { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error(payload.error || "Status lookup failed");
 
-    const steamNameFromUrl = params.get("steam_name");
-    const steamAvatarFromUrl = params.get("steam_avatar");
-    const discordNameFromUrl = params.get("discord_name");
-    const discordAvatarFromUrl = params.get("discord_avatar");
+        setLinked({
+          steam: Boolean(payload.steam?.linked),
+          discord: Boolean(payload.discord?.linked)
+        });
+        setProfile({
+          steamName: payload.steam?.name || "Steam Player",
+          steamAvatar: payload.steam?.avatar || steamLogo,
+          discordName: payload.discord?.name || "Discord User",
+          discordAvatar: payload.discord?.avatar || discordLogo
+        });
+      } catch (error) {
+        console.error("Unable to load linked account status", error);
+        setLinkMessage("Unable to load account status. Please refresh and try again.");
+      } finally {
+        setLinkStatusLoading(false);
+      }
+    };
 
-    if (steamNameFromUrl) localStorage.setItem("btarust_steam_name", steamNameFromUrl);
-    if (steamAvatarFromUrl) localStorage.setItem("btarust_steam_avatar", steamAvatarFromUrl);
-    if (discordNameFromUrl) localStorage.setItem("btarust_discord_name", discordNameFromUrl);
-    if (discordAvatarFromUrl) localStorage.setItem("btarust_discord_avatar", discordAvatarFromUrl);
-
-    setLinked({ steam: steamLinked, discord: discordLinked });
-    setProfile({
-      steamName: localStorage.getItem("btarust_steam_name") || "Steam Player",
-      steamAvatar: steamLinked ? localStorage.getItem("btarust_steam_avatar") || steamLogo : steamLogo,
-      discordName: localStorage.getItem("btarust_discord_name") || "Discord User",
-      discordAvatar: discordLinked ? localStorage.getItem("btarust_discord_avatar") || discordLogo : discordLogo
-    });
+    loadLinkStatus();
   }, []);
 
   useEffect(() => {
+    if (initialView !== "servers") return undefined;
+
     let active = true;
 
     const refreshServerStatus = async () => {
@@ -651,27 +681,36 @@ export default function Page({ initialView = "home" }) {
       active = false;
       clearInterval(timer);
     };
-  }, []);
+  }, [initialView]);
 
-  const unlinkAccount = async (type) => {
-    const confirmed = window.confirm(`Unlink your ${type === "steam" ? "Steam" : "Discord"} account from this website?`);
+  const unlinkAccount = async (type, askForConfirmation = true) => {
+    const confirmed = !askForConfirmation || window.confirm(`Unlink your ${type === "steam" ? "Steam" : "Discord"} account from this website?`);
     if (!confirmed) return;
 
-    localStorage.removeItem(type === "steam" ? "btarust_steam_linked" : "btarust_discord_linked");
-    localStorage.removeItem(type === "steam" ? "btarust_steam_name" : "btarust_discord_name");
-    localStorage.removeItem(type === "steam" ? "btarust_steam_avatar" : "btarust_discord_avatar");
-    setLinked((current) => ({ ...current, [type]: false }));
-    setProfile((current) => ({
-      ...current,
-      ...(type === "steam" ? { steamName: "Steam Player", steamAvatar: steamLogo } : {}),
-      ...(type === "discord" ? { discordName: "Discord User", discordAvatar: discordLogo } : {})
-    }));
-
     try {
-      await fetch(`/api/auth/${type}/unlink`, { method: "POST" });
+      const response = await fetch(`/api/auth/${type}/unlink`, { method: "POST" });
+      const payload = await response.json();
+      if (!response.ok || !payload.ok) throw new Error(payload.error || "Unlink failed");
+
+      setLinked((current) => ({ ...current, [type]: false }));
+      setProfile((current) => ({
+        ...current,
+        ...(type === "steam" ? { steamName: "Steam Player", steamAvatar: steamLogo } : {}),
+        ...(type === "discord" ? { discordName: "Discord User", discordAvatar: discordLogo } : {})
+      }));
+      setLinkMessage(`${type === "steam" ? "Steam" : "Discord"} account unlinked.`);
     } catch (error) {
-      console.warn(`${type} unlink API route not available yet. Local unlink completed.`, error);
+      console.error(`${type} unlink failed`, error);
+      setLinkMessage(`Unable to unlink ${type === "steam" ? "Steam" : "Discord"}. Please try again.`);
     }
+  };
+
+  const unlinkAllAccounts = async () => {
+    if (!window.confirm("Unlink both Steam and Discord from this website?")) return;
+    await Promise.all([
+      linked.steam ? unlinkAccount("steam", false) : Promise.resolve(),
+      linked.discord ? unlinkAccount("discord", false) : Promise.resolve()
+    ]);
   };
 
   const openKit = (title) => {
@@ -728,8 +767,8 @@ export default function Page({ initialView = "home" }) {
         </nav>
         <div className="actions">
           <div className="badges" style={{ margin: 0, alignItems: 'center' }}>
-            <Badge tone={linked.steam ? "green" : "orange"}>{linked.steam ? "Steam Linked" : "Steam not linked"}</Badge>
-            <Badge tone={linked.discord ? "green" : "orange"}>{linked.discord ? "Discord Linked" : "Discord not linked"}</Badge>
+            <Badge tone={linked.steam ? "green" : "orange"}>{linkStatusLoading ? "Steam: Checking..." : linked.steam ? "Steam Linked" : "Steam not linked"}</Badge>
+            <Badge tone={linked.discord ? "green" : "orange"}>{linkStatusLoading ? "Discord: Checking..." : linked.discord ? "Discord Linked" : "Discord not linked"}</Badge>
           </div>
           <a href={tebexStore}><Button outline>Open Store</Button></a>
           <a href={discordInvite}><Button>Join Discord</Button></a>
@@ -879,6 +918,7 @@ export default function Page({ initialView = "home" }) {
             <p className="eyebrow">Account Linking</p>
             <h2 className="h2">Linked Account Status</h2>
             <p className="muted">Connect Steam and Discord so purchases, kits, VIP rewards, cooldowns, and Discord permissions sync to the correct Rust profile.</p>
+            {linkMessage && <p className="badge orange" role="status" style={{ marginTop: 14 }}>{linkMessage}</p>}
 
             <div className="linkGrid" style={{
               marginTop: 26,
@@ -963,10 +1003,7 @@ export default function Page({ initialView = "home" }) {
               justifyContent: 'center'
             }}>
               <Button
-                onClick={() => {
-                  unlinkAccount('steam');
-                  unlinkAccount('discord');
-                }}
+                onClick={unlinkAllAccounts}
                 outline
               >
                 ❌ Unlink All Accounts

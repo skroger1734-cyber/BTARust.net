@@ -1,24 +1,37 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { sendDiscordLog } from "../../_utils/discordLog";
-
-const SITE_URL = "https://btarust.net";
-const LINK_COOKIE = "btarust_link_key";
-
-function getOrCreateLinkKey(request) {
-  return request.cookies.get(LINK_COOKIE)?.value || crypto.randomUUID();
-}
+import {
+  LINK_COOKIE,
+  SITE_URL,
+  getOrCreateLinkKey,
+  getSupabase,
+  linkCookieOptions
+} from "../../_utils/linking";
 
 function getSteamId(claimedId) {
-  const match = String(claimedId || "").match(/\/(\d+)$/);
+  const match = String(claimedId || "").match(/^https?:\/\/steamcommunity\.com\/openid\/id\/(\d+)$/);
   return match?.[1] || null;
 }
 
-function getSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("Missing Supabase env vars");
-  return createClient(url, key);
+async function verifySteamOpenId(url) {
+  const params = new URLSearchParams();
+
+  for (const [key, value] of url.searchParams.entries()) {
+    if (key.startsWith("openid.")) params.set(key, value);
+  }
+
+  params.set("openid.mode", "check_authentication");
+
+  const response = await fetch("https://steamcommunity.com/openid/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params,
+    cache: "no-store"
+  });
+
+  if (!response.ok) return false;
+  const result = await response.text();
+  return /(^|\n)is_valid:true(\n|$)/.test(result);
 }
 
 async function getSteamProfile(steamId) {
@@ -106,18 +119,22 @@ async function saveSteam(steamId, profile, linkKey) {
 
 export async function GET(request) {
   const url = new URL(request.url);
-  const steamId = getSteamId(url.searchParams.get("openid.claimed_id"));
+  const claimedId = url.searchParams.get("openid.claimed_id");
   const linkKey = getOrCreateLinkKey(request);
 
+  let steamId = null;
   let profile = null;
 
   try {
+    const isValid = await verifySteamOpenId(url);
+    steamId = isValid ? getSteamId(claimedId) : null;
+
     if (steamId) {
       profile = await getSteamProfile(steamId);
       await saveSteam(steamId, profile, linkKey);
       await maybeAssignVerifiedRole(linkKey);
 
-      await sendDiscordLog({
+      const logResult = await sendDiscordLog({
         title: "Steam Account Linked",
         color: 0x22c55e,
         thumbnail: { url: profile?.avatarfull || profile?.avatarmedium || profile?.avatar || undefined },
@@ -127,12 +144,18 @@ export async function GET(request) {
         ],
         timestamp: new Date().toISOString()
       });
+
+      if (!logResult.ok) {
+        console.error("[steam] link saved but audit log failed", logResult.status);
+      }
+    } else {
+      console.error("[steam] OpenID response validation failed");
     }
   } catch (err) {
     console.error("[steam] link failed", err);
   }
 
-  const redirect = new URL("/", SITE_URL);
+  const redirect = new URL("/account-linking", SITE_URL);
   redirect.searchParams.set("steam", steamId ? "linked" : "failed");
 
   if (profile?.personaname) redirect.searchParams.set("steam_name", profile.personaname);
@@ -141,13 +164,7 @@ export async function GET(request) {
   }
 
   const response = NextResponse.redirect(redirect);
-  response.cookies.set(LINK_COOKIE, linkKey, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30
-  });
+  response.cookies.set(LINK_COOKIE, linkKey, linkCookieOptions());
 
   return response;
 }

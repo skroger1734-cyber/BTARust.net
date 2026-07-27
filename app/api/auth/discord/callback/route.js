@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { Rcon } from "rcon-client";
 import { sendDiscordLog } from "../../_utils/discordLog";
+import {
+  DISCORD_STATE_COOKIE,
+  LINK_COOKIE,
+  SITE_URL,
+  getOrCreateLinkKey,
+  getSupabase,
+  linkCookieOptions
+} from "../../_utils/linking";
 
 export const runtime = "nodejs";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.btarust.net";
 const DISCORD_CALLBACK_URL = `${SITE_URL}/api/auth/discord/callback`;
-const LINK_COOKIE = "btarust_link_key";
-
-function getOrCreateLinkKey(request) {
-  return request.cookies.get(LINK_COOKIE)?.value || crypto.randomUUID();
-}
 
 function discordAvatarUrl(user) {
   if (!user?.id || !user?.avatar) {
@@ -23,7 +24,7 @@ function discordAvatarUrl(user) {
 }
 
 function redirectHome(status, user = null, linkKey = null) {
-  const redirect = new URL("/", SITE_URL);
+  const redirect = new URL("/account-linking", SITE_URL);
   redirect.searchParams.set("discord", status);
 
   if (status === "linked" && user?.id) {
@@ -37,27 +38,11 @@ function redirectHome(status, user = null, linkKey = null) {
   const response = NextResponse.redirect(redirect);
 
   if (linkKey) {
-    response.cookies.set(LINK_COOKIE, linkKey, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30
-    });
+    response.cookies.set(LINK_COOKIE, linkKey, linkCookieOptions());
   }
 
+  response.cookies.delete(DISCORD_STATE_COOKIE);
   return response;
-}
-
-function getSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) {
-    throw new Error("Missing Supabase env vars");
-  }
-
-  return createClient(url, key);
 }
 
 async function assignVerifiedRole(discordId) {
@@ -245,7 +230,14 @@ export async function GET(request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const error = url.searchParams.get("error");
+  const state = url.searchParams.get("state");
+  const expectedState = request.cookies.get(DISCORD_STATE_COOKIE)?.value;
   const linkKey = getOrCreateLinkKey(request);
+
+  if (!state || !expectedState || state !== expectedState) {
+    console.error("[discord] invalid oauth state");
+    return redirectHome("failed", null, linkKey);
+  }
 
   if (error) {
     console.error("[discord] oauth returned error", error);
@@ -278,7 +270,7 @@ export async function GET(request) {
     await saveDiscord(user, linkKey);
     await syncRustGroups(linkKey);
 
-    await sendDiscordLog({
+    const logResult = await sendDiscordLog({
       title: "Discord Account Linked",
       color: 0x5865f2,
       thumbnail: {
@@ -303,6 +295,10 @@ export async function GET(request) {
       ],
       timestamp: new Date().toISOString()
     });
+
+    if (!logResult.ok) {
+      console.error("[discord] link saved but audit log failed", logResult.status);
+    }
 
     return redirectHome("linked", user, linkKey);
   } catch (err) {

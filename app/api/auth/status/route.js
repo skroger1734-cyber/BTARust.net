@@ -14,6 +14,11 @@ export async function GET(request) {
 
   try {
     const account = await getLinkedAccount(linkKey);
+    console.log("[linking] status resolved", {
+      recordFound: Boolean(account),
+      steamLinked: Boolean(account?.steam_id),
+      discordLinked: Boolean(account?.discord_id)
+    });
     const response = NextResponse.json(
       { ok: true, ...publicAccount(account) },
       { headers: { "Cache-Control": "no-store" } }

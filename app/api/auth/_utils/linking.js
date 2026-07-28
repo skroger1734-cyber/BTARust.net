@@ -9,8 +9,12 @@ export const SITE_URL = (process.env.OAUTH_SITE_URL || "https://btarust.net").re
 let supabase = null;
 
 export function getSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.BTA_SUPABASE_URL;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.BTA_SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {
     throw new Error("Missing Supabase env vars");

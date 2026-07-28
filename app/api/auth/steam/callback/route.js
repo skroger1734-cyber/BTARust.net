@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendDiscordLog } from "../../_utils/discordLog";
+import { syncLinkedIdentityByKey } from "../../../_utils/entitlements";
 import {
   LINK_COOKIE,
   SITE_URL,
@@ -35,7 +36,10 @@ async function verifySteamOpenId(url) {
 }
 
 async function getSteamProfile(steamId) {
-  const key = process.env.STEAM_API_KEY;
+  const key =
+    process.env.STEAM_API_KEY ||
+    process.env.BTA_STEAM_WEB_API_KEY ||
+    process.env.BTA_STEAM_SERVER_API_KEY;
   if (!key || !steamId) return null;
 
   const res = await fetch(
@@ -50,52 +54,6 @@ async function getSteamProfile(steamId) {
 
   const data = await res.json();
   return data?.response?.players?.[0] || null;
-}
-
-async function assignVerifiedRole(discordId) {
-  const token = process.env.DISCORD_BOT_TOKEN;
-  const guildId = process.env.DISCORD_GUILD_ID;
-  const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
-
-  if (!token || !guildId || !roleId || !discordId) return false;
-
-  const res = await fetch(
-    `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
-    {
-      method: "PUT",
-      headers: { Authorization: `Bot ${token}` }
-    }
-  );
-
-  if (!res.ok) {
-    console.error("[discord] verified role failed", res.status, await res.text());
-    return false;
-  }
-
-  console.log("[discord] verified role assigned", discordId);
-  return true;
-}
-
-async function maybeAssignVerifiedRole(linkKey) {
-  const supabase = getSupabase();
-
-  const { data, error } = await supabase
-    .from("linked_accounts")
-    .select("discord_id, steam_id")
-    .eq("link_key", linkKey)
-    .maybeSingle();
-
-  if (error) {
-    console.error("[verify] lookup failed", error);
-    return false;
-  }
-
-  if (!data?.discord_id || !data?.steam_id) {
-    console.log("[verify] not ready yet", data);
-    return false;
-  }
-
-  return await assignVerifiedRole(data.discord_id);
 }
 
 async function saveSteam(steamId, profile, linkKey) {
@@ -132,7 +90,7 @@ export async function GET(request) {
     if (steamId) {
       profile = await getSteamProfile(steamId);
       await saveSteam(steamId, profile, linkKey);
-      await maybeAssignVerifiedRole(linkKey);
+      await syncLinkedIdentityByKey(linkKey);
 
       const logResult = await sendDiscordLog({
         title: "Steam Account Linked",

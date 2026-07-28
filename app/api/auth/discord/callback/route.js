@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { Rcon } from "rcon-client";
 import { sendDiscordLog } from "../../_utils/discordLog";
+import { syncLinkedIdentityByKey } from "../../../_utils/entitlements";
 import {
   DISCORD_STATE_COOKIE,
   LINK_COOKIE,
@@ -45,85 +45,6 @@ function redirectHome(status, user = null, linkKey = null) {
   return response;
 }
 
-async function assignVerifiedRole(discordId) {
-  const token = process.env.DISCORD_BOT_TOKEN;
-  const guildId = process.env.DISCORD_GUILD_ID;
-  const roleId = process.env.DISCORD_VERIFIED_ROLE_ID;
-
-  if (!token || !guildId || !roleId || !discordId) {
-    console.error("[discord] Missing role env vars");
-    return false;
-  }
-
-  const res = await fetch(
-    `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: `Bot ${token}`
-      }
-    }
-  );
-
-  if (!res.ok) {
-    console.error("[discord] verified role failed", res.status, await res.text());
-    return false;
-  }
-
-  return true;
-}
-
-async function getDiscordMember(discordId) {
-  const token = process.env.DISCORD_BOT_TOKEN;
-  const guildId = process.env.DISCORD_GUILD_ID;
-
-  if (!token || !guildId || !discordId) {
-    console.error("[discord] Missing member lookup env vars");
-    return null;
-  }
-
-  const res = await fetch(
-    `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}`,
-    {
-      headers: {
-        Authorization: `Bot ${token}`
-      }
-    }
-  );
-
-  if (!res.ok) {
-    console.error("[discord] member lookup failed", res.status, await res.text());
-    return null;
-  }
-
-  return await res.json();
-}
-
-async function sendRconCommand(command) {
-  const host = process.env.RUST_SERVER_IP;
-  const port = Number(process.env.RUST_RCON_PORT);
-  const password = process.env.RUST_RCON_PASSWORD;
-
-  if (!host || !port || !password) {
-    console.error("[rcon] Missing RCON env vars");
-    return false;
-  }
-
-  let rcon = null;
-
-  try {
-    rcon = await Rcon.connect({ host, port, password });
-    const result = await rcon.send(command);
-    console.log("[rcon]", command, result);
-    return true;
-  } catch (err) {
-    console.error("[rcon] command failed", command, err);
-    return false;
-  } finally {
-    if (rcon) rcon.end();
-  }
-}
-
 async function saveDiscord(user, linkKey) {
   if (!user?.id || !linkKey) {
     throw new Error("Missing Discord user or link key");
@@ -149,50 +70,29 @@ async function saveDiscord(user, linkKey) {
 }
 
 async function syncRustGroups(linkKey) {
-  const supabase = getSupabase();
-
-  const { data, error } = await supabase
-    .from("linked_accounts")
-    .select("discord_id, steam_id")
-    .eq("link_key", linkKey)
-    .maybeSingle();
-
-  if (error) {
-    console.error("[sync] lookup failed", error);
+  const result = await syncLinkedIdentityByKey(linkKey);
+  if (!result.linked) {
+    console.log("[sync] Steam and Discord are not both linked yet");
     return false;
   }
 
-  if (!data?.discord_id || !data?.steam_id) {
-    console.log("[sync] Steam and Discord are not both linked yet", data);
-    return false;
-  }
-
-  await assignVerifiedRole(data.discord_id);
-
-  const member = await getDiscordMember(data.discord_id);
-  const roles = Array.isArray(member?.roles) ? member.roles : [];
-  const boosterRoleId = process.env.DISCORD_BOOSTER_ROLE_ID;
-
-  const rustGroup =
-    boosterRoleId && roles.includes(boosterRoleId)
-      ? "discordbooster"
-      : "discord";
-
-  await sendRconCommand(`oxide.usergroup add ${data.steam_id} ${rustGroup}`);
-  await sendRconCommand("server.writecfg");
-
+  // The existing ServerPanel LinkBot watches the shared linked_accounts table
+  // and applies ServerPanel's normal link command to US, EU, and Test.
   return true;
 }
 
 async function exchangeCodeForToken(code) {
+  const clientId = process.env.DISCORD_CLIENT_ID || process.env.BTA_DISCORD_CLIENT_ID;
+  const clientSecret =
+    process.env.DISCORD_CLIENT_SECRET || process.env.BTA_DISCORD_CLIENT_SECRET;
   const tokenRes = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
     body: new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID,
-      client_secret: process.env.DISCORD_CLIENT_SECRET,
+      client_id: clientId,
+      client_secret: clientSecret,
       grant_type: "authorization_code",
       code,
       redirect_uri: DISCORD_CALLBACK_URL
@@ -249,7 +149,10 @@ export async function GET(request) {
     return redirectHome("failed", null, linkKey);
   }
 
-  if (!process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_CLIENT_SECRET) {
+  if (
+    !(process.env.DISCORD_CLIENT_ID || process.env.BTA_DISCORD_CLIENT_ID) ||
+    !(process.env.DISCORD_CLIENT_SECRET || process.env.BTA_DISCORD_CLIENT_SECRET)
+  ) {
     console.error("[discord] missing Discord client env vars");
     return redirectHome("failed", null, linkKey);
   }

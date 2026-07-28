@@ -10,7 +10,10 @@ import {
 const DISCORD_CALLBACK_URL = `${SITE_URL}/api/auth/discord/callback`;
 
 export async function GET(request) {
-  const clientId = process.env.DISCORD_CLIENT_ID || "";
+  const clientId =
+    process.env.DISCORD_CLIENT_ID ||
+    process.env.BTA_DISCORD_CLIENT_ID ||
+    "";
 
   if (!clientId) {
     return NextResponse.redirect(`${SITE_URL}/account-linking?discord=missing_client_id`);

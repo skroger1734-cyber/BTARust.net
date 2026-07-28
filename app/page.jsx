@@ -69,6 +69,18 @@ function Countdown() {
     return () => clearInterval(timer);
   }, []);
 
+  const wipe = useMemo(() => (now ? nextFacepunchWipe(now) : null), [now]);
+  const currentMonthStart = useMemo(() => {
+    if (!now) return null;
+    const current = nextFacepunchWipe(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0)));
+    if (now < current) {
+      const prevMonth = now.getUTCMonth() - 1;
+      const prevYear = now.getUTCFullYear() + Math.floor(prevMonth / 12);
+      return nextFacepunchWipe(new Date(Date.UTC(prevYear, (prevMonth + 12) % 12, 1, 0, 0, 0)));
+    }
+    return current;
+  }, [now]);
+
   if (!now) {
     return (
       <Card extra="orangeBorder countdownCard">
@@ -87,17 +99,6 @@ function Countdown() {
       </Card>
     );
   }
-
-  const wipe = useMemo(() => nextFacepunchWipe(now), [now]);
-  const currentMonthStart = useMemo(() => {
-    const current = nextFacepunchWipe(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0)));
-    if (now < current) {
-      const prevMonth = now.getUTCMonth() - 1;
-      const prevYear = now.getUTCFullYear() + Math.floor(prevMonth / 12);
-      return nextFacepunchWipe(new Date(Date.UTC(prevYear, (prevMonth + 12) % 12, 1, 0, 0, 0)));
-    }
-    return current;
-  }, [now]);
 
   const seconds = Math.max(0, Math.floor((wipe.getTime() - now.getTime()) / 1000));
   const totalCycleSeconds = Math.max(1, Math.floor((wipe.getTime() - currentMonthStart.getTime()) / 1000));
@@ -392,6 +393,7 @@ const lifetimeKits = [
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
     rewards: rankRewards.ultimate,
+    price: "$170.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439471"
   },
   {
@@ -402,6 +404,7 @@ const lifetimeKits = [
     backpack: "12 Slots",
     bundle: "Permanent VIP Kit & Permissions",
     rewards: rankRewards.vip,
+    price: "$25.50 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439459"
   }
 ];
@@ -414,6 +417,7 @@ const buildYourOwnLifetimeKits = [
     cooldown: "24 Hr",
     backpack: "48 Slots",
     rewards: rankRewards.general,
+    price: "$50.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439470"
   },
   {
@@ -423,6 +427,7 @@ const buildYourOwnLifetimeKits = [
     cooldown: "24 Hr",
     backpack: "48 Slots",
     rewards: rankRewards.officer,
+    price: "$45.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7486542"
   },
   {
@@ -432,6 +437,7 @@ const buildYourOwnLifetimeKits = [
     cooldown: "24 Hr",
     backpack: "48 Slots",
     rewards: rankRewards.soldier,
+    price: "$40.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439466"
   },
   {
@@ -441,6 +447,7 @@ const buildYourOwnLifetimeKits = [
     cooldown: "24 Hr",
     backpack: "24 Slots",
     rewards: rankRewards.enlistment,
+    price: "$30.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439464"
   },
   {
@@ -450,6 +457,7 @@ const buildYourOwnLifetimeKits = [
     cooldown: "24 Hr",
     backpack: "24 Slots",
     rewards: rankRewards.recruit,
+    price: "$20.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439462"
   },
   {
@@ -459,6 +467,7 @@ const buildYourOwnLifetimeKits = [
     cooldown: "24 Hr",
     backpack: "No Permission Bundle",
     rewards: rankRewards.vip,
+    price: "$5.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439458"
   },
   {
@@ -466,6 +475,7 @@ const buildYourOwnLifetimeKits = [
     title: "Farm Lifetime Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
+    price: "$10.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7486439"
   },
   {
@@ -473,6 +483,7 @@ const buildYourOwnLifetimeKits = [
     title: "Electrical Lifetime Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
+    price: "$10.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7486415"
   },
   {
@@ -480,7 +491,8 @@ const buildYourOwnLifetimeKits = [
     title: "Builder Lifetime Kit",
     cooldown: "24 Hr",
     backpack: "No Backpack",
-    packageUrl: "https://btarustnet.tebex.io/package/builder-lifetime"
+    price: "$10.00 USD",
+    packageUrl: "https://btarustnet.tebex.io/package/7486262"
   }
 ];
 
@@ -746,6 +758,34 @@ export default function Page({ initialView = "home" }) {
         @media(max-width:900px){.videoGrid,.eventFeatureGrid{grid-template-columns:1fr}}
         @media(max-width:520px){.eventPhotoPair{grid-template-columns:1fr}}
       `}</style>
+      <style>{`
+        :root{--rad:#b8f52b;--hazard:#f5c542;--ember:#ff5a1f;--rust:#8e2f1b;--steel:#15191a}
+        body{background-color:#070908;background-image:linear-gradient(180deg,rgba(3,6,4,.60),rgba(7,9,8,.96) 52%,#070908 100%),url('/BTARust_HeroImage_Optimized.jpg')}
+        .bg{background:repeating-linear-gradient(135deg,rgba(245,197,66,.035) 0 12px,transparent 12px 36px),radial-gradient(circle at 14% 5%,rgba(184,245,43,.16),transparent 30%),radial-gradient(circle at 86% 8%,rgba(255,90,31,.18),transparent 31%),linear-gradient(180deg,rgba(0,0,0,.12),#070908 82%)}
+        .header{background:linear-gradient(180deg,rgba(7,9,8,.96),rgba(7,9,8,.78));border-bottom:1px solid rgba(184,245,43,.22)}
+        .header:after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:4px;background:repeating-linear-gradient(135deg,#171a18 0 12px,#d5a91f 12px 24px);opacity:.72}
+        .nav a:hover,.nav a.active,.orange{color:var(--rad)}
+        .nav a:after{background:var(--rad);box-shadow:0 0 14px rgba(184,245,43,.6)}
+        .btn{border-radius:8px;background:linear-gradient(135deg,#9b2f18,#e14d20 58%,#7d2114);text-transform:uppercase;letter-spacing:.05em;box-shadow:0 12px 28px rgba(78,20,10,.42),inset 0 1px 0 rgba(255,255,255,.2)}
+        .btn:hover{box-shadow:0 16px 42px rgba(255,90,31,.3),0 0 22px rgba(184,245,43,.18)}
+        .btn.outline{border-color:rgba(184,245,43,.35);background:rgba(10,14,11,.86)}
+        .btn.outline:hover{border-color:rgba(184,245,43,.85);box-shadow:0 0 28px rgba(184,245,43,.18)}
+        .card{border-radius:12px;border-color:rgba(184,245,43,.14);background:linear-gradient(145deg,rgba(20,25,22,.94),rgba(7,10,8,.90))}
+        .card:after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid rgba(255,255,255,.025);background:linear-gradient(115deg,transparent 0 74%,rgba(184,245,43,.025) 74% 76%,transparent 76%)}
+        .card:hover,.card.orangeBorder{border-color:rgba(184,245,43,.42)}
+        .eyebrow{color:var(--hazard)}
+        .badge.green{background:rgba(184,245,43,.13);color:#d9ff74;border-color:rgba(184,245,43,.28)}
+        .badge.orange{background:rgba(255,90,31,.14);color:#ffb18e;border-color:rgba(255,90,31,.3)}
+        .kitPrice{display:inline-flex;align-items:center;gap:8px;margin:2px 0 8px;padding:8px 12px;border:1px solid rgba(184,245,43,.46);border-radius:6px;background:rgba(85,112,20,.18);color:#dfff7e;font-size:20px;font-weight:1000;letter-spacing:.02em;box-shadow:inset 3px 0 0 var(--rad)}
+        .nukePromo{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:0;border:1px solid rgba(184,245,43,.38);border-radius:14px;background:#090d0a;box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 42px rgba(184,245,43,.08)}
+        .nukePromoCopy{padding:38px;align-self:center}
+        .nukePromoCopy h2{font-size:46px;margin:8px 0 14px;text-transform:uppercase;line-height:.98}
+        .nukePromoCopy strong{color:var(--rad);text-shadow:0 0 18px rgba(184,245,43,.35)}
+        .nukePromoImage{min-height:390px;background:linear-gradient(90deg,#090d0a 0,transparent 25%),url('/BTA-Cargo-Nuke-Promo.png') center/cover no-repeat}
+        .hazardLine{height:14px;margin:22px 0;background:repeating-linear-gradient(135deg,#121512 0 14px,#e6b92c 14px 28px);border:1px solid rgba(245,197,66,.35)}
+        .radiationMark{font-size:54px;filter:drop-shadow(0 0 14px rgba(184,245,43,.38))}
+        @media(max-width:900px){.nukePromo{grid-template-columns:1fr}.nukePromoImage{min-height:270px;order:-1}.nukePromoCopy{padding:24px}.nukePromoCopy h2{font-size:36px}}
+      `}</style>
       <div className="bg" />
       <header className="header container">
         <a href="/" className="brand">
@@ -813,6 +853,25 @@ export default function Page({ initialView = "home" }) {
               <Badge>Creative</Badge>
             </div>
           </Card>
+        </section>
+
+        <section className="container section">
+          <div className="nukePromo">
+            <div className="nukePromoCopy">
+              <div className="radiationMark" aria-hidden="true">☢</div>
+              <p className="eyebrow">Cargo Nuke Event • Beta Live</p>
+              <h2>Prepare. <strong>Survive.</strong> Recover.</h2>
+              <p className="muted">
+                Nuclear flyovers now enter the BTA Event Cycle with bomber escorts, SAM interception, randomized strike outcomes, fallout zones, rescue objectives, and decontamination recovery.
+              </p>
+              <div className="hazardLine" aria-hidden="true" />
+              <div className="actions">
+                <a href="/events"><Button>View Nuke Event Intel</Button></a>
+                <a href="/servers"><Button outline>Choose a Server</Button></a>
+              </div>
+            </div>
+            <div className="nukePromoImage" role="img" aria-label="BTA Cargo Nuke bomber flying over an apocalyptic Rust landscape" />
+          </div>
         </section>
 
         <section className="container section"><Countdown /></section>
@@ -1056,6 +1115,7 @@ export default function Page({ initialView = "home" }) {
               <Card key={kit.title} extra="orangeBorder">
                 <div className="kitIcon">{kit.icon}</div>
                 <h3 className="kitTitle">{kit.title}</h3>
+                <div className="kitPrice">☢ {kit.price}</div>
                 <div className="badges">
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   {kit.backpack && <Badge>{kit.backpack}</Badge>}
@@ -1083,6 +1143,7 @@ export default function Page({ initialView = "home" }) {
               <Card key={kit.title} extra="orangeBorder">
                 <div className="kitIcon">{kit.icon}</div>
                 <h3 className="kitTitle">{kit.title}</h3>
+                <div className="kitPrice">☢ {kit.price}</div>
                 <div className="badges">
                   <Badge>{kit.cooldown} Cooldown</Badge>
                   {kit.backpack && <Badge>{kit.backpack}</Badge>}

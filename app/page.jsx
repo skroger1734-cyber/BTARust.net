@@ -174,7 +174,7 @@ const navigationPages = [
 ];
 
 const pageMeta = {
-  servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Creative server information from the network source of truth."],
+  servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Test server information from the network source of truth."],
   "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
   "lifetime-kits": ["BTA Kits & Packages", "Know exactly what every kit includes", "Browse free starter kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and the Ultimate bundle."],
   "streamer-program": ["BTA Creator Program", "Turn your next Rust wipe into a story", "Established PC Rust creators can apply for verified access, creator perks, private support, and a full viewer giveaway pack."],
@@ -864,15 +864,15 @@ export default function Page({ initialView = "home" }) {
 
           <Card extra="orangeBorder">
             <p className="eyebrow">Featured Servers</p>
-            <h2 className="h2">US 3x, EU 3x & Creative</h2>
+            <h2 className="h2">US 3x, EU 3x & Test</h2>
             <p className="muted">
-              Three live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, plus our official US Creative server.
+              Three live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, plus our official US Test server.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
               <Badge>US</Badge>
               <Badge>EU</Badge>
-              <Badge>Creative</Badge>
+              <Badge>Test Server</Badge>
             </div>
           </Card>
         </section>
@@ -950,7 +950,7 @@ export default function Page({ initialView = "home" }) {
               <p className="eyebrow">Server Lineup</p>
               <h2 className="h2">Choose your battlefield</h2>
             </div>
-            <p className="muted">Choose US or EU 3x monthly gameplay, or build freely on the US Creative server.</p>
+            <p className="muted">Choose US or EU 3x monthly gameplay, or follow upcoming BTA changes on the US Test server.</p>
           </div>
 
           <div className="grid grid3">
@@ -988,9 +988,11 @@ export default function Page({ initialView = "home" }) {
                   <div className="actions" style={{marginTop:18}}>
                     <a href={server.connect}><Button>Connect to Server</Button></a>
                     <a href={mapUrl} target="_blank" rel="noreferrer"><Button outline>View Map</Button></a>
-                    <a href={server.battleMetricsUrl} target="_blank" rel="noreferrer">
-                      <Button outline>BattleMetrics</Button>
-                    </a>
+                    {server.battleMetricsUrl && (
+                      <a href={server.battleMetricsUrl} target="_blank" rel="noreferrer">
+                        <Button outline>BattleMetrics</Button>
+                      </a>
+                    )}
                   </div>
 
                   <div className="muted" style={{marginTop:14,fontWeight:700}}>

@@ -1,12 +1,12 @@
 export const servers = [
   {
     id: "us-3x-monthly",
-    name: "BTARust.net | US | 3x Monthly | QoL/Loot+ | No Team Limit | Full Wipe",
+    name: "BTARust.net | US | 3x Monthly | 50% Upkeep | QoL/Loot+ | No Team Limit",
     shortName: "US 3x Monthly",
     region: "US",
     rate: "3x Monthly",
     wipe: "Full Wipe",
-    description: "Fast-paced monthly Rust with 3x gather and loot, QoL systems, no team limit, active moderation, and full monthly wipes.",
+    description: "US monthly Rust with 3x gather and loot, 50% upkeep, QoL systems, no team limit, active moderation, and full monthly wipes.",
     ip: "144.48.106.226",
     port: 28015,
     queryPort: 28017,
@@ -16,27 +16,27 @@ export const servers = [
   },
   {
     id: "eu-3x-monthly",
-    name: "BTARust.net | EU | 3x Monthly | QoL/Loot+ | No Team Limit | Full Wipe",
+    name: "BTARust.net | EU | 3x Monthly | 50% Upkeep | QoL/Loot+ | No Team Limit",
     shortName: "EU 3x Monthly",
     region: "EU",
     rate: "3x Monthly",
     wipe: "Full Wipe",
-    description: "European monthly Rust with 3x gather and loot, QoL systems, no team limit, active moderation, and full monthly wipes.",
-    ip: "104.234.252.154",
-    port: 28045,
-    queryPort: 28047,
-    battleMetricsId: "31941157",
+    description: "European monthly Rust with 3x gather and loot, 50% upkeep, QoL systems, no team limit, active moderation, and full monthly wipes.",
+    ip: "37.153.157.67",
+    port: 28025,
+    queryPort: 28027,
+    battleMetricsId: null,
     map: "Procedural Map",
     mapUrl: "https://rustmaps.com/map/1518af88259c40389fe493ec1d4f5830"
   },
   {
-    id: "us-creative",
-    name: "BTARust.net | US | Creative",
-    shortName: "US Creative",
+    id: "us-test",
+    name: "BTARust.net | US | Test Server",
+    shortName: "US Test Server",
     region: "US",
-    rate: "Creative",
-    wipe: "Creative Sandbox",
-    description: "Build-focused creative server for testing bases, practicing designs, experimenting with electrical systems, and planning raids.",
+    rate: "Test",
+    wipe: "Development & Beta",
+    description: "BTA development and beta server for testing upcoming plugins, events, integrations, and balance changes before main-server rollout.",
     ip: "216.245.176.150",
     port: 28025,
     queryPort: 28027,
@@ -48,5 +48,7 @@ export const servers = [
   ...server,
   client: `${server.ip}:${server.port}`,
   connect: `steam://run/252490//+connect%20${server.ip}%3A${server.port}/`,
-  battleMetricsUrl: `https://www.battlemetrics.com/servers/rust/${server.battleMetricsId}`
+  battleMetricsUrl: server.battleMetricsId
+    ? `https://www.battlemetrics.com/servers/rust/${server.battleMetricsId}`
+    : null
 }));

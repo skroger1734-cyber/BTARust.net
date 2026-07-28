@@ -1,4 +1,4 @@
-import SitePage from "../page";
+import AccountLinkingClient from "./AccountLinkingClient";
 
 export const metadata = {
   title: "Account Linking | BTARust.net",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function AccountLinkingPage() {
-  return <SitePage initialView="account-linking" />;
+  return <AccountLinkingClient />;
 }

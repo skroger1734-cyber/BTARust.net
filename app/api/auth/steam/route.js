@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
+import {
+  LINK_COOKIE,
+  SITE_URL,
+  getOrCreateLinkKey,
+  linkCookieOptions
+} from "../_utils/linking";
 
-const SITE_URL = "https://btarust.net";
-const STEAM_CALLBACK_URL = "https://btarust.net/api/auth/steam/callback";
+const STEAM_CALLBACK_URL = `${SITE_URL}/api/auth/steam/callback`;
 
-export async function GET() {
+export async function GET(request) {
+  const linkKey = getOrCreateLinkKey(request);
   const params = new URLSearchParams({
     "openid.ns": "http://specs.openid.net/auth/2.0",
     "openid.mode": "checkid_setup",
@@ -13,5 +19,7 @@ export async function GET() {
     "openid.claimed_id": "http://specs.openid.net/auth/2.0/identifier_select"
   });
 
-  return NextResponse.redirect(`https://steamcommunity.com/openid/login?${params.toString()}`);
+  const response = NextResponse.redirect(`https://steamcommunity.com/openid/login?${params.toString()}`);
+  response.cookies.set(LINK_COOKIE, linkKey, linkCookieOptions());
+  return response;
 }

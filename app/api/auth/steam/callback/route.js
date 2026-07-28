@@ -5,8 +5,8 @@ import {
   LINK_COOKIE,
   SITE_URL,
   getOrCreateLinkKey,
-  getSupabase,
-  linkCookieOptions
+  linkCookieOptions,
+  saveLinkedIdentity
 } from "../../_utils/linking";
 
 function getSteamId(claimedId) {
@@ -59,20 +59,17 @@ async function getSteamProfile(steamId) {
 async function saveSteam(steamId, profile, linkKey) {
   if (!steamId || !linkKey) throw new Error("Missing Steam ID or link key");
 
-  const supabase = getSupabase();
-
-  const { error } = await supabase.from("linked_accounts").upsert(
-    {
-      link_key: linkKey,
+  await saveLinkedIdentity({
+    linkKey,
+    identityColumn: "steam_id",
+    identityValue: steamId,
+    values: {
       steam_id: steamId,
       steam_persona: profile?.personaname || null,
-      steam_avatar: profile?.avatarfull || profile?.avatarmedium || profile?.avatar || null,
-      updated_at: new Date().toISOString()
-    },
-    { onConflict: "link_key" }
-  );
-
-  if (error) throw error;
+      steam_avatar:
+        profile?.avatarfull || profile?.avatarmedium || profile?.avatar || null
+    }
+  });
 }
 
 export async function GET(request) {
@@ -82,6 +79,7 @@ export async function GET(request) {
 
   let steamId = null;
   let profile = null;
+  let linked = false;
 
   try {
     const isValid = await verifySteamOpenId(url);
@@ -91,6 +89,7 @@ export async function GET(request) {
       profile = await getSteamProfile(steamId);
       await saveSteam(steamId, profile, linkKey);
       await syncLinkedIdentityByKey(linkKey);
+      linked = true;
 
       const logResult = await sendDiscordLog({
         title: "Steam Account Linked",
@@ -114,7 +113,7 @@ export async function GET(request) {
   }
 
   const redirect = new URL("/account-linking", SITE_URL);
-  redirect.searchParams.set("steam", steamId ? "linked" : "failed");
+  redirect.searchParams.set("steam", linked ? "linked" : "failed");
 
   if (profile?.personaname) redirect.searchParams.set("steam_name", profile.personaname);
   if (profile?.avatarfull || profile?.avatarmedium || profile?.avatar) {

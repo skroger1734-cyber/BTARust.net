@@ -6,8 +6,8 @@ import {
   LINK_COOKIE,
   SITE_URL,
   getOrCreateLinkKey,
-  getSupabase,
-  linkCookieOptions
+  linkCookieOptions,
+  saveLinkedIdentity
 } from "../../_utils/linking";
 
 export const runtime = "nodejs";
@@ -50,23 +50,17 @@ async function saveDiscord(user, linkKey) {
     throw new Error("Missing Discord user or link key");
   }
 
-  const supabase = getSupabase();
-
-  const { error } = await supabase.from("linked_accounts").upsert(
-    {
-      link_key: linkKey,
+  await saveLinkedIdentity({
+    linkKey,
+    identityColumn: "discord_id",
+    identityValue: user.id,
+    values: {
       discord_id: user.id,
       discord_username: user.username || null,
       discord_global_name: user.global_name || null,
-      discord_avatar: discordAvatarUrl(user),
-      updated_at: new Date().toISOString()
-    },
-    {
-      onConflict: "link_key"
+      discord_avatar: discordAvatarUrl(user)
     }
-  );
-
-  if (error) throw error;
+  });
 }
 
 async function syncRustGroups(linkKey) {

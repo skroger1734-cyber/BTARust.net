@@ -1,66 +1,117 @@
+import dgram from "node:dgram";
 import { NextResponse } from "next/server";
 import { servers } from "../../../data/servers";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-function normalizeServer(server, payload) {
-  const attributes = payload?.data?.attributes;
-  const details = attributes?.details || {};
-  const mapDetails = details.rust_maps || {};
+const A2S_HEADER = Buffer.from([0xff, 0xff, 0xff, 0xff, 0x54]);
+const A2S_PAYLOAD = Buffer.from("Source Engine Query\0", "ascii");
+const A2S_REQUEST = Buffer.concat([A2S_HEADER, A2S_PAYLOAD]);
 
-  if (!attributes) {
-    return {
-      id: server.id,
-      battleMetricsId: server.battleMetricsId,
-      status: "unknown",
-      players: null,
-      maxPlayers: null,
-      map: server.map,
-      mapUrl: server.mapUrl
-    };
+function readCString(buffer, offset) {
+  const ending = buffer.indexOf(0, offset);
+  if (ending < 0) throw new Error("Invalid A2S response");
+  return {
+    value: buffer.toString("utf8", offset, ending),
+    next: ending + 1
+  };
+}
+
+function parseInfoResponse(message) {
+  if (message.length < 10 || message.readUInt32LE(0) !== 0xffffffff || message[4] !== 0x49) {
+    throw new Error("Unexpected A2S response");
   }
 
+  let offset = 6;
+  const name = readCString(message, offset);
+  offset = name.next;
+  const map = readCString(message, offset);
+  offset = map.next;
+  const folder = readCString(message, offset);
+  offset = folder.next;
+  const game = readCString(message, offset);
+  offset = game.next + 2;
+
   return {
-    id: server.id,
-    battleMetricsId: server.battleMetricsId,
-    status: attributes.status || "unknown",
-    players: Number.isFinite(attributes.players) ? attributes.players : null,
-    maxPlayers: Number.isFinite(attributes.maxPlayers) ? attributes.maxPlayers : null,
-    map: details.map || server.map,
-    mapUrl: mapDetails.url || server.mapUrl,
-    mapThumbnail: mapDetails.thumbnailUrl || null,
-    lastWipe: details.rust_last_wipe || null,
-    nextWipe: details.rust_next_wipe || null,
-    checkedAt: new Date().toISOString()
+    name: name.value,
+    map: map.value,
+    players: message[offset],
+    maxPlayers: message[offset + 1],
+    bots: message[offset + 2]
   };
+}
+
+function queryA2S(server) {
+  return new Promise((resolve, reject) => {
+    const socket = dgram.createSocket("udp4");
+    const timeout = setTimeout(() => {
+      socket.close();
+      reject(new Error("A2S query timed out"));
+    }, 2500);
+
+    const finish = (callback, value) => {
+      clearTimeout(timeout);
+      socket.close();
+      callback(value);
+    };
+
+    socket.on("error", (error) => finish(reject, error));
+    socket.on("message", (message) => {
+      const responseType = message[4];
+
+      if (responseType === 0x41 && message.length >= 9) {
+        socket.send(
+          Buffer.concat([A2S_REQUEST, message.subarray(5, 9)]),
+          server.queryPort,
+          server.ip
+        );
+        return;
+      }
+
+      try {
+        finish(resolve, parseInfoResponse(message));
+      } catch (error) {
+        finish(reject, error);
+      }
+    });
+
+    socket.send(A2S_REQUEST, server.queryPort, server.ip);
+  });
 }
 
 export async function GET() {
   const results = await Promise.all(
     servers.map(async (server) => {
       try {
-        const response = await fetch(
-          `https://api.battlemetrics.com/servers/${server.battleMetricsId}`,
-          {
-            headers: {
-              Accept: "application/vnd.api+json",
-              "User-Agent": "BTARust.net/1.0 (+https://www.btarust.net)"
-            },
-            next: { revalidate: 60 }
-          }
-        );
-
-        if (!response.ok) throw new Error(`BattleMetrics returned ${response.status}`);
-        return normalizeServer(server, await response.json());
+        const status = await queryA2S(server);
+        return {
+          id: server.id,
+          status: "online",
+          players: status.players,
+          maxPlayers: status.maxPlayers,
+          map: status.map || server.map,
+          mapUrl: server.mapUrl,
+          serverName: status.name,
+          checkedAt: new Date().toISOString()
+        };
       } catch (error) {
-        console.error(`[battlemetrics] ${server.id}:`, error);
-        return normalizeServer(server, null);
+        console.error(`[server-status] ${server.id}:`, error);
+        return {
+          id: server.id,
+          status: "offline",
+          players: null,
+          maxPlayers: null,
+          map: server.map,
+          mapUrl: server.mapUrl,
+          checkedAt: new Date().toISOString()
+        };
       }
     })
   );
 
   return NextResponse.json(
-    { servers: results },
-    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    { source: "steam-a2s", servers: results },
+    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120" } }
   );
 }

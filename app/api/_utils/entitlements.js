@@ -66,33 +66,48 @@ export const PACKAGE_ENTITLEMENTS = Object.freeze({
 
 function discordConfig() {
   return {
-    token:
-      process.env.DISCORD_BOT_TOKEN ||
-      process.env.BTA_INFO_BOT_TOKEN ||
+    tokens: [
+      process.env.BTA_INFO_BOT_TOKEN,
       process.env.BTA_LINKING_BOT_TOKEN,
+      process.env.DISCORD_BOT_TOKEN
+    ].filter((token, index, values) => token && values.indexOf(token) === index),
     guildId: process.env.DISCORD_GUILD_ID || process.env.BTA_DISCORD_GUILD_ID
   };
 }
 
 async function discordRoleRequest(discordId, roleId, method) {
-  const { token, guildId } = discordConfig();
-  if (!token || !guildId || !discordId || !roleId) {
+  const { tokens, guildId } = discordConfig();
+  if (!tokens.length || !guildId || !discordId || !roleId) {
     throw new Error("Discord role synchronization is not configured");
   }
 
-  const response = await fetch(
-    `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
-    {
-      method,
-      headers: { Authorization: `Bot ${token}` },
-      cache: "no-store"
-    }
-  );
+  let lastFailure = null;
 
-  if (!response.ok) {
+  for (const token of tokens) {
+    const response = await fetch(
+      `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}/roles/${roleId}`,
+      {
+        method,
+        headers: { Authorization: `Bot ${token}` },
+        cache: "no-store"
+      }
+    );
+
+    if (response.ok) return;
+
     const detail = await response.text();
-    throw new Error(`Discord role ${method} failed (${response.status}): ${detail}`);
+    lastFailure = new Error(
+      `Discord role ${method} failed (${response.status}): ${detail}`
+    );
+
+    // A stale token should not prevent a correctly configured fallback bot
+    // from applying the role.
+    if (response.status !== 401 && response.status !== 403) {
+      throw lastFailure;
+    }
   }
+
+  throw lastFailure || new Error(`Discord role ${method} failed`);
 }
 
 export async function addDiscordRole(discordId, roleId) {

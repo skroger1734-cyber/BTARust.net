@@ -88,8 +88,13 @@ export async function GET(request) {
     if (steamId) {
       profile = await getSteamProfile(steamId);
       await saveSteam(steamId, profile, linkKey);
-      await syncLinkedIdentityByKey(linkKey);
       linked = true;
+
+      try {
+        await syncLinkedIdentityByKey(linkKey);
+      } catch (syncError) {
+        console.error("[steam] link saved but role sync failed", syncError);
+      }
 
       const logResult = await sendDiscordLog({
         title: "Steam Account Linked",

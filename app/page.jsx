@@ -6,6 +6,7 @@ import { servers } from "./data/servers";
 const siteUrl = "https://www.btarust.net";
 const tebexStore = "https://btarustnet.tebex.io";
 const discordInvite = "https://discord.gg/HhrxErrDXg";
+const streamerApplicationChannel = "https://discord.com/channels/1502376626539724820/1531008906111877230";
 
 function Button({ children, outline = false, onClick }) {
   return (
@@ -166,6 +167,7 @@ const navigationPages = [
   { key: "servers", href: "/servers", title: "Servers", icon: "🌎", desc: "Live status, player counts, maps, BattleMetrics, and direct connect links." },
   { key: "account-linking", href: "/account-linking", title: "Account Linking", icon: "🔗", desc: "Connect Steam and Discord so purchases, kits, roles, and rewards sync correctly." },
   { key: "lifetime-kits", href: "/lifetime-kits", title: "BTA Kits", icon: "👑", desc: "Explore free kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and bundles." },
+  { key: "streamer-program", href: "/streamer-program", title: "Streamer Program", icon: "🎥", desc: "Apply for the verified creator program, streamer package, private channels, and audience giveaway codes." },
   { key: "events", href: "/events", title: "Events", icon: "💥", desc: "Preview BTA custom events, Raidable Bases, Cargo Plane Crash, and the open-PvP action waiting across the map." },
   { key: "rules", href: "/rules", title: "Rules", icon: "🛡️", desc: "Read the community, gameplay, wipe protection, and fair-play rules before joining." },
   { key: "info", href: "/info", title: "QoL & Commands", icon: "⚡", desc: "Browse free QoL perks, events, premium perks, vehicles, limits, and in-game commands." }
@@ -175,6 +177,7 @@ const pageMeta = {
   servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Test server information from the network source of truth."],
   "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
   "lifetime-kits": ["BTA Kits & Packages", "Know exactly what every kit includes", "Browse free starter kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and the Ultimate bundle."],
+  "streamer-program": ["BTA Creator Program", "Turn your next Rust wipe into a story", "Established PC Rust creators can apply for verified access, creator perks, private support, and a full viewer giveaway pack."],
   events: ["BTA Events", "The map never stays quiet", "Explore BTARust.net custom and native events. Every event is open PvP, so counter-players can arrive at any moment."],
   rules: ["Server Rules", "Simple rules. Better wipes.", "These rules apply across the BTARust.net network unless a server-specific notice says otherwise."],
   info: ["Player Guide", "QoL, perks, commands, and server info", "Everything players need after joining: protection, events, vehicles, ranks, limits, economy, and useful commands."]
@@ -784,7 +787,26 @@ export default function Page({ initialView = "home" }) {
         .nukePromoImage{min-height:390px;background:linear-gradient(90deg,#090d0a 0,transparent 25%),url('/BTA-Cargo-Nuke-Promo.png') center/cover no-repeat}
         .hazardLine{height:14px;margin:22px 0;background:repeating-linear-gradient(135deg,#121512 0 14px,#e6b92c 14px 28px);border:1px solid rgba(245,197,66,.35)}
         .radiationMark{font-size:54px;filter:drop-shadow(0 0 14px rgba(184,245,43,.38))}
-        @media(max-width:900px){.nukePromo{grid-template-columns:1fr}.nukePromoImage{min-height:270px;order:-1}.nukePromoCopy{padding:24px}.nukePromoCopy h2{font-size:36px}}
+        .streamerPromo{display:grid;grid-template-columns:minmax(280px,.78fr) minmax(0,1.22fr);overflow:hidden;border:1px solid rgba(255,69,58,.48);border-radius:14px;background:linear-gradient(135deg,rgba(42,8,8,.94),rgba(8,10,9,.96));box-shadow:0 30px 90px rgba(0,0,0,.48),0 0 34px rgba(255,69,58,.09)}
+        .streamerPromoImage{min-height:440px;background:url('/BTA-Streamer-Program.png') center 18%/cover no-repeat;border-right:1px solid rgba(255,69,58,.32)}
+        .streamerPromoCopy{padding:42px;align-self:center}
+        .streamerPromoCopy h2{font-size:44px;line-height:1;margin:8px 0 16px;text-transform:uppercase}
+        .streamerStats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+        .streamerStat{padding:16px;border:1px solid rgba(255,255,255,.09);border-radius:8px;background:rgba(0,0,0,.32)}
+        .streamerStat strong{display:block;color:#ffb14e;font-size:27px;line-height:1}
+        .streamerStat span{display:block;margin-top:7px;color:#b9b9bd;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+        .programHero{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);gap:34px;align-items:start}
+        .programPoster{width:100%;display:block;border:1px solid rgba(255,69,58,.55);border-radius:12px;box-shadow:0 28px 80px rgba(0,0,0,.58)}
+        .programChecklist{display:grid;gap:12px;margin:24px 0}
+        .programCheck{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-left:3px solid var(--rad);background:rgba(20,25,22,.78);color:#d4d4d8;line-height:1.5}
+        .programCheck strong{color:#f4f4f5}
+        .steps{counter-reset:program-step;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+        .step{counter-increment:program-step;position:relative;padding:24px 20px 20px;border:1px solid rgba(184,245,43,.22);border-radius:10px;background:rgba(11,15,12,.9)}
+        .step:before{content:counter(program-step);display:grid;place-items:center;width:36px;height:36px;margin-bottom:18px;border-radius:50%;background:var(--rad);color:#10140b;font-weight:1000;box-shadow:0 0 22px rgba(184,245,43,.24)}
+        .step h3{margin:0 0 8px}.step p{margin:0}
+        .policyCallout{padding:24px;border:1px solid rgba(245,197,66,.48);border-left:5px solid var(--hazard);border-radius:8px;background:rgba(54,42,8,.36)}
+        @media(max-width:900px){.nukePromo,.streamerPromo,.programHero{grid-template-columns:1fr}.nukePromoImage{min-height:270px;order:-1}.nukePromoCopy{padding:24px}.nukePromoCopy h2{font-size:36px}.streamerPromoImage{min-height:320px;border-right:0;border-bottom:1px solid rgba(255,69,58,.32)}.streamerPromoCopy{padding:24px}.streamerPromoCopy h2{font-size:34px}.steps{grid-template-columns:1fr 1fr}}
+        @media(max-width:520px){.streamerStats,.steps{grid-template-columns:1fr}.streamerPromoImage{min-height:260px}.programHero{gap:22px}}
       `}</style>
       <div className="bg" />
       <header className="header container">
@@ -871,6 +893,28 @@ export default function Page({ initialView = "home" }) {
               </div>
             </div>
             <div className="nukePromoImage" role="img" aria-label="BTA Cargo Nuke bomber flying over an apocalyptic Rust landscape" />
+          </div>
+        </section>
+
+        <section className="container section">
+          <div className="streamerPromo">
+            <div className="streamerPromoImage" role="img" aria-label="PC Rust streamers wanted for the BTARust.net creator program" />
+            <div className="streamerPromoCopy">
+              <p className="eyebrow">PC Rust Streamers Wanted</p>
+              <h2>Stream the chaos. <span className="orange">Reward your viewers.</span></h2>
+              <p className="muted">
+                Established creators can apply for the verified BTA Streamer Program, with an exclusive in-game package, private creator access, protection tools, and a serious giveaway arsenal for their community.
+              </p>
+              <div className="streamerStats">
+                <div className="streamerStat"><strong>3</strong><span>Streamer friend codes</span></div>
+                <div className="streamerStat"><strong>110</strong><span>Viewer giveaway codes</span></div>
+                <div className="streamerStat"><strong>100+</strong><span>Verified avg. viewers</span></div>
+              </div>
+              <div className="actions">
+                <a href="/streamer-program"><Button>Explore the Program</Button></a>
+                <a href={streamerApplicationChannel} target="_blank" rel="noreferrer"><Button outline>Apply in Discord</Button></a>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1162,6 +1206,123 @@ export default function Page({ initialView = "home" }) {
             ))}
           </div>
         </section>
+        )}
+
+        {initialView === "streamer-program" && (
+          <>
+            <section className="container section" style={{ paddingTop: 28 }}>
+              <div className="programHero">
+                <div>
+                  <p className="eyebrow">Verified Creator Access</p>
+                  <h2 className="h2">A creator program built for the stream—and the people watching it.</h2>
+                  <p className="muted" style={{ fontSize: 18, marginTop: 18 }}>
+                    Bring your community into BTARust.net and showcase the Cargo Nuke Event, BTA Event Cycle, and monthly 3x servers with support from the team behind them.
+                  </p>
+                  <div className="programChecklist">
+                    <div className="programCheck"><span>✓</span><div><strong>Verified Streamer role</strong><br />Stand out in Discord with access to private streamer channels and the BTA development team.</div></div>
+                    <div className="programCheck"><span>✓</span><div><strong>Exclusive in-game streamer package</strong><br />Creator access includes BTA skins, General kit permissions, queue priority, building tools, symmetry, and sign tools.</div></div>
+                    <div className="programCheck"><span>✓</span><div><strong>Evidence-based stream protection</strong><br />Opt-in stream-sniping monitoring alerts staff with evidence; it never automatically bans or kicks a player.</div></div>
+                  </div>
+                  <div className="actions">
+                    <a href={streamerApplicationChannel} target="_blank" rel="noreferrer"><Button>Apply in the Streamer Channel</Button></a>
+                    <a href={discordInvite} target="_blank" rel="noreferrer"><Button outline>Join BTARust Discord</Button></a>
+                  </div>
+                </div>
+                <img className="programPoster" src="/BTA-Streamer-Program.png" alt="BTARust.net PC Rust Streamers Wanted program poster" />
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="sectionHead">
+                <div>
+                  <p className="eyebrow">Creator Package</p>
+                  <h2 className="h2">Everything included after approval</h2>
+                </div>
+                <p className="muted">One application unlocks creator tools, community rewards, and direct support.</p>
+              </div>
+              <div className="grid grid3">
+                <Card extra="orangeBorder">
+                  <div className="kitIcon">🎬</div>
+                  <h3 className="kitTitle">Creator Access</h3>
+                  <ul className="infoList">
+                    <li>Verified Streamer Discord role</li>
+                    <li>Private streamer channels</li>
+                    <li>Direct access to the BTA development team</li>
+                    <li>Queue bypass and creator protection</li>
+                  </ul>
+                </Card>
+                <Card extra="orangeBorder">
+                  <div className="kitIcon">🛠️</div>
+                  <h3 className="kitTitle">In-Game Package</h3>
+                  <ul className="infoList">
+                    <li>General kit permissions</li>
+                    <li>BTA and Building Skins access</li>
+                    <li>Simple Symmetry building tools</li>
+                    <li>Sign Artist URL and text tools</li>
+                  </ul>
+                </Card>
+                <Card extra="orangeBorder">
+                  <div className="kitIcon">🎁</div>
+                  <h3 className="kitTitle">Community Giveaways</h3>
+                  <ul className="infoList">
+                    <li>3 ULTIMATE Lifetime Bundle friend codes</li>
+                    <li>110 viewer giveaway codes</li>
+                    <li>10 codes for each of 11 lifetime packages</li>
+                    <li>100% off, one-time use, no expiration</li>
+                  </ul>
+                </Card>
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="sectionHead">
+                <div>
+                  <p className="eyebrow">Application Flow</p>
+                  <h2 className="h2">From application to live creator</h2>
+                </div>
+              </div>
+              <div className="steps">
+                <div className="step"><h3>Link accounts</h3><p className="muted">Connect Steam and Discord on this website so rewards reach the correct player.</p></div>
+                <div className="step"><h3>Apply in Discord</h3><p className="muted">Open the Streamer Program channel, press the application button, and submit your channel and analytics.</p></div>
+                <div className="step"><h3>Staff review</h3><p className="muted">The team verifies your channel and a minimum 100 average concurrent live viewers.</p></div>
+                <div className="step"><h3>Go live with BTA</h3><p className="muted">Approved creators receive roles, server permissions, private access, and their code inventory.</p></div>
+              </div>
+            </section>
+
+            <section className="container section">
+              <div className="grid grid3">
+                <Card extra="orangeBorder">
+                  <p className="eyebrow">Eligibility</p>
+                  <h2 className="kitTitle">What you need</h2>
+                  <ul className="infoList">
+                    <li>An established PC Rust channel</li>
+                    <li>100 average concurrent live viewers</li>
+                    <li>Verifiable channel analytics</li>
+                    <li>Valid Steam, Discord, and stream channel details</li>
+                    <li>Staff approval</li>
+                  </ul>
+                </Card>
+                <Card>
+                  <p className="eyebrow">Automated Support</p>
+                  <h2 className="kitTitle">The bot handles the handoff</h2>
+                  <p className="muted">Applications, staff decisions, viewer verification, code inventory, and Tebex redemption auditing all run through the existing BTA Streamer Bot workflow.</p>
+                  <p className="muted">Viewer proof is rechecked periodically and redemptions are audited to keep the program fair.</p>
+                </Card>
+                <Card>
+                  <p className="eyebrow">Ready to Apply?</p>
+                  <h2 className="kitTitle">Open the official application</h2>
+                  <p className="muted">The website explains the program; Discord remains the single official application and review system.</p>
+                  <div className="actions">
+                    <a href={streamerApplicationChannel} target="_blank" rel="noreferrer"><Button>Apply Now</Button></a>
+                    <a href="/account-linking"><Button outline>Link Accounts First</Button></a>
+                  </div>
+                </Card>
+              </div>
+              <div className="policyCallout" style={{ marginTop: 24 }}>
+                <strong>Giveaway policy:</strong> The 3 friend codes are for other streamers. The 110 package codes are public audience giveaway prizes and may not be used as private friend perks. Misuse can remove Streamer Program access.
+              </div>
+            </section>
+          </>
         )}
 
         {initialView === "events" && (

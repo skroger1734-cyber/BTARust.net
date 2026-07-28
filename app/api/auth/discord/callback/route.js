@@ -165,7 +165,11 @@ export async function GET(request) {
     }
 
     await saveDiscord(user, linkKey);
-    await syncRustGroups(linkKey);
+    try {
+      await syncRustGroups(linkKey);
+    } catch (syncError) {
+      console.error("[discord] link saved but role sync failed", syncError);
+    }
 
     const logResult = await sendDiscordLog({
       title: "Discord Account Linked",

@@ -6,6 +6,7 @@ import { servers } from "./data/servers";
 const siteUrl = "https://www.btarust.net";
 const tebexStore = "https://btarustnet.tebex.io";
 const discordInvite = "https://discord.gg/HhrxErrDXg";
+const havenHosting = "https://havendevelopment.net/plans";
 const streamerApplicationChannel = "https://discord.com/channels/1502376626539724820/1531008906111877230";
 
 function Button({ children, outline = false, onClick }) {
@@ -805,6 +806,10 @@ export default function Page({ initialView = "home" }) {
         .step:before{content:counter(program-step);display:grid;place-items:center;width:36px;height:36px;margin-bottom:18px;border-radius:50%;background:var(--rad);color:#10140b;font-weight:1000;box-shadow:0 0 22px rgba(184,245,43,.24)}
         .step h3{margin:0 0 8px}.step p{margin:0}
         .policyCallout{padding:24px;border:1px solid rgba(245,197,66,.48);border-left:5px solid var(--hazard);border-radius:8px;background:rgba(54,42,8,.36)}
+        .hostingPartner{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 auto 28px;padding:14px 20px;border:1px solid rgba(255,90,31,.35);border-radius:8px;background:linear-gradient(90deg,rgba(207,67,45,.14),rgba(10,12,11,.92),rgba(207,67,45,.14));color:#d8d8dc;text-align:center}
+        .hostingPartner strong{color:#ffb18e;text-transform:uppercase;letter-spacing:.06em}
+        .hostingPartner a{color:#fff;font-weight:900;text-decoration:none}
+        .hostingPartner a:hover{color:#ffb18e}
         @media(max-width:900px){.nukePromo,.streamerPromo,.programHero{grid-template-columns:1fr}.nukePromoImage{min-height:270px;order:-1}.nukePromoCopy{padding:24px}.nukePromoCopy h2{font-size:36px}.streamerPromoImage{min-height:320px;border-right:0;border-bottom:1px solid rgba(255,69,58,.32)}.streamerPromoCopy{padding:24px}.streamerPromoCopy h2{font-size:34px}.steps{grid-template-columns:1fr 1fr}}
         @media(max-width:520px){.streamerStats,.steps{grid-template-columns:1fr}.streamerPromoImage{min-height:260px}.programHero{gap:22px}}
       `}</style>
@@ -838,6 +843,14 @@ export default function Page({ initialView = "home" }) {
       </header>
 
       <main id="top">
+        <div className="container">
+          <div className="hostingPartner">
+            <span aria-hidden="true">🤝</span>
+            <span><strong>Hosting Partner &amp; Sponsor:</strong> BTARust.net is proudly hosted in partnership with</span>
+            <a href={havenHosting} target="_blank" rel="noreferrer">Haven Development Hosting</a>
+          </div>
+        </div>
+
         {activeMeta && (
           <section className="container pageIntro">
             <p className="eyebrow">{activeMeta[0]}</p>
@@ -1479,7 +1492,11 @@ export default function Page({ initialView = "home" }) {
         )}
       </main>
 
-      <footer className="footer">© BTARust.net • Built for Rust players • {siteUrl}</footer>
+      <footer className="footer">
+        © BTARust.net • Built for Rust players • {siteUrl}
+        <br />
+        Hosting partner &amp; sponsor: <a href={havenHosting} target="_blank" rel="noreferrer">Haven Development Hosting</a>
+      </footer>
       <KitModal kit={preview} onClose={() => setPreview(null)} />
     </>
   );

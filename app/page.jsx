@@ -229,10 +229,11 @@ const qolGroups = [
 ];
 
 const commandGroups = [
-  { title: "Start Here", commands: ["/info — server menu and quick help", "/help — basic help", "/kit — available kits", "/rules — server rules", "/store — store and perks", "/discord — Discord linking help", "/dc — generate a Discord linking code", "/wipe or /wipedata — wipe schedule", "/stats — player stats", "/playtime — view playtime", "/clan — clan system", "/remove — remove owned structures/entities", "/shop — shop, where available", "/vote — vote rewards", "/claim — claim vote rewards", "/rewardlist — vote reward list"] },
-  { title: "Wipe Protection", commands: ["/bta — wipe protection info", "/protection — protection status", "/protectionoff — disable protection early", "/wipeprotection or /wp — protection info/status"] },
-  { title: "Premium & QoL", commands: ["/skins, /skin, /skinbox — SkinBox", "/backpack or /bp — backpack", "/up and /upall — building upgrades", "/bgrade or /grade — building grade tool", "/code 1234 — auto-apply code locks", "/fs — Furnace Splitter", "/bs — Blueprint Share", "/btawb — TC workbench", "/togglecarradio — car radio", "/sym — Simple Symmetry"] },
-  { title: "Vehicles", commands: ["/mymini, /fmini, /nomini — Mini Copter", "/myheli, /fheli, /noheli — Scrap Transport Helicopter", "/myattack, /fattack, /noattack — Attack Helicopter"] }
+  { title: "Start Here", commands: ["/info — server menu and quick help", "/servers — live BTA servers and connect buttons", "/help — basic help", "/kits — available kits", "/rules — server rules", "/store — store and perks", "/discord — Discord linking help", "/dc — generate a Discord linking code", "/wipe or /wipedata — wipe schedule", "/stats — player stats", "/playtime — view playtime", "/clan — clan system", "/shop — player shop", "/vote, /claim, /rewardlist — voting rewards"] },
+  { title: "Teams & Protection", commands: ["/changeleader PLAYER — transfer leadership when the current Rust team leader is offline", "/pti [player|team|clan|tc] — placed turret and defense totals", "/bta — wipe protection info", "/protection — protection status", "/protectionoff — disable protection early", "/wipeprotection or /wp — protection info/status"] },
+  { title: "Premium & QoL", commands: ["/skins, /skin, /skinbox — BTA SkinBox", "/backpack or /bp — backpack", "/vstorage — supported vehicle storage", "/remove — remove owned structures/entities", "/up and /upall — building upgrades", "/bgrade or /grade — building grade tool", "/code 1234 — auto-apply code locks", "/fs — Furnace Splitter", "/bs — Blueprint Share", "/btawb — TC workbench", "/togglecarradio — car radio", "/sym — Simple Symmetry", "/autobranch [on|off] — automatic electrical branches", "/sil URL — sign image loader (permission required)"] },
+  { title: "Vehicles", commands: ["/mymini, /fmini, /nomini — Mini Copter", "/myheli, /fheli, /noheli — Scrap Transport Helicopter", "/myattack, /fattack, /noattack — Attack Helicopter"] },
+  { title: "Voting & Night", commands: ["/skipnight — start or vote yes in the night vote", "/noskip — vote no and keep the night"] }
 ];
 
 const rankReference = [

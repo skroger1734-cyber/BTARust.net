@@ -1,7 +1,7 @@
 import AccountLinkingClient from "./AccountLinkingClient";
 
 export const metadata = {
-  title: "Account Linking | BTARust.net",
+  title: "Account Linking",
   description: "Link Steam and Discord to synchronize BTARust.net purchases, kits, roles, and rewards."
 };
 

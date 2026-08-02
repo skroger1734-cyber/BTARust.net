@@ -6,7 +6,8 @@ import { servers } from "./data/servers";
 const siteUrl = "https://www.btarust.net";
 const tebexStore = "https://btarustnet.tebex.io";
 const discordInvite = "https://discord.gg/HhrxErrDXg";
-const havenHosting = "https://havendevelopment.net/plans";
+const tiktokProfile = "https://www.tiktok.com/@btarust";
+const havenHosting = "https://havendevelopment.net/?ref=BTARUST";
 const streamerApplicationChannel = "https://discord.com/channels/1502376626539724820/1531008906111877230";
 
 function Button({ children, outline = false, onClick }) {
@@ -165,6 +166,7 @@ const rules = [
 ];
 
 const navigationPages = [
+  { key: "monthly-ops", href: "/minigames", title: "Mini Games", icon: "🎮", desc: "Play six interactive Rust mini-games and compete for verified monthly rewards." },
   { key: "servers", href: "/servers", title: "Servers", icon: "🌎", desc: "Live status, player counts, maps, BattleMetrics, and direct connect links." },
   { key: "account-linking", href: "/account-linking", title: "Account Linking", icon: "🔗", desc: "Connect Steam and Discord so purchases, kits, roles, and rewards sync correctly." },
   { key: "lifetime-kits", href: "/lifetime-kits", title: "BTA Kits", icon: "👑", desc: "Explore free kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and bundles." },
@@ -175,7 +177,7 @@ const navigationPages = [
 ];
 
 const pageMeta = {
-  servers: ["Server Network", "Choose your battlefield", "Live US, EU, and Test server information from the network source of truth."],
+  servers: ["Server Network", "Choose your battlefield", "Live US and EU monthly 3x plus US weekly 2x server information from the network source of truth."],
   "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
   "lifetime-kits": ["BTA Kits & Packages", "Know exactly what every kit includes", "Browse free starter kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and the Ultimate bundle."],
   "streamer-program": ["BTA Creator Program", "Turn your next Rust wipe into a story", "Established PC Rust creators can apply for verified access, creator perks, private support, and a full viewer giveaway pack."],
@@ -229,7 +231,7 @@ const qolGroups = [
 ];
 
 const commandGroups = [
-  { title: "Start Here", commands: ["/info — server menu and quick help", "/servers — live BTA servers and connect buttons", "/help — basic help", "/kits — available kits", "/rules — server rules", "/store — store and perks", "/discord — Discord linking help", "/dc — generate a Discord linking code", "/wipe or /wipedata — wipe schedule", "/stats — player stats", "/playtime — view playtime", "/clan — clan system", "/shop — player shop", "/vote, /claim, /rewardlist — voting rewards"] },
+  { title: "Start Here", commands: ["/info — server menu and quick help", "/network — live BTA servers and connect buttons", "/help — basic help", "/kits — available kits", "/rules — server rules", "/store — store and perks", "/discord — Discord linking help", "/dc — generate a Discord linking code", "/wipe or /wipedata — wipe schedule", "/stats — player stats", "/playtime — view playtime", "/clan — clan system", "/shop — player shop", "/vote, /claim, /rewardlist — voting rewards"] },
   { title: "Teams & Protection", commands: ["/changeleader PLAYER — transfer leadership when the current Rust team leader is offline", "/pti [player|team|clan|tc] — placed turret and defense totals", "/bta — wipe protection info", "/protection — protection status", "/protectionoff — disable protection early", "/wipeprotection or /wp — protection info/status"] },
   { title: "Premium & QoL", commands: ["/skins, /skin, /skinbox — BTA SkinBox", "/backpack or /bp — backpack", "/vstorage — supported vehicle storage", "/remove — remove owned structures/entities", "/up and /upall — building upgrades", "/bgrade or /grade — building grade tool", "/code 1234 — auto-apply code locks", "/fs — Furnace Splitter", "/bs — Blueprint Share", "/btawb — TC workbench", "/togglecarradio — car radio", "/sym — Simple Symmetry", "/autobranch [on|off] — automatic electrical branches", "/sil URL — sign image loader (permission required)"] },
   { title: "Vehicles", commands: ["/mymini, /fmini, /nomini — Mini Copter", "/myheli, /fheli, /noheli — Scrap Transport Helicopter", "/myattack, /fattack, /noattack — Attack Helicopter"] },
@@ -625,6 +627,7 @@ export default function Page({ initialView = "home" }) {
   const [linked, setLinked] = useState({ steam: false, discord: false });
   const [linkStatusLoading, setLinkStatusLoading] = useState(true);
   const [linkMessage, setLinkMessage] = useState("");
+  const [fromMiniGames, setFromMiniGames] = useState(false);
   const [serverStatus, setServerStatus] = useState({});
   const activeMeta = pageMeta[initialView];
   const steamLogo = "https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png";
@@ -640,8 +643,10 @@ export default function Page({ initialView = "home" }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const result = params.get("discord") || params.get("steam");
+    setFromMiniGames(params.get("from") === "minigames");
     if (result === "linked") setLinkMessage("Account linked successfully.");
-    if (result === "failed") setLinkMessage("Account linking failed. Please try again or open a support ticket.");
+    if (result === "failed") setLinkMessage("That account could not be linked. Check that it is not already paired with a different BTA account, then try again.");
+    if (result === "missing_client_id") setLinkMessage("Discord linking is temporarily unavailable. Please open a support ticket.");
 
     const loadLinkStatus = async () => {
       try {
@@ -872,6 +877,7 @@ export default function Page({ initialView = "home" }) {
             
             <div className="actions" style={{ marginTop: 30 }}>
               <a href="/servers"><Button>View Servers</Button></a>
+              <a href="/minigames"><Button>Play Monthly Ops</Button></a>
               <a href="/account-linking"><Button outline>Link Accounts</Button></a>
             </div>
           </div>
@@ -880,13 +886,13 @@ export default function Page({ initialView = "home" }) {
             <p className="eyebrow">Featured Servers</p>
             <h2 className="h2">US 3x, EU 3x & Test</h2>
             <p className="muted">
-              Three live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, plus our official US Test server.
+              Three live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, plus weekly 2x gameplay in the US.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
               <Badge>US</Badge>
               <Badge>EU</Badge>
-              <Badge>Test Server</Badge>
+              <Badge>US 2x Weekly</Badge>
             </div>
           </Card>
         </section>
@@ -938,7 +944,7 @@ export default function Page({ initialView = "home" }) {
           <div className="sectionHead">
             <div>
               <p className="eyebrow">Explore BTARust.net</p>
-              <h2 className="h2">Six focused player guides</h2>
+              <h2 className="h2">Player guides &amp; Monthly Ops</h2>
             </div>
             <p className="muted">Open a dedicated page for the information you need.</p>
           </div>
@@ -964,7 +970,7 @@ export default function Page({ initialView = "home" }) {
               <p className="eyebrow">Server Lineup</p>
               <h2 className="h2">Choose your battlefield</h2>
             </div>
-            <p className="muted">Choose US or EU 3x monthly gameplay, or follow upcoming BTA changes on the US Test server.</p>
+            <p className="muted">Choose US or EU 3x monthly gameplay, or jump into the US 2x weekly server for a faster wipe cycle.</p>
           </div>
 
           <div className="grid grid3">
@@ -1074,7 +1080,7 @@ export default function Page({ initialView = "home" }) {
                     {linked.steam ? (
                       <Button outline onClick={() => unlinkAccount("steam")}>❌ Unlink Steam</Button>
                     ) : (
-                      <a href="/api/auth/steam"><Button>🔗 Connect Steam</Button></a>
+                      <a className="btn" href="/api/auth/steam"><span className="btnText">Connect Steam</span></a>
                     )}
                   </div>
                 </div>
@@ -1109,12 +1115,22 @@ export default function Page({ initialView = "home" }) {
                     {linked.discord ? (
                       <Button outline onClick={() => unlinkAccount("discord")}>❌ Unlink Discord</Button>
                     ) : (
-                      <a href="/api/auth/discord"><Button outline>💬 Connect Discord</Button></a>
+                      <a className="btn outline" href="/api/auth/discord"><span className="btnText">Connect Discord</span></a>
                     )}
                   </div>
                 </div>
               </div>
             </div>
+
+            {(fromMiniGames || (linked.steam && linked.discord)) && (
+              <div style={{ marginTop: 22, display: 'flex', justifyContent: 'center' }}>
+                <a className="btn" href="/minigames">
+                  <span className="btnText">
+                    {linked.steam && linked.discord ? "Return to Monthly Ops" : "Back to Mini-Games"}
+                  </span>
+                </a>
+              </div>
+            )}
 
             <div style={{
               marginTop: 22,
@@ -1475,6 +1491,7 @@ export default function Page({ initialView = "home" }) {
                     <a className="commandLine" href={tebexStore} target="_blank" rel="noreferrer">Store — Tebex</a>
                     <a className="commandLine" href={discordInvite} target="_blank" rel="noreferrer">Discord — Join the community</a>
                     <a className="commandLine" href="https://x.com/BTARustOfficial" target="_blank" rel="noreferrer">X / Twitter — @BTARustOfficial</a>
+                    <a className="commandLine" href={tiktokProfile} target="_blank" rel="noreferrer">TikTok — @btarust</a>
                   </div>
                 </Card>
               </div>
@@ -1497,6 +1514,8 @@ export default function Page({ initialView = "home" }) {
         © BTARust.net • Built for Rust players • {siteUrl}
         <br />
         Hosting partner &amp; sponsor: <a href={havenHosting} target="_blank" rel="noreferrer">Haven Development Hosting</a>
+        <br />
+        <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a>
       </footer>
       <KitModal kit={preview} onClose={() => setPreview(null)} />
     </>

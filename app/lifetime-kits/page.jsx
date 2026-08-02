@@ -1,7 +1,7 @@
 import SitePage from "../page";
 
 export const metadata = {
-  title: "BTA Kits | BTARust.net",
+  title: "BTA Kits",
   description: "Explore BTARust.net free kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and bundles."
 };
 

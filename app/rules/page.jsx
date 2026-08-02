@@ -1,7 +1,7 @@
 import SitePage from "../page";
 
 export const metadata = {
-  title: "Rules | BTARust.net",
+  title: "Rules",
   description: "BTARust.net network rules covering fair play, moderation, teams, and wipe protection."
 };
 

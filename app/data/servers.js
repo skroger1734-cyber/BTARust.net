@@ -12,7 +12,7 @@ export const servers = [
     queryPort: 28017,
     battleMetricsId: null,
     map: "Procedural Map",
-    mapUrl: "https://rustmaps.com/map/a6424e50bb6947d88a552cb781aacbc7"
+    mapUrl: "https://rustmaps.com/map/3700_2073373186"
   },
   {
     id: "eu-3x-monthly",
@@ -22,27 +22,27 @@ export const servers = [
     rate: "3x Monthly",
     wipe: "Full Wipe",
     description: "European monthly Rust with 3x gather and loot, 50% upkeep, QoL systems, no team limit, active moderation, and full monthly wipes.",
-    ip: "169.58.90.65",
+    ip: "85.93.9.153",
     port: 28015,
     queryPort: 28017,
     battleMetricsId: null,
     map: "Procedural Map",
-    mapUrl: "https://rustmaps.com/map/1518af88259c40389fe493ec1d4f5830"
+    mapUrl: "https://rustmaps.com/map/6d1e997ed39b4532bb30769ab8299840"
   },
   {
-    id: "us-test",
-    name: "BTARust.net | US | Test Server",
-    shortName: "US Test Server",
+    id: "us-2x-weekly",
+    name: "BTARust.net | US | 2x Weekly | 50% Upkeep | QoL/Loot+ | No Team Limit",
+    shortName: "US 2x Weekly",
     region: "US",
-    rate: "Test",
-    wipe: "Development & Beta",
-    description: "BTA development and beta server for testing upcoming plugins, events, integrations, and balance changes before main-server rollout.",
+    rate: "2x Weekly",
+    wipe: "Thursday • 2 PM ET",
+    description: "US weekly Rust with 2x gather, loot, stacks, smelting, and recyclers, 50% upkeep, QoL systems, no team limit, active moderation, and Thursday wipes.",
     ip: "144.225.37.13",
     port: 28015,
     queryPort: 28017,
     battleMetricsId: null,
     map: "Procedural Map",
-    mapUrl: "https://rustmaps.com/map/4ef6fa86fe11497792c07bb4d3d045dc"
+    mapUrl: "https://rustmaps.com/map/4250_2085781650"
   }
 ].map((server) => ({
   ...server,

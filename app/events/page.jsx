@@ -1,7 +1,7 @@
 import SitePage from "../page";
 
 export const metadata = {
-  title: "Events | BTARust.net",
+  title: "Events",
   description: "Preview BTARust.net custom and native open-PvP events, including 200+ randomized Raidable Bases and Cargo Plane Crash."
 };
 

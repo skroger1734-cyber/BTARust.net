@@ -1,8 +1,8 @@
 import SitePage from "../page";
 
 export const metadata = {
-  title: "Servers | BTARust.net",
-  description: "Live BTARust.net US 3x, EU 3x, and US Test server status, maps, and connect links."
+  title: "Servers",
+  description: "Live BTARust.net US 3x Monthly, EU 3x Monthly, and US 2x Weekly server status, maps, and connect links."
 };
 
 export default function ServersPage() {

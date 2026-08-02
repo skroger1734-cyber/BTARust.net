@@ -1,0 +1,582 @@
+{
+  "brand": {
+    "name": "BTA Monthly Giveaways",
+    "color": 16753920,
+    "footer": "BTARust.net • Rewards reset monthly"
+  },
+  "rules": {
+    "timezone": "UTC",
+    "dailyPlaysPerGame": 1,
+    "monthlyWinsPerGame": 1,
+    "minimumAccountAgeDays": 7,
+    "kitDurationDays": 30,
+    "gameSessionMinutes": 10
+  },
+  "games": {
+    "locked_crate": {
+      "name": "Locked Crate Hunt",
+      "emoji": "🔒",
+      "description": "Use one signal sweep to locate a transmitter hidden among six crates, then make one final pick.",
+      "winChanceDisplay": "Hard deduction • 1 scan",
+      "rewardTable": "crate_hunt"
+    },
+    "code_raid": {
+      "name": "Code Raid",
+      "emoji": "🔢",
+      "description": "Crack a five-digit code in five attempts. Hints show higher, lower, or correct.",
+      "winChanceDisplay": "Hard skill game • 5 guesses",
+      "rewardTable": "code_raid"
+    },
+    "monument_quiz": {
+      "name": "Monument Mastermind",
+      "emoji": "🧠",
+      "description": "Answer five randomly selected Rust monument questions without missing one.",
+      "winChanceDisplay": "Knowledge gauntlet • 5 questions",
+      "rewardTable": "monument_quiz"
+    },
+    "minefield": {
+      "name": "Raid Base Minefield",
+      "emoji": "💣",
+      "description": "Interpret overlapping radiation readings and cross four trapped rows.",
+      "winChanceDisplay": "Hard risk analysis • 4 rows",
+      "rewardTable": "minefield"
+    },
+    "high_low": {
+      "name": "Recycler High–Low",
+      "emoji": "♻️",
+      "description": "Cards run from 1 (lowest) to 13 (highest). Call higher or lower and build a seven-card streak without a shield.",
+      "winChanceDisplay": "Skill + luck • 7-card streak",
+      "rewardTable": "high_low"
+    },
+    "nuclear_override": {
+      "name": "Nuclear Override",
+      "emoji": "☢️",
+      "description": "Memorize six reactor controls with possible repeats, enter them in order, then hold SCRAM.",
+      "winChanceDisplay": "Hard memory game • 6 controls",
+      "rewardTable": "nuclear_override"
+    }
+  },
+  "rewardCatalog": {
+    "tebex_10": {
+      "name": "10% Off BTA Tebex Store",
+      "type": "tebex_code",
+      "description": "One single-use 10% discount code.",
+      "image": "/assets/rewards/tebex-discount.png",
+      "monthlyStock": 12,
+      "fulfillment": "code_pool"
+    },
+    "case_bronze_2": {
+      "name": "Bronze Reward • 100 Case Keys",
+      "type": "case_keys",
+      "tier": "bronze",
+      "image": "/assets/rewards/case-bronze.png",
+      "quantity": 100,
+      "monthlyStock": 40,
+      "fulfillment": "staff_queue"
+    },
+    "case_silver_2": {
+      "name": "Silver Reward • 200 Case Keys",
+      "type": "case_keys",
+      "tier": "silver",
+      "image": "/assets/rewards/case-silver.png",
+      "quantity": 200,
+      "monthlyStock": 24,
+      "fulfillment": "staff_queue"
+    },
+    "case_gold_1": {
+      "name": "Gold Reward • 300 Case Keys",
+      "type": "case_keys",
+      "tier": "gold",
+      "image": "/assets/rewards/case-gold.png",
+      "quantity": 300,
+      "monthlyStock": 10,
+      "fulfillment": "staff_queue"
+    },
+    "kit_vip_30": {
+      "name": "VIP Kit Access • 30 Days",
+      "type": "kit",
+      "kitName": "VIP Lifetime",
+      "image": "/assets/kits/vip.png",
+      "permission": "kits.viplifetime",
+      "durationDays": 30,
+      "monthlyStock": 24,
+      "fulfillment": "staff_queue"
+    },
+    "kit_recruit_30": {
+      "name": "Recruit Tier Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Recruit Tier",
+      "image": "/assets/kits/recruit.png",
+      "permission": "kits.recruit",
+      "durationDays": 30,
+      "monthlyStock": 18,
+      "fulfillment": "staff_queue"
+    },
+    "kit_enlistment_30": {
+      "name": "Enlistment Tier Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Enlistment Tier",
+      "image": "/assets/kits/enlistment.png",
+      "permission": "kits.enlistment",
+      "durationDays": 30,
+      "monthlyStock": 15,
+      "fulfillment": "staff_queue"
+    },
+    "kit_builder_30": {
+      "name": "Builder Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Builder Kit",
+      "image": "/assets/kits/builder.png",
+      "permission": "kits.builder",
+      "durationDays": 30,
+      "monthlyStock": 12,
+      "fulfillment": "staff_queue"
+    },
+    "kit_farm_30": {
+      "name": "Farm Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Farm Kit",
+      "image": "/assets/kits/farm.png",
+      "permission": "kits.farm",
+      "durationDays": 30,
+      "monthlyStock": 12,
+      "fulfillment": "staff_queue"
+    },
+    "kit_electrical_30": {
+      "name": "Electrical Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Electrical Kit",
+      "image": "/assets/kits/electrical.png",
+      "permission": "kits.electrical",
+      "durationDays": 30,
+      "monthlyStock": 12,
+      "fulfillment": "staff_queue"
+    },
+    "kit_soldier_30": {
+      "name": "Soldier Tier Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Soldier Tier",
+      "image": "/assets/kits/soldier.png",
+      "permission": "kits.soldier",
+      "durationDays": 30,
+      "monthlyStock": 8,
+      "fulfillment": "staff_queue"
+    },
+    "kit_officer_30": {
+      "name": "Officer Tier Kit • 30 Days",
+      "type": "kit",
+      "kitName": "Officer Tier",
+      "image": "/assets/kits/officer.png",
+      "permission": "kits.officer",
+      "durationDays": 30,
+      "monthlyStock": 5,
+      "fulfillment": "staff_queue"
+    },
+    "kit_general_30": {
+      "name": "General Tier Kit • 30 Days",
+      "type": "kit",
+      "kitName": "General Tier",
+      "image": "/assets/kits/general.png",
+      "permission": "kits.general",
+      "durationDays": 30,
+      "monthlyStock": 2,
+      "fulfillment": "staff_queue"
+    }
+  },
+  "rewardTables": {
+    "crate_hunt": [
+      {
+        "reward": "case_bronze_2",
+        "weight": 28
+      },
+      {
+        "reward": "case_silver_2",
+        "weight": 19
+      },
+      {
+        "reward": "case_gold_1",
+        "weight": 8
+      },
+      {
+        "reward": "kit_vip_30",
+        "weight": 10
+      },
+      {
+        "reward": "kit_recruit_30",
+        "weight": 8
+      },
+      {
+        "reward": "kit_enlistment_30",
+        "weight": 6
+      },
+      {
+        "reward": "kit_builder_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_farm_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_electrical_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_soldier_30",
+        "weight": 3
+      },
+      {
+        "reward": "kit_officer_30",
+        "weight": 2
+      },
+      {
+        "reward": "kit_general_30",
+        "weight": 1
+      },
+      {
+        "reward": "tebex_10",
+        "weight": 3
+      }
+    ],
+    "code_raid": [
+      {
+        "reward": "case_silver_2",
+        "weight": 24
+      },
+      {
+        "reward": "case_gold_1",
+        "weight": 14
+      },
+      {
+        "reward": "kit_vip_30",
+        "weight": 14
+      },
+      {
+        "reward": "kit_recruit_30",
+        "weight": 12
+      },
+      {
+        "reward": "kit_enlistment_30",
+        "weight": 8
+      },
+      {
+        "reward": "kit_builder_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_farm_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_electrical_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_soldier_30",
+        "weight": 3
+      },
+      {
+        "reward": "kit_officer_30",
+        "weight": 2
+      },
+      {
+        "reward": "kit_general_30",
+        "weight": 1
+      },
+      {
+        "reward": "tebex_10",
+        "weight": 7
+      }
+    ],
+    "monument_quiz": [
+      {
+        "reward": "case_bronze_2",
+        "weight": 28
+      },
+      {
+        "reward": "case_silver_2",
+        "weight": 20
+      },
+      {
+        "reward": "case_gold_1",
+        "weight": 7
+      },
+      {
+        "reward": "kit_vip_30",
+        "weight": 9
+      },
+      {
+        "reward": "kit_recruit_30",
+        "weight": 7
+      },
+      {
+        "reward": "kit_enlistment_30",
+        "weight": 6
+      },
+      {
+        "reward": "kit_builder_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_farm_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_electrical_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_soldier_30",
+        "weight": 3
+      },
+      {
+        "reward": "kit_officer_30",
+        "weight": 2
+      },
+      {
+        "reward": "kit_general_30",
+        "weight": 1
+      },
+      {
+        "reward": "tebex_10",
+        "weight": 5
+      }
+    ],
+    "minefield": [
+      {
+        "reward": "case_bronze_2",
+        "weight": 28
+      },
+      {
+        "reward": "case_silver_2",
+        "weight": 21
+      },
+      {
+        "reward": "case_gold_1",
+        "weight": 7
+      },
+      {
+        "reward": "kit_vip_30",
+        "weight": 10
+      },
+      {
+        "reward": "kit_recruit_30",
+        "weight": 7
+      },
+      {
+        "reward": "kit_enlistment_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_builder_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_farm_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_electrical_30",
+        "weight": 4
+      },
+      {
+        "reward": "kit_soldier_30",
+        "weight": 3
+      },
+      {
+        "reward": "kit_officer_30",
+        "weight": 2
+      },
+      {
+        "reward": "kit_general_30",
+        "weight": 1
+      },
+      {
+        "reward": "tebex_10",
+        "weight": 4
+      }
+    ],
+    "high_low": [
+      {
+        "reward": "case_silver_2",
+        "weight": 22
+      },
+      {
+        "reward": "case_gold_1",
+        "weight": 15
+      },
+      {
+        "reward": "kit_vip_30",
+        "weight": 14
+      },
+      {
+        "reward": "kit_recruit_30",
+        "weight": 12
+      },
+      {
+        "reward": "kit_enlistment_30",
+        "weight": 8
+      },
+      {
+        "reward": "kit_builder_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_farm_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_electrical_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_soldier_30",
+        "weight": 3
+      },
+      {
+        "reward": "kit_officer_30",
+        "weight": 2
+      },
+      {
+        "reward": "kit_general_30",
+        "weight": 1
+      },
+      {
+        "reward": "tebex_10",
+        "weight": 8
+      }
+    ],
+    "nuclear_override": [
+      {
+        "reward": "case_silver_2",
+        "weight": 18
+      },
+      {
+        "reward": "case_gold_1",
+        "weight": 17
+      },
+      {
+        "reward": "kit_vip_30",
+        "weight": 14
+      },
+      {
+        "reward": "kit_recruit_30",
+        "weight": 12
+      },
+      {
+        "reward": "kit_enlistment_30",
+        "weight": 8
+      },
+      {
+        "reward": "kit_builder_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_farm_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_electrical_30",
+        "weight": 5
+      },
+      {
+        "reward": "kit_soldier_30",
+        "weight": 3
+      },
+      {
+        "reward": "kit_officer_30",
+        "weight": 2
+      },
+      {
+        "reward": "kit_general_30",
+        "weight": 1
+      },
+      {
+        "reward": "tebex_10",
+        "weight": 10
+      }
+    ]
+  },
+  "trivia": [
+    {
+      "question": "Which monument has a launch site and Bradley APC?",
+      "answers": [
+        "Airfield",
+        "Launch Site",
+        "Power Plant",
+        "Train Yard"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Which card is required for the final door in the Oil Rig crate room?",
+      "answers": [
+        "Green",
+        "Blue",
+        "Red",
+        "No card"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What protects players from radiation at high-radiation monuments?",
+      "answers": [
+        "Cold protection",
+        "Wet protection",
+        "Radiation protection",
+        "Melee protection"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "Which resource is commonly recycled into High Quality Metal?",
+      "answers": [
+        "Road signs",
+        "Metal blades",
+        "Tech trash",
+        "Rope"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "Where is the recycler located at Outpost?",
+      "answers": [
+        "Inside the safe zone",
+        "On the roof only",
+        "Below the ocean",
+        "There is no recycler"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Which fuel powers the Giant Excavator?",
+      "answers": ["Low Grade Fuel", "Crude Oil", "Diesel Fuel", "Animal Fat"],
+      "correct": 2
+    },
+    {
+      "question": "Which pair contains protected safe-zone recyclers?",
+      "answers": ["Outpost and Bandit Camp", "Airfield and Train Yard", "Launch Site and Dome", "Oil Rig and Harbor"],
+      "correct": 0
+    },
+    {
+      "question": "Which monument is categorized as a safe zone?",
+      "answers": ["Military Tunnels", "Fishing Village", "Power Plant", "Satellite Dish"],
+      "correct": 1
+    },
+    {
+      "question": "Which location is classified as a small monument?",
+      "answers": ["Lighthouse", "Train Yard", "Giant Excavator Pit", "Arctic Research Base"],
+      "correct": 0
+    },
+    {
+      "question": "Where are Underwater Labs found?",
+      "answers": ["Snow biome only", "Inside caves", "In the ocean", "Under Launch Site"],
+      "correct": 2
+    },
+    {
+      "question": "What clearance does a red keycard provide?",
+      "answers": ["Basic areas", "Top-level areas", "Safe zones only", "Roadside monuments"],
+      "correct": 1
+    }
+  ]
+}

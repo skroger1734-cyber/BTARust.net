@@ -400,7 +400,7 @@ const lifetimeKits = [
     backpack: "48 Slots",
     bundle: "Includes All Kits Except Discord Booster",
     rewards: rankRewards.ultimate,
-    price: "$170.00 USD",
+    price: "$200.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439471"
   },
   {
@@ -411,7 +411,7 @@ const lifetimeKits = [
     backpack: "12 Slots",
     bundle: "Permanent VIP Kit & Permissions",
     rewards: rankRewards.vip,
-    price: "$25.50 USD",
+    price: "$30.00 USD",
     packageUrl: "https://btarustnet.tebex.io/package/7439459"
   }
 ];

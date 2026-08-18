@@ -37,7 +37,7 @@ export const servers = [
     rate: "2x Weekly",
     wipe: "Thursday • 2 PM ET",
     description: "US weekly Rust with 2x gather, loot, stacks, smelting, and recyclers, 50% upkeep, QoL systems, no team limit, active moderation, and Thursday wipes.",
-    ip: "144.225.37.13",
+    ip: "103.114.163.44",
     port: 28015,
     queryPort: 28017,
     battleMetricsId: null,

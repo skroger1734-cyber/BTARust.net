@@ -884,15 +884,16 @@ export default function Page({ initialView = "home" }) {
 
           <Card extra="orangeBorder">
             <p className="eyebrow">Featured Servers</p>
-            <h2 className="h2">US 3x, EU 3x & Test</h2>
+            <h2 className="h2">US 3x, EU 3x, Weekly & Test</h2>
             <p className="muted">
-              Three live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, plus weekly 2x gameplay in the US.
+              Four live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, weekly 2x gameplay in the US, plus our official US East Test server.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
               <Badge>US</Badge>
               <Badge>EU</Badge>
               <Badge>US 2x Weekly</Badge>
+              <Badge>US Test Server</Badge>
             </div>
           </Card>
         </section>
@@ -970,7 +971,7 @@ export default function Page({ initialView = "home" }) {
               <p className="eyebrow">Server Lineup</p>
               <h2 className="h2">Choose your battlefield</h2>
             </div>
-            <p className="muted">Choose US or EU 3x monthly gameplay, or jump into the US 2x weekly server for a faster wipe cycle.</p>
+            <p className="muted">Choose US or EU 3x monthly gameplay, jump into the US 2x weekly server, or help test upcoming changes on the US East Test server.</p>
           </div>
 
           <div className="grid grid3">

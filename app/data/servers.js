@@ -43,6 +43,21 @@ export const servers = [
     battleMetricsId: null,
     map: "Procedural Map",
     mapUrl: "https://rustmaps.com/map/4250_2085781650"
+  },
+  {
+    id: "us-test",
+    name: "BTARust.net | US East Test Server",
+    shortName: "US Test Server",
+    region: "US East",
+    rate: "Test",
+    wipe: "Development & Beta",
+    description: "BTA development and beta server for testing upcoming plugins, events, integrations, and balance changes before main-server rollout.",
+    ip: "51.161.93.250",
+    port: 28015,
+    queryPort: 28017,
+    battleMetricsId: null,
+    map: "Procedural Map",
+    mapUrl: null
   }
 ].map((server) => ({
   ...server,

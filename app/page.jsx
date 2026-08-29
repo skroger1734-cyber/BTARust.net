@@ -886,7 +886,7 @@ export default function Page({ initialView = "home" }) {
             <p className="eyebrow">Featured Servers</p>
             <h2 className="h2">US 3x, EU 3x, Weekly & Test</h2>
             <p className="muted">
-              Four live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, weekly 2x gameplay in the US, plus our official US East Test server.
+              Four live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, weekly 2x gameplay in the US, plus the US East Test server.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
@@ -1341,8 +1341,8 @@ export default function Page({ initialView = "home" }) {
                 </Card>
                 <Card>
                   <p className="eyebrow">Ready to Apply?</p>
-                  <h2 className="kitTitle">Open the official application</h2>
-                  <p className="muted">The website explains the program; Discord remains the single official application and review system.</p>
+                  <h2 className="kitTitle">Open the BTA application</h2>
+                  <p className="muted">The website explains the program; applications and reviews are handled through the designated BTARust Discord channel.</p>
                   <div className="actions">
                     <a href={streamerApplicationChannel} target="_blank" rel="noreferrer"><Button>Apply Now</Button></a>
                     <a href="/account-linking"><Button outline>Link Accounts First</Button></a>

@@ -5,7 +5,7 @@ import { servers } from "./data/servers";
 
 const siteUrl = "https://www.btarust.net";
 const tebexStore = "https://btarustnet.tebex.io";
-const discordInvite = "https://discord.gg/HhrxErrDXg";
+const discordInvite = "https://discord.gg/VjracYS6A7";
 const tiktokProfile = "https://www.tiktok.com/@btarust";
 const havenHosting = "https://havendevelopment.net/?ref=BTARUST";
 const streamerApplicationChannel = "https://discord.com/channels/1502376626539724820/1531008906111877230";

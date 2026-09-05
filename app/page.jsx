@@ -177,7 +177,7 @@ const navigationPages = [
 ];
 
 const pageMeta = {
-  servers: ["Server Network", "Choose your battlefield", "Live US and EU monthly 3x plus US weekly 2x server information from the network source of truth."],
+  servers: ["Server Network", "Choose your battlefield", "Live US and EU monthly 3x plus US and EU weekly 2x server information from the network source of truth."],
   "account-linking": ["Account Linking", "Keep every reward on the right account", "Link Steam and Discord to synchronize Tebex purchases, kits, Discord roles, and community rewards."],
   "lifetime-kits": ["BTA Kits & Packages", "Know exactly what every kit includes", "Browse free starter kits, Discord-linked and Booster rewards, premium kits, lifetime ranks, and the Ultimate bundle."],
   "streamer-program": ["BTA Creator Program", "Turn your next Rust wipe into a story", "Established PC Rust creators can apply for verified access, creator perks, private support, and a full viewer giveaway pack."],
@@ -884,16 +884,16 @@ export default function Page({ initialView = "home" }) {
 
           <Card extra="orangeBorder">
             <p className="eyebrow">Featured Servers</p>
-            <h2 className="h2">US 3x, EU 3x, Weekly & Test</h2>
+            <h2 className="h2">US & EU Monthly 3x + Weekly 2x</h2>
             <p className="muted">
-              Four live BTARust.net servers: monthly 3x QoL/Loot+ gameplay in the US and EU, weekly 2x gameplay in the US, plus the US East Test server.
+              Four live BTARust.net servers: monthly 3x and weekly 2x QoL/Loot+ gameplay in both the US and EU.
             </p>
             <div className="badges" style={{ marginTop: 18 }}>
               <Badge tone="green">Live</Badge>
               <Badge>US</Badge>
               <Badge>EU</Badge>
               <Badge>US 2x Weekly</Badge>
-              <Badge>US Test Server</Badge>
+              <Badge>EU 2x Weekly</Badge>
             </div>
           </Card>
         </section>
@@ -971,7 +971,7 @@ export default function Page({ initialView = "home" }) {
               <p className="eyebrow">Server Lineup</p>
               <h2 className="h2">Choose your battlefield</h2>
             </div>
-            <p className="muted">Choose US or EU 3x monthly gameplay, jump into the US 2x weekly server, or help test upcoming changes on the US East Test server.</p>
+            <p className="muted">Choose US or EU 3x monthly gameplay, or jump into the US or EU 2x weekly server for a faster wipe cycle.</p>
           </div>
 
           <div className="grid grid3">
